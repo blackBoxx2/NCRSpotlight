@@ -17,9 +17,11 @@ namespace EntitiesLayer.Models
         public int RoleID { get; set; }
         public Role Role { get; set; }
 
-        [Required] 
+        [Required]
         public int RepresentativeID { get; set; }
         public Representative Representative { get; set; }
 
-    }
+        public ICollection<NCRLog> NCRLogs{ get; set; } = new HashSet<NCRLog>();
+
+}
 }
