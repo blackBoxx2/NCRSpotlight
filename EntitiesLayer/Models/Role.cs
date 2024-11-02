@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace EntitiesLayer.Models
 {
-    internal class Role
+    public class Role
     {
 
         [Key]

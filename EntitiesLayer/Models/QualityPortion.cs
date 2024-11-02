@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace EntitiesLayer.Models
 {
-    internal class QualityPortion
+    public class QualityPortion
     {
 
         [Key]

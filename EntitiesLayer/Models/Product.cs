@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace EntitiesLayer.Models
 {
-    internal class Product
+    public class Product
     {
         [Key]
         public int ID { get; set; }
