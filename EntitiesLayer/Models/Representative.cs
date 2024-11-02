@@ -19,6 +19,8 @@ namespace EntitiesLayer.Models
         [Required(ErrorMessage = "A last name is required")]
         public string LastName { get; set; }
 
+        public ICollection<RoleRep> RoleReps { get; set; } = new HashSet<RoleRep>();
+
 
     }
 }

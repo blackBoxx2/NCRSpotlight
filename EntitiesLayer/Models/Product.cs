@@ -26,5 +26,7 @@ namespace EntitiesLayer.Models
         [Required]
         public byte[] Picture { get; set; }
 
+        public ICollection<QualityPortion> QualityPortions { get; set; } = new HashSet<QualityPortion>();
+
     }
 }

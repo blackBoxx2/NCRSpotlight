@@ -17,5 +17,7 @@ namespace EntitiesLayer.Models
         [MaxLength(30)]
         public string RoleName { get; set; }
 
+        public ICollection<RoleRep> RoleReps { get; set; } = new HashSet<RoleRep>();
+
     }
 }
