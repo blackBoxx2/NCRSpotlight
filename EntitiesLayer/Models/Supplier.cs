@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace EntitiesLayer.Models
 {
-    internal class Supplier
+    public class Supplier
     {
         [Key]
         public int ID { get; set; }

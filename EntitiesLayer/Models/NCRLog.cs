@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace EntitiesLayer.Models
 {
-    internal class NCRLog
+    public class NCRLog
     {
         [Key]
         public int ID { get; set; }

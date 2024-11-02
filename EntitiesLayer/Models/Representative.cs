@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace EntitiesLayer.Models
 {
-    internal class Representative
+    public class Representative
     {
 
         [Key]
