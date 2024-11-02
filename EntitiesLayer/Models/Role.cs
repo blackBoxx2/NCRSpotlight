@@ -11,7 +11,7 @@ namespace EntitiesLayer.Models
     {
 
         [Key]
-        public int RoleID { get; set; }
+        public int ID { get; set; }
 
         [Required(ErrorMessage = "Must include a name for a role")]
         [MaxLength(30)]
