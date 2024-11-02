@@ -20,18 +20,6 @@ namespace EntitiesLayer.Models
 
         public NCRStatus Status { get; set; }
 
-        //[Required]
-        //public int EngRepID { get; set; }
-        //[Display(Name = "Engineering Rep")]
-        //public RoleRep? EngRep { get; set; }
-        [Required]
-
-        public int QualityPortionID { get; set; }
-
-        [Required]
-        [Display(Name = "Quality Rep Portion")]
-        public QualityPortion? qualityPortion { get; set; }
-
         public ICollection<NCRLogHistory> History { get; set; } = new HashSet<NCRLogHistory>();
         
 

@@ -6,6 +6,8 @@ var connectionString = builder.Configuration.GetConnectionString("IdentityContex
 
 builder.Services.AddDbContext<IdentityContext>(options => options.UseSqlite(connectionString));
 
+builder.Services.AddDbContext<NCRContext>(options => options.UseSqlite(connectionString));
+
 builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<IdentityContext>();
 
 builder.Services.AddDbContext<NCRContext>(options =>

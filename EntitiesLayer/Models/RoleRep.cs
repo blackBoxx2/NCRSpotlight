@@ -10,7 +10,7 @@ namespace EntitiesLayer.Models
     public class RoleRep
     {
         [Key]
-        public int ID { get; set; }
+        public int RoleRepID { get; set; }
 
         [Required]
         public int RoleID { get; set; }
@@ -19,8 +19,7 @@ namespace EntitiesLayer.Models
         [Required]
         public int RepresentativeID { get; set; }
         public Representative Representative { get; set; }
-
-        public ICollection<QualityPortion> QualityPortions { get; set; } = new HashSet<QualityPortion>();
+        public ICollection<QualityPortion> QualityPortions{ get; set; } = new HashSet<QualityPortion>();
 
 }
 }
