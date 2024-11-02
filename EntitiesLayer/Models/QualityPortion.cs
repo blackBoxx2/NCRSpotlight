@@ -38,6 +38,11 @@ namespace EntitiesLayer.Models
         [Display(Name = "Defect Description``")]
         public string DefectDescription { get; set; }
 
+        [Required]
+        public int RoleRepID { get; set; }
+        [Display(Name = "Quality Assurance Rep")]
+        public RoleRep? RoleRep { get; set; }
+
 
 
     }
