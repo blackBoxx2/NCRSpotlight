@@ -24,6 +24,8 @@ namespace EntitiesLayer.Models
         [Required]
         public DateTime DateCreated { get; set; }
 
+        public NCRStatus Status { get; set; }
+
         [Required]
         public int EngRepID { get; set; }
         [Display(Name = "Engineering Rep")]
@@ -33,6 +35,9 @@ namespace EntitiesLayer.Models
         public int QARepID { get; set; }
         [Display(Name = "Quality Assurance Rep")]
         public RoleRep? QARep { get; set; }
+
+        public ICollection<NCRLogHistory> History { get; set; } = new HashSet<NCRLogHistory>();
+        
 
     }
 }

@@ -15,6 +15,8 @@ namespace EntitiesLayer.Models
 
         [Required(ErrorMessage = "A first name is required")]
         public string FirstName { get; set; }
+
+        public string? MiddleInitial {  get; set; }
         
         [Required(ErrorMessage = "A last name is required")]
         public string LastName { get; set; }
