@@ -8,6 +8,9 @@ builder.Services.AddDbContext<IdentityContext>(options => options.UseSqlite(conn
 
 builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<IdentityContext>();
 
+builder.Services.AddDbContext<NCRContext>(options =>
+options.UseSqlite(connectionString));
+
 // Add services to the container.
 //Without the .AddRazorPages we cant use .cshtml pages
 builder.Services.AddRazorPages();

@@ -9,7 +9,6 @@ namespace EntitiesLayer.Models
 {
     public class RoleRep
     {
-
         [Key]
         public int ID { get; set; }
 
@@ -21,7 +20,7 @@ namespace EntitiesLayer.Models
         public int RepresentativeID { get; set; }
         public Representative Representative { get; set; }
 
-        public ICollection<NCRLog> NCRLogs{ get; set; } = new HashSet<NCRLog>();
+        public ICollection<QualityPortion> QualityPortions { get; set; } = new HashSet<QualityPortion>();
 
 }
 }

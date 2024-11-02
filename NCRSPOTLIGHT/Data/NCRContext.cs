@@ -76,9 +76,6 @@ namespace NCRSPOTLIGHT.Data
                 .HasIndex(rep => new {rep.FirstName, rep.MiddleInitial, rep.LastName})
                 .IsUnique();
 
-            //Rolerep
-            modelBuilder.Entity<RoleRep>()
-                .HasKey(rp => new { rp.RoleID, rp.RepresentativeID });
 
 
             //NCRLog likely sdhould be able to delete an NCR as an admin with no issues, this should also delete the history
@@ -88,15 +85,14 @@ namespace NCRSPOTLIGHT.Data
                 .HasForeignKey(nh => nh.NCRLogID)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            modelBuilder.Entity<NCRLog>()
-                .HasOne(n => n.QARep)
-                .WithMany()
-                .HasForeignKey(n => n.QARepID);
 
-            modelBuilder.Entity<NCRLog>()
-                .HasOne(n => n.EngRep)
-                .WithMany()
-                .HasForeignKey(n => n.EngRepID);
+
+
+            modelBuilder.Entity<QualityPortion>()
+                .HasOne(qp => qp.RoleRep)
+                .WithMany(qp => qp.QualityPortions)
+                .HasForeignKey(qp => qp.RoleRepID);
+
 
         }
         #endregion
