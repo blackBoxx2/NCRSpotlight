@@ -10,6 +10,9 @@ namespace EntitiesLayer.Models
     internal class RoleRep
     {
 
+        [Key]
+        public int ID { get; set; }
+
         [Required]
         public int RoleID { get; set; }
         public Role Role { get; set; }
