@@ -73,6 +73,7 @@ app.MapRazorPages();
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
-    NCRInitializer.Initialize(services);
+    NCRInitializer.Initialize(serviceProvider:services, DeleteDatabase:false,
+        UseMigrations:true,SeedSampleData:true);
 }
 app.Run();
