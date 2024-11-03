@@ -162,7 +162,7 @@ namespace NCRSPOTLIGHT.Controllers
         {
             var supplier = await _getSupplierByIDAsyncUseCase.Execute(id);
 
-            return  supplier == null? false: true; 
+            return supplier != null; 
         }
     }
 }
