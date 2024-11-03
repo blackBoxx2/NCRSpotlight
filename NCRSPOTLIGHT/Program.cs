@@ -30,7 +30,7 @@ builder.Services.AddTransient<IAddSupplierAsyncUseCase, AddSupplierAsyncUseCase>
 builder.Services.AddTransient<IDeleteSupplierAsyncUseCase, DeleteSupplierAsyncUseCase>();
 builder.Services.AddTransient<IGetSupplierByIDAsyncUseCase, GetSupplierByIdAsyncUseCase>();
 builder.Services.AddTransient<IGetSuppliersAsyncUseCase, GetSuppliersAsyncUseCase>();
-builder.Services.AddTransient<IUpdateSupplierAsycUseCase, UpdateSupplierAsyncUseCase>();
+builder.Services.AddTransient<IUpdateSupplierAsyncUseCase, UpdateSupplierAsyncUseCase>();
 //Implement Policy Based Authorization (Used for specific roles)
 builder.Services.AddAuthorization(options =>
 {

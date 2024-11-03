@@ -8,6 +8,6 @@ namespace UseCasesLayer.DataStorePluginInterfaces
         Task AddSupplierAsyc(Supplier supplier);
         Task DeleteSupplierAsyc(int id);
         Task<IEnumerable<Supplier>> GetSuppliersAsyc();
-        Task UpdateSupplierAsyc(int? id, Supplier supplier);
+        Task UpdateSupplierAsync(int? id, Supplier supplier);
     }
 }
