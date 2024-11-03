@@ -12,29 +12,13 @@ namespace EntitiesLayer.Models
         [Key]
         public int ID { get; set; }
 
-        [Required]
-        
-        public int QualityPortionID { get; set; }
 
-        [Required]
-        [Display(Name = "Quality Rep Portion")]
-        public QualityPortion? qualityPortion { get; set; }
 
         [Display(Name = "Date Created")]
         [Required]
         public DateTime DateCreated { get; set; }
 
         public NCRStatus Status { get; set; }
-
-        [Required]
-        public int EngRepID { get; set; }
-        [Display(Name = "Engineering Rep")]
-        public RoleRep? EngRep { get; set; }
-
-        [Required]
-        public int QARepID { get; set; }
-        [Display(Name = "Quality Assurance Rep")]
-        public RoleRep? QARep { get; set; }
 
         public ICollection<NCRLogHistory> History { get; set; } = new HashSet<NCRLogHistory>();
         
