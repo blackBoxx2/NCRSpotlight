@@ -1,7 +1,7 @@
 ﻿using EntitiesLayer.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace NCRSPOTLIGHT.Data
+namespace Plugins.DataStore.SQLite
 {
     public class NCRContext:DbContext
     {

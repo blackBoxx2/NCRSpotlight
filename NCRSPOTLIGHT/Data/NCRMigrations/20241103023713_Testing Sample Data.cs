@@ -6,11 +6,25 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace NCRSPOTLIGHT.Data.NCRMigrations
 {
     /// <inheritdoc />
-    public partial class Initial : Migration
+    public partial class TestingSampleData : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.CreateTable(
+                name: "NCRLog",
+                columns: table => new
+                {
+                    ID = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    DateCreated = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    Status = table.Column<int>(type: "INTEGER", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_NCRLog", x => x.ID);
+                });
+
             migrationBuilder.CreateTable(
                 name: "Representatives",
                 columns: table => new
@@ -50,6 +64,28 @@ namespace NCRSPOTLIGHT.Data.NCRMigrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Suppliers", x => x.ID);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "NCRLogHistory",
+                columns: table => new
+                {
+                    ID = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    ChangedBy = table.Column<string>(type: "TEXT", nullable: false),
+                    ChangedOn = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    Comments = table.Column<string>(type: "TEXT", nullable: false),
+                    NCRLogID = table.Column<int>(type: "INTEGER", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_NCRLogHistory", x => x.ID);
+                    table.ForeignKey(
+                        name: "FK_NCRLogHistory_NCRLog_NCRLogID",
+                        column: x => x.NCRLogID,
+                        principalTable: "NCRLog",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -131,54 +167,6 @@ namespace NCRSPOTLIGHT.Data.NCRMigrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            migrationBuilder.CreateTable(
-                name: "NCRLog",
-                columns: table => new
-                {
-                    ID = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    QualityPortionID = table.Column<int>(type: "INTEGER", nullable: false),
-                    DateCreated = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    Status = table.Column<int>(type: "INTEGER", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_NCRLog", x => x.ID);
-                    table.ForeignKey(
-                        name: "FK_NCRLog_QualityPortions_QualityPortionID",
-                        column: x => x.QualityPortionID,
-                        principalTable: "QualityPortions",
-                        principalColumn: "ID",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "NCRLogHistory",
-                columns: table => new
-                {
-                    ID = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    ChangedBy = table.Column<string>(type: "TEXT", nullable: false),
-                    ChangedOn = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    Comments = table.Column<string>(type: "TEXT", nullable: false),
-                    NCRLogID = table.Column<int>(type: "INTEGER", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_NCRLogHistory", x => x.ID);
-                    table.ForeignKey(
-                        name: "FK_NCRLogHistory_NCRLog_NCRLogID",
-                        column: x => x.NCRLogID,
-                        principalTable: "NCRLog",
-                        principalColumn: "ID",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateIndex(
-                name: "IX_NCRLog_QualityPortionID",
-                table: "NCRLog",
-                column: "QualityPortionID");
-
             migrationBuilder.CreateIndex(
                 name: "IX_NCRLogHistory_NCRLogID",
                 table: "NCRLogHistory",
@@ -242,10 +230,10 @@ namespace NCRSPOTLIGHT.Data.NCRMigrations
                 name: "NCRLogHistory");
 
             migrationBuilder.DropTable(
-                name: "NCRLog");
+                name: "QualityPortions");
 
             migrationBuilder.DropTable(
-                name: "QualityPortions");
+                name: "NCRLog");
 
             migrationBuilder.DropTable(
                 name: "Products");

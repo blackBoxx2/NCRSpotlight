@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NCRSPOTLIGHT.Data;
+using Plugins.DataStore.SQLite;
 
 #nullable disable
 
@@ -26,15 +27,10 @@ namespace NCRSPOTLIGHT.Data.NCRMigrations
                     b.Property<DateTime>("DateCreated")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("QualityPortionID")
-                        .HasColumnType("INTEGER");
-
                     b.Property<int>("Status")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("ID");
-
-                    b.HasIndex("QualityPortionID");
 
                     b.ToTable("NCRLog");
                 });
@@ -218,17 +214,6 @@ namespace NCRSPOTLIGHT.Data.NCRMigrations
                         .IsUnique();
 
                     b.ToTable("Suppliers");
-                });
-
-            modelBuilder.Entity("EntitiesLayer.Models.NCRLog", b =>
-                {
-                    b.HasOne("EntitiesLayer.Models.QualityPortion", "qualityPortion")
-                        .WithMany()
-                        .HasForeignKey("QualityPortionID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("qualityPortion");
                 });
 
             modelBuilder.Entity("EntitiesLayer.Models.NCRLogHistory", b =>

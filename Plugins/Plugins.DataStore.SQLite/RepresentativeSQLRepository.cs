@@ -4,11 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EntitiesLayer.Models
+namespace Plugins.DataStore.SQLite
 {
-    public class NCRRollRep
+    public class RepresentativeSQLRepository
     {
-        public int ID { get; set; }
-
     }
 }
