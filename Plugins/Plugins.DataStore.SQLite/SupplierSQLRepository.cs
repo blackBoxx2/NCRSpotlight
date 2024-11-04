@@ -38,8 +38,6 @@ namespace Plugins.DataStore.SQLite
                     .AsNoTracking()
                     .FirstOrDefaultAsync(s => s.ID == id);
            return supplier;
-
-    
         }
 
         //Add a Supplier
