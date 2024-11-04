@@ -5,10 +5,11 @@ using System.Text;
 using System.Threading.Tasks;
 using UseCasesLayer.DataStorePluginInterfaces;
 using UseCasesLayer.UseCaseInterfaces.RepresentitiveUseCaseInterfaces;
+using UseCasesLayer.UseCaseInterfaces.RoleRepUseCaseInterfaces;
 
 namespace UseCasesLayer.UseCaseInterfaces.RoleRepUseCases
 {
-    public class DeleteRoleRepAsyncUseCase : IDeleteRepresentativeAsyncUseCase
+    public class DeleteRoleRepAsyncUseCase : IDeleteRoleRepAsyncUseCase 
     {
         private readonly IRoleRepRepository _roleRepRepository;
 
