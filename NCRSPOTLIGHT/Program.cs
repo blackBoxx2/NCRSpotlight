@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore;
 using NCRSPOTLIGHT.Data;
 using Plugins.DataStore.SQLite;
 using UseCasesLayer.DataStorePluginInterfaces;
+using UseCasesLayer.UseCaseInterfaces.ProductUseCaseInterfaces;
+using UseCasesLayer.UseCaseInterfaces.ProductUseCases;
 using UseCasesLayer.UseCaseInterfaces.RepresentativesUseCase;
 using UseCasesLayer.UseCaseInterfaces.RepresentitiveUseCaseInterfaces;
 using UseCasesLayer.UseCaseInterfaces.RepresentitvesUseCase;
@@ -32,10 +34,9 @@ builder.Services.AddControllersWithViews();
 //We will come back and add an If statement to check if its in development or QA
 builder.Services.AddTransient<ISupplierRepository, SupplierSQLRepository>();
 builder.Services.AddTransient<IRoleRepository, RoleSQLRepository>();
-
 builder.Services.AddTransient<IRepresentativeRepository, RepresentativeSQLRepository>();
-
 builder.Services.AddTransient<IRoleRepRepository, RoleRepSQLRepository>();
+builder.Services.AddTransient<IProductRepository, ProductSQLRepository>();
 
 
 #region Register Supplier Services
@@ -66,6 +67,13 @@ builder.Services.AddTransient<IDeleteRoleRepAsyncUseCase, DeleteRoleRepAsyncUseC
 builder.Services.AddTransient<IGetRoleRepByIDAsyncUseCase, GetRoleRepByIdAsyncUseCase>();
 builder.Services.AddTransient<IGetRoleRepAsyncUseCase, GetRoleRepAsyncUseCase>();
 builder.Services.AddTransient<IUpdateRoleRepAsyncUseCase, UpdateRoleRepAsyncUseCase>();
+
+//product
+builder.Services.AddTransient<IAddProductAsyncUseCase, AddProductAsyncUseCase>();
+builder.Services.AddTransient<IDeleteProductAsyncUseCase, DeleteProductAsyncUseCase>();
+builder.Services.AddTransient<IUpdateProductAsyncUseCase, UpdateProductAsyncUseCase>();
+builder.Services.AddTransient<IGetProductByIDAsyncUseCase, GetProductByIDAsyncUseCase>();
+builder.Services.AddTransient<IGetProductsAsyncUseCase, GetProductsAsyncUseCase>();
 
 #endregion
 
@@ -112,7 +120,7 @@ app.MapRazorPages();
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
-    NCRInitializer.Initialize(serviceProvider:services, DeleteDatabase:false,
+    NCRInitializer.Initialize(serviceProvider:services, DeleteDatabase:true,
         UseMigrations:true,SeedSampleData:true);
 }
 app.Run();

@@ -35,15 +35,12 @@ namespace EntitiesLayer.Models
         public byte[] DefectPicture { get; set; }
 
         [Required]
-        [Display(Name = "Defect Description``")]
+        [Display(Name = "Defect Description")]
         public string DefectDescription { get; set; }
 
         [Required]
         public int RoleRepID { get; set; }
         [Display(Name = "Quality Assurance Rep")]
         public RoleRep? RoleRep { get; set; }
-
-
-
     }
 }
