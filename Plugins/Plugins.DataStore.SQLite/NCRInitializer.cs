@@ -50,26 +50,52 @@ namespace Plugins.DataStore.SQLite
                 #region Start seeding data
                 try
                 {
-                    //Suppliers
-                    if (!context.Suppliers.Any())
+                    List<string> supplierNames = new List<string>
                     {
-                        context.Suppliers.AddRange(
-                                new Supplier()
+                        "Apex Supplies Ltd.",
+                        "Blue Ridge Manufacturing Co.",
+                        "Central Distributors Inc.",
+                        "Dynamic Industrial Solutions",
+                        "Eastern Wholesale Partners",
+                        "First Choice Suppliers",
+                        "Global Imports and Exports",
+                        "Horizon Equipment Co.",
+                        "Imperial Components Ltd.",
+                        "Keystone Distribution Group",
+                        "Liberty Supply Corporation",
+                        "Maverick Materials LLC",
+                        "NorthStar Parts & Tools",
+                        "Omega Resource Solutions",
+                        "PrimeSource Traders",
+                        "Quality Goods International",
+                        "Reliable Supply Chain Inc.",
+                        "Silverline Services Ltd.",
+                        "Titan Manufacturing Group",
+                        "United Wholesale Solutions"
+                    };
+                    int id = 1;
+                    //Suppliers
+                    if (!context.Suppliers.Any() || context.Suppliers.Count() < 20)
+                    {
+                        id = context.Suppliers.Any() ? context.Suppliers.Max(s => s.ID) + 1 : 1;
+                        foreach (string supplier in supplierNames)
+                        {
+                            if(!context.Suppliers.Any(s => s.SupplierName == supplier))
+                            {
+                                context.Suppliers.Add(
+                                new Supplier
                                 {
-                                    ID = 1,
-                                    SupplierName = "Seed Supplier 1"
-                                },
-                                new Supplier()
-                                {
-                                    ID = 2,
-                                    SupplierName = "Seed Supplier 2"
-                                },
-                                new Supplier()
-                                {
-                                    ID = 3,
-                                    SupplierName = "Seed Supplier 3"
+                                    ID = id,
+                                    SupplierName = supplier
                                 }
-                            );
+                                );
+                                id++;
+                            }
+                            else
+                            {
+                                continue;
+                            }                            
+                        }
                         context.SaveChanges();
                     }
                     //Representatives
