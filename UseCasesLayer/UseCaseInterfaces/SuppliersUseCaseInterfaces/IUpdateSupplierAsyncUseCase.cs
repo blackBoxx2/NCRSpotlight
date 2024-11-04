@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace UseCasesLayer.UseCaseInterfaces.SuppliersUseCaseInterfaces
 {
-    public interface IUpdateSupplierAsycUseCase
+    public interface IUpdateSupplierAsyncUseCase
     {
         Task Execute(int? id, Supplier supplier);
 

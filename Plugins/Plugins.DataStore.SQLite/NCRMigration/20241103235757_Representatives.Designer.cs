@@ -4,16 +4,15 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using NCRSPOTLIGHT.Data;
 using Plugins.DataStore.SQLite;
 
 #nullable disable
 
-namespace NCRSPOTLIGHT.Data.NCRMigrations
+namespace Plugins.DataStore.SQLite.NCRMigration
 {
     [DbContext(typeof(NCRContext))]
-    [Migration("20241103023713_Testing Sample Data")]
-    partial class TestingSampleData
+    [Migration("20241103235757_Representatives")]
+    partial class Representatives
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

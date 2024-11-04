@@ -9,7 +9,7 @@ using UseCasesLayer.UseCaseInterfaces.SuppliersUseCaseInterfaces;
 
 namespace UseCasesLayer.UseCaseInterfaces.SuppliersUseCases
 {
-    public class UpdateSupplierAsyncUseCase : IUpdateSupplierAsycUseCase
+    public class UpdateSupplierAsyncUseCase : IUpdateSupplierAsyncUseCase
     {
         private readonly ISupplierRepository _supplierRepository;
 
@@ -19,7 +19,7 @@ namespace UseCasesLayer.UseCaseInterfaces.SuppliersUseCases
         }
         public async Task Execute(int? id, Supplier supplier)
         {
-            await _supplierRepository.UpdateSupplierAsyc(id,supplier); 
+            await _supplierRepository.UpdateSupplierAsync(id,supplier); 
         }
     }
 }

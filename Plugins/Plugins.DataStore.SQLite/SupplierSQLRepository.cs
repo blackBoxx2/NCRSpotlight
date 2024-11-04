@@ -11,7 +11,7 @@ using UseCasesLayer.DataStorePluginInterfaces;
 namespace Plugins.DataStore.SQLite
 {
     public class SupplierSQLRepository : ISupplierRepository
-    {
+    { 
         private readonly NCRContext _context;
 
         public SupplierSQLRepository(NCRContext context)
@@ -38,11 +38,8 @@ namespace Plugins.DataStore.SQLite
                     .AsNoTracking()
                     .FirstOrDefaultAsync(s => s.ID == id);
            return supplier;
-
-    
         }
 
-        //Add a Supplier
         public async Task AddSupplierAsyc(Supplier supplier)
         {
             _context.Suppliers.Add(supplier);
@@ -50,7 +47,7 @@ namespace Plugins.DataStore.SQLite
         }
 
         //Edit Supplier -- gonna move this to controller to use TryUpdateModelAsyc
-        public async Task UpdateSupplierAsyc(int? id, Supplier supplier)
+        public async Task UpdateSupplierAsync(int? id, Supplier supplier)
         {
             if (id != supplier.ID) return;
 
