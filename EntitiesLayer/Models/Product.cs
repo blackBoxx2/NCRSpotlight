@@ -23,8 +23,7 @@ namespace EntitiesLayer.Models
         [Required]
         public string Description { get; set; }
 
-        [Required]
-        public byte[] Picture { get; set; }
+        public ICollection<ProductPicture> ProductPictures { get; set; } = new HashSet<ProductPicture>();
 
         public ICollection<QualityPortion> QualityPortions { get; set; } = new HashSet<QualityPortion>();
 
