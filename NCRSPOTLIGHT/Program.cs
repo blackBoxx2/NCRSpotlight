@@ -3,6 +3,9 @@ using Microsoft.EntityFrameworkCore;
 using NCRSPOTLIGHT.Data;
 using Plugins.DataStore.SQLite;
 using UseCasesLayer.DataStorePluginInterfaces;
+using UseCasesLayer.UseCaseInterfaces.RepresentativesUseCase;
+using UseCasesLayer.UseCaseInterfaces.RepresentitiveUseCaseInterfaces;
+using UseCasesLayer.UseCaseInterfaces.RepresentitvesUseCase;
 using UseCasesLayer.UseCaseInterfaces.RoleUseCaseInterfaces;
 using UseCasesLayer.UseCaseInterfaces.RoleUseCases;
 using UseCasesLayer.UseCaseInterfaces.SuppliersUseCaseInterfaces;
@@ -28,18 +31,33 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddTransient<ISupplierRepository, SupplierSQLRepository>();
 builder.Services.AddTransient<IRoleRepository, RoleSQLRepository>();
 
-//Register Supplier Services
+builder.Services.AddTransient<IRepresentativeRepository, RepresentativeSQLRepository>();
+
+
+#region Register Supplier Services
+//Supplier
 builder.Services.AddTransient<IAddSupplierAsyncUseCase, AddSupplierAsyncUseCase>();
 builder.Services.AddTransient<IDeleteSupplierAsyncUseCase, DeleteSupplierAsyncUseCase>();
 builder.Services.AddTransient<IGetSupplierByIDAsyncUseCase, GetSupplierByIdAsyncUseCase>();
 builder.Services.AddTransient<IGetSuppliersAsyncUseCase, GetSuppliersAsyncUseCase>();
-builder.Services.AddTransient<IUpdateSupplierAsycUseCase, UpdateSupplierAsyncUseCase>();
+builder.Services.AddTransient<IUpdateSupplierAsyncUseCase, UpdateSupplierAsyncUseCase>();
+
+//Representative
+builder.Services.AddTransient<IAddRepresentativeAsyncUseCase, AddRepresentativeAsyncUseCase>();
+builder.Services.AddTransient<IDeleteRepresentativeAsyncUseCase, DeleteRepresentativeAsyncUseCase>();
+builder.Services.AddTransient<IGetRepresentativesByIdAsyncUseCase, GetRepresentativesByIdAsyncUseCase>();
+builder.Services.AddTransient<IGetRepresentativesAsyncUseCase, GetRepresentativesAsyncUseCase>();
+builder.Services.AddTransient<IUpdateRepresentativeAsyncUseCase, UpdateRepresentativeAsyncUseCase>();
+
 //Register Role Services
 builder.Services.AddTransient<IAddRoleAsyncUserCase, AddRoleAsyncUseCase>();
 builder.Services.AddTransient<IDeleteRoleAsyncUserCase, DeleteRoleAsyncUseCase>();
 builder.Services.AddTransient<IGetRoleByIDAsyncUserCase, GetRolByIDUseCase>();
 builder.Services.AddTransient<IGetRoleAsyncUserCase, GetRoleAsyncUseCase>();
 builder.Services.AddTransient<IUpdateRoleAsyncUserCase, UpdateRoleAsyncUseCase>();
+#endregion
+
+
 //Implement Policy Based Authorization (Used for specific roles)
 builder.Services.AddAuthorization(options =>
 {

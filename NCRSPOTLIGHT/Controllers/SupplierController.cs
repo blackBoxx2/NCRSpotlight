@@ -18,19 +18,19 @@ namespace NCRSPOTLIGHT.Controllers
         private readonly IDeleteSupplierAsyncUseCase _deleteSupplierAsyncUseCase;
         private readonly IGetSupplierByIDAsyncUseCase _getSupplierByIDAsyncUseCase;
         private readonly IGetSuppliersAsyncUseCase _getSuppliersAsyncUseCase;
-        private readonly IUpdateSupplierAsycUseCase _updateSupplierAsycUseCase;
+        private readonly IUpdateSupplierAsyncUseCase _updateSupplierAsyncUseCase;
 
         public SupplierController(IAddSupplierAsyncUseCase addSupplierAsyncUseCase,
                                   IDeleteSupplierAsyncUseCase deleteSupplierAsyncUseCase,
                                   IGetSupplierByIDAsyncUseCase getSupplierByIDAsyncUseCase,
                                   IGetSuppliersAsyncUseCase getSuppliersAsyncUseCase,
-                                  IUpdateSupplierAsycUseCase updateSupplierAsycUseCase)
+                                  IUpdateSupplierAsyncUseCase updateSupplierAsyncUseCase)
         {
             this._addSupplierAsyncUseCase = addSupplierAsyncUseCase;
             this._deleteSupplierAsyncUseCase = deleteSupplierAsyncUseCase;
             this._getSupplierByIDAsyncUseCase = getSupplierByIDAsyncUseCase;
             this._getSuppliersAsyncUseCase = getSuppliersAsyncUseCase;
-            this._updateSupplierAsycUseCase = updateSupplierAsycUseCase;
+            this._updateSupplierAsyncUseCase = updateSupplierAsyncUseCase;
         }
 
         // GET: Supplier
@@ -110,7 +110,7 @@ namespace NCRSPOTLIGHT.Controllers
             {
                 try
                 {
-                    await _updateSupplierAsycUseCase.Execute(id,supplier);
+                    await _updateSupplierAsyncUseCase.Execute(id,supplier);
                 }
                 catch (DbUpdateConcurrencyException)
                 {

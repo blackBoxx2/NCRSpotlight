@@ -47,7 +47,7 @@ namespace Plugins.DataStore.SQLite
         }
 
         //Edit Supplier -- gonna move this to controller to use TryUpdateModelAsyc
-        public async Task UpdateSupplierAsyc(int? id, Supplier supplier)
+        public async Task UpdateSupplierAsync(int? id, Supplier supplier)
         {
             if (id != supplier.ID) return;
 
