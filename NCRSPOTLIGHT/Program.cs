@@ -6,8 +6,8 @@ using UseCasesLayer.DataStorePluginInterfaces;
 using UseCasesLayer.UseCaseInterfaces.RepresentativesUseCase;
 using UseCasesLayer.UseCaseInterfaces.RepresentitiveUseCaseInterfaces;
 using UseCasesLayer.UseCaseInterfaces.RepresentitvesUseCase;
-using UseCasesLayer.UseCaseInterfaces.RoleRepUseCaseInterfaces;
-using UseCasesLayer.UseCaseInterfaces.RoleRepUseCases;
+using UseCasesLayer.UseCaseInterfaces.RoleUseCaseInterfaces;
+using UseCasesLayer.UseCaseInterfaces.RoleUseCases;
 using UseCasesLayer.UseCaseInterfaces.SuppliersUseCaseInterfaces;
 using UseCasesLayer.UseCaseInterfaces.SuppliersUseCases;
 var builder = WebApplication.CreateBuilder(args);
@@ -29,9 +29,7 @@ builder.Services.AddControllersWithViews();
 
 //We will come back and add an If statement to check if its in development or QA
 builder.Services.AddTransient<ISupplierRepository, SupplierSQLRepository>();
-
-// code for step 11 - owen
-builder.Services.AddTransient<IRoleRepRepository, RoleRepSQLRepository>();
+builder.Services.AddTransient<IRoleRepository, RoleSQLRepository>();
 
 builder.Services.AddTransient<IRepresentativeRepository, RepresentativeSQLRepository>();
 
@@ -51,14 +49,14 @@ builder.Services.AddTransient<IGetRepresentativesByIdAsyncUseCase, GetRepresenta
 builder.Services.AddTransient<IGetRepresentativesAsyncUseCase, GetRepresentativesAsyncUseCase>();
 builder.Services.AddTransient<IUpdateRepresentativeAsyncUseCase, UpdateRepresentativeAsyncUseCase>();
 
-// RoleRep
-builder.Services.AddTransient<IAddRoleRepAsyncUseCase, AddRoleRepAsyncUseCase>();
-builder.Services.AddTransient<IDeleteRepresentativeAsyncUseCase, DeleteRoleRepAsyncUseCase>();
-builder.Services.AddTransient<IGetRoleRepAsyncUseCase, GetRoleRepAsyncUseCase>();
-builder.Services.AddTransient<IGetRoleRepByIDAsyncUseCase, GetRoleRepByIdAsyncUseCase>();
-builder.Services.AddTransient<IUpdateRoleRepAsyncUseCase, UpdateRoleRepAsyncUseCase>();
-
+//Register Role Services
+builder.Services.AddTransient<IAddRoleAsyncUserCase, AddRoleAsyncUseCase>();
+builder.Services.AddTransient<IDeleteRoleAsyncUserCase, DeleteRoleAsyncUseCase>();
+builder.Services.AddTransient<IGetRoleByIDAsyncUserCase, GetRolByIDUseCase>();
+builder.Services.AddTransient<IGetRoleAsyncUserCase, GetRoleAsyncUseCase>();
+builder.Services.AddTransient<IUpdateRoleAsyncUserCase, UpdateRoleAsyncUseCase>();
 #endregion
+
 
 //Implement Policy Based Authorization (Used for specific roles)
 builder.Services.AddAuthorization(options =>
@@ -102,7 +100,7 @@ app.MapRazorPages();
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
-    NCRInitializer.Initialize(serviceProvider:services, DeleteDatabase:false,
+    NCRInitializer.Initialize(serviceProvider:services, DeleteDatabase:true,
         UseMigrations:true,SeedSampleData:true);
 }
 app.Run();

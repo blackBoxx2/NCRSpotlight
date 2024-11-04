@@ -11,7 +11,7 @@ using UseCasesLayer.DataStorePluginInterfaces;
 namespace Plugins.DataStore.SQLite
 {
     public class SupplierSQLRepository : ISupplierRepository
-    {
+    { 
         private readonly NCRContext _context;
 
         public SupplierSQLRepository(NCRContext context)
@@ -40,7 +40,6 @@ namespace Plugins.DataStore.SQLite
            return supplier;
         }
 
-        //Add a Supplier
         public async Task AddSupplierAsyc(Supplier supplier)
         {
             _context.Suppliers.Add(supplier);
