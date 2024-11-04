@@ -1,0 +1,81 @@
+﻿@model EntitiesLayer.Models.Product
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>Product</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit" method="post" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="ID" />
+            <div class="form-group">
+                <label asp-for="SupplierID" class="control-label"></label>
+                <select asp-for="SupplierID" class="form-control" asp-items="ViewBag.SupplierID"></select>
+                <span asp-validation-for="SupplierID" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ProductNumber" class="control-label"></label>
+                <input asp-for="ProductNumber" class="form-control" />
+                <span asp-validation-for="ProductNumber" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Description" class="control-label"></label>
+                <input asp-for="Description" class="form-control" />
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>        
+            <div class="form-group">
+                <label class="control-label custom-file-label">Upload Additional Pictures: </label>
+                <div>
+                    <input type="file" class="form-control" name="theFiles" multiple="multiple"/>
+                </div>
+                <div class="form-group">
+                    <label class="control-label"> Current Documents:</label>
+                    <div class="ml-md-3">
+                        @{
+                            int fileCount = Model.ProductPictures.Count;
+                            if (fileCount > 0)
+                            {
+                                var firstFile = Model.ProductPictures.FirstOrDefault(); ;
+                                if (fileCount > 1)
+                                {
+                                    <a class="" role="button" data-bs-toggle="collapse"
+                                       href="#collapseDocs@(Model.ID)" aria-expanded="false"
+                                       aria-controls="collapseDocs@(Model.ID)">
+                                        <span class="badge bg-info">@fileCount</span> Current Documents...
+                                    </a>
+                                    <div class="collapse" id="collapseDocs@(Model.ID)">
+                                        @{
+                                            foreach (var d in Model.ProductPictures)
+                                            {
+                                                <p>@d.FileName</p> <br />
+                                            }
+                                        }
+                                    </div>
+                                }
+                                else
+                                {
+                                    <p>@firstFile?.FileName</p>
+                                }
+                            }
+                        }
+                    </div>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
