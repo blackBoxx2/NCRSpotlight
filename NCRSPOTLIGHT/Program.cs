@@ -6,6 +6,8 @@ using UseCasesLayer.DataStorePluginInterfaces;
 using UseCasesLayer.UseCaseInterfaces.RepresentativesUseCase;
 using UseCasesLayer.UseCaseInterfaces.RepresentitiveUseCaseInterfaces;
 using UseCasesLayer.UseCaseInterfaces.RepresentitvesUseCase;
+using UseCasesLayer.UseCaseInterfaces.RoleUseCaseInterfaces;
+using UseCasesLayer.UseCaseInterfaces.RoleUseCases;
 using UseCasesLayer.UseCaseInterfaces.SuppliersUseCaseInterfaces;
 using UseCasesLayer.UseCaseInterfaces.SuppliersUseCases;
 var builder = WebApplication.CreateBuilder(args);
@@ -27,6 +29,7 @@ builder.Services.AddControllersWithViews();
 
 //We will come back and add an If statement to check if its in development or QA
 builder.Services.AddTransient<ISupplierRepository, SupplierSQLRepository>();
+builder.Services.AddTransient<IRoleRepository, RoleSQLRepository>();
 
 builder.Services.AddTransient<IRepresentativeRepository, RepresentativeSQLRepository>();
 
@@ -46,7 +49,14 @@ builder.Services.AddTransient<IGetRepresentativesByIdAsyncUseCase, GetRepresenta
 builder.Services.AddTransient<IGetRepresentativesAsyncUseCase, GetRepresentativesAsyncUseCase>();
 builder.Services.AddTransient<IUpdateRepresentativeAsyncUseCase, UpdateRepresentativeAsyncUseCase>();
 
+//Register Role Services
+builder.Services.AddTransient<IAddRoleAsyncUserCase, AddRoleAsyncUseCase>();
+builder.Services.AddTransient<IDeleteRoleAsyncUserCase, DeleteRoleAsyncUseCase>();
+builder.Services.AddTransient<IGetRoleByIDAsyncUserCase, GetRolByIDUseCase>();
+builder.Services.AddTransient<IGetRoleAsyncUserCase, GetRoleAsyncUseCase>();
+builder.Services.AddTransient<IUpdateRoleAsyncUserCase, UpdateRoleAsyncUseCase>();
 #endregion
+
 
 //Implement Policy Based Authorization (Used for specific roles)
 builder.Services.AddAuthorization(options =>
