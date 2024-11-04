@@ -21,6 +21,21 @@ namespace NCRSPOTLIGHT.Controllers
         private readonly IGetRoleRepAsyncUseCase _getRoleRepAsyncUseCase;
         private readonly IUpdateRoleRepAsyncUseCase _updateRoleRepAsyncUseCase;
 
+    public RoleRepController(IAddRoleRepAsyncUseCase addRoleRepAsyncUseCase, 
+        IDeleteRoleRepAsyncUseCase deleteRoleRepAsyncUseCase,
+        IGetRoleRepByIDAsyncUseCase getRoleRepByIDAsyncUseCase, 
+        IGetRoleRepAsyncUseCase getRoleRepAsyncUseCase, 
+        IUpdateRoleRepAsyncUseCase updateRoleRepAsyncUseCase)
+        {
+            this._addRoleRepAsyncUseCase= addRoleRepAsyncUseCase;
+            this._deleteRoleRepAsyncUseCase= deleteRoleRepAsyncUseCase;
+            this._getRoleRepByIDAsyncUseCase = getRoleRepByIDAsyncUseCase;
+            this._getRoleRepAsyncUseCase = getRoleRepAsyncUseCase;
+            this._updateRoleRepAsyncUseCase = updateRoleRepAsyncUseCase;
+        }
+
+
+
         // GET: RoleRep
         public async Task<IActionResult> Index()
         {

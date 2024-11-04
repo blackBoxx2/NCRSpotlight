@@ -6,6 +6,8 @@ using UseCasesLayer.DataStorePluginInterfaces;
 using UseCasesLayer.UseCaseInterfaces.RepresentativesUseCase;
 using UseCasesLayer.UseCaseInterfaces.RepresentitiveUseCaseInterfaces;
 using UseCasesLayer.UseCaseInterfaces.RepresentitvesUseCase;
+using UseCasesLayer.UseCaseInterfaces.RoleRepUseCaseInterfaces;
+using UseCasesLayer.UseCaseInterfaces.RoleRepUseCases;
 using UseCasesLayer.UseCaseInterfaces.RoleUseCaseInterfaces;
 using UseCasesLayer.UseCaseInterfaces.RoleUseCases;
 using UseCasesLayer.UseCaseInterfaces.SuppliersUseCaseInterfaces;
@@ -33,6 +35,8 @@ builder.Services.AddTransient<IRoleRepository, RoleSQLRepository>();
 
 builder.Services.AddTransient<IRepresentativeRepository, RepresentativeSQLRepository>();
 
+builder.Services.AddTransient<IRoleRepRepository, RoleRepSQLRepository>();
+
 
 #region Register Supplier Services
 //Supplier
@@ -55,6 +59,14 @@ builder.Services.AddTransient<IDeleteRoleAsyncUserCase, DeleteRoleAsyncUseCase>(
 builder.Services.AddTransient<IGetRoleByIDAsyncUserCase, GetRolByIDUseCase>();
 builder.Services.AddTransient<IGetRoleAsyncUserCase, GetRoleAsyncUseCase>();
 builder.Services.AddTransient<IUpdateRoleAsyncUserCase, UpdateRoleAsyncUseCase>();
+
+//RoleRep
+builder.Services.AddTransient<IAddRoleRepAsyncUseCase, AddRoleRepAsyncUseCase>();
+builder.Services.AddTransient<IDeleteRoleRepAsyncUseCase, DeleteRoleRepAsyncUseCase>();
+builder.Services.AddTransient<IGetRoleRepByIDAsyncUseCase, GetRoleRepByIdAsyncUseCase>();
+builder.Services.AddTransient<IGetRoleRepAsyncUseCase, GetRoleRepAsyncUseCase>();
+builder.Services.AddTransient<IUpdateRoleRepAsyncUseCase, UpdateRoleRepAsyncUseCase>();
+
 #endregion
 
 

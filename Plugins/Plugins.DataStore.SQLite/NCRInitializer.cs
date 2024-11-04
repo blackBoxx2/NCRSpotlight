@@ -110,6 +110,30 @@ namespace Plugins.DataStore.SQLite
                            );
                         context.SaveChanges();
                     }
+                    if (!context.RoleReps.Any())
+                    {
+                        context.RoleReps.AddRange(
+                            new RoleRep()
+                            {
+                                RoleRepID = 1,
+                                RoleID = 1,
+                                RepresentativeID = 1
+                            },
+                            new RoleRep()
+                            {
+                                RoleRepID = 2,
+                                RoleID = 1,
+                                RepresentativeID = 2
+                            },
+                            new RoleRep()
+                            {
+                                RoleRepID = 3,
+                                RoleID = 1,
+                                RepresentativeID = 3
+                            }
+                        );
+                        context.SaveChanges();
+                    }
                 }
 
 
