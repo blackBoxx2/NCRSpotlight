@@ -72,6 +72,33 @@ namespace Plugins.DataStore.SQLite
                             );
                         context.SaveChanges();
                     }
+                    //Representatives
+                    if (!context.Representatives.Any())
+                    {
+                        context.Representatives.AddRange(
+                            new Representative()
+                            {
+                                ID = 1,
+                                FirstName = "Josh",
+                                MiddleInitial = "P",
+                                LastName = "Allen"
+                            },
+                            new Representative()
+                            {
+                                ID = 2,
+                                FirstName = "Dalton",
+                                LastName = "Kincaid"
+                            },
+                            new Representative()
+                            {
+                                ID = 3,
+                                FirstName = "Keon",
+                                MiddleInitial = "A",
+                                LastName = "Coleman"
+                            }
+                            );
+                        context.SaveChanges();
+                    }
                 }
                 catch
                 {

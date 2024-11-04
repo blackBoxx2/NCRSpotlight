@@ -3,12 +3,11 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using NCRSPOTLIGHT.Data;
 using Plugins.DataStore.SQLite;
 
 #nullable disable
 
-namespace NCRSPOTLIGHT.Data.NCRMigrations
+namespace Plugins.DataStore.SQLite.NCRMigration
 {
     [DbContext(typeof(NCRContext))]
     partial class NCRContextModelSnapshot : ModelSnapshot

@@ -3,6 +3,9 @@ using Microsoft.EntityFrameworkCore;
 using NCRSPOTLIGHT.Data;
 using Plugins.DataStore.SQLite;
 using UseCasesLayer.DataStorePluginInterfaces;
+using UseCasesLayer.UseCaseInterfaces.RepresentativesUseCase;
+using UseCasesLayer.UseCaseInterfaces.RepresentitiveUseCaseInterfaces;
+using UseCasesLayer.UseCaseInterfaces.RepresentitvesUseCase;
 using UseCasesLayer.UseCaseInterfaces.SuppliersUseCaseInterfaces;
 using UseCasesLayer.UseCaseInterfaces.SuppliersUseCases;
 var builder = WebApplication.CreateBuilder(args);
@@ -25,12 +28,26 @@ builder.Services.AddControllersWithViews();
 //We will come back and add an If statement to check if its in development or QA
 builder.Services.AddTransient<ISupplierRepository, SupplierSQLRepository>();
 
-//Register Supplier Services
+builder.Services.AddTransient<IRepresentativeRepository, RepresentativeSQLRepository>();
+
+
+#region Register Supplier Services
+//Supplier
 builder.Services.AddTransient<IAddSupplierAsyncUseCase, AddSupplierAsyncUseCase>();
 builder.Services.AddTransient<IDeleteSupplierAsyncUseCase, DeleteSupplierAsyncUseCase>();
 builder.Services.AddTransient<IGetSupplierByIDAsyncUseCase, GetSupplierByIdAsyncUseCase>();
 builder.Services.AddTransient<IGetSuppliersAsyncUseCase, GetSuppliersAsyncUseCase>();
 builder.Services.AddTransient<IUpdateSupplierAsyncUseCase, UpdateSupplierAsyncUseCase>();
+
+//Representative
+builder.Services.AddTransient<IAddRepresentativeAsyncUseCase, AddRepresentativeAsyncUseCase>();
+builder.Services.AddTransient<IDeleteRepresentativeAsyncUseCase, DeleteRepresentativeAsyncUseCase>();
+builder.Services.AddTransient<IGetRepresentativesByIdAsyncUseCase, GetRepresentativesByIdAsyncUseCase>();
+builder.Services.AddTransient<IGetRepresentativesAsyncUseCase, GetRepresentativesAsyncUseCase>();
+builder.Services.AddTransient<IUpdateRepresentativeAsyncUseCase, UpdateRepresentativeAsyncUseCase>();
+
+#endregion
+
 //Implement Policy Based Authorization (Used for specific roles)
 builder.Services.AddAuthorization(options =>
 {
