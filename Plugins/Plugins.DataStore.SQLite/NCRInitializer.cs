@@ -72,13 +72,23 @@ namespace Plugins.DataStore.SQLite
                             );
                         context.SaveChanges();
                     }
+                    if (!context.Roles.Any()) 
+                    {
+                        context.Roles.AddRange(
+                            new Role()
+                            {
+                                ID = 1,
+                                RoleName = "Seed Role 1"
+                            }
+                           );
+                        context.SaveChanges();
+                    }
                 }
                 catch
                 {
 
                 }
-
-
+                
                 #endregion
             }
         }

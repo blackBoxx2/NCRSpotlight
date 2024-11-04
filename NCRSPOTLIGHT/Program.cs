@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore;
 using NCRSPOTLIGHT.Data;
 using Plugins.DataStore.SQLite;
 using UseCasesLayer.DataStorePluginInterfaces;
+using UseCasesLayer.UseCaseInterfaces.RoleUseCaseInterfaces;
+using UseCasesLayer.UseCaseInterfaces.RoleUseCases;
 using UseCasesLayer.UseCaseInterfaces.SuppliersUseCaseInterfaces;
 using UseCasesLayer.UseCaseInterfaces.SuppliersUseCases;
 var builder = WebApplication.CreateBuilder(args);
@@ -24,6 +26,7 @@ builder.Services.AddControllersWithViews();
 
 //We will come back and add an If statement to check if its in development or QA
 builder.Services.AddTransient<ISupplierRepository, SupplierSQLRepository>();
+builder.Services.AddTransient<IRoleRepository, RoleSQLRepository>();
 
 //Register Supplier Services
 builder.Services.AddTransient<IAddSupplierAsyncUseCase, AddSupplierAsyncUseCase>();
@@ -31,6 +34,12 @@ builder.Services.AddTransient<IDeleteSupplierAsyncUseCase, DeleteSupplierAsyncUs
 builder.Services.AddTransient<IGetSupplierByIDAsyncUseCase, GetSupplierByIdAsyncUseCase>();
 builder.Services.AddTransient<IGetSuppliersAsyncUseCase, GetSuppliersAsyncUseCase>();
 builder.Services.AddTransient<IUpdateSupplierAsycUseCase, UpdateSupplierAsyncUseCase>();
+//Register Role Services
+builder.Services.AddTransient<IAddRoleAsyncUserCase, AddRoleAsyncUseCase>();
+builder.Services.AddTransient<IDeleteRoleAsyncUserCase, DeleteRoleAsyncUseCase>();
+builder.Services.AddTransient<IGetRoleByIDAsyncUserCase, GetRolByIDUseCase>();
+builder.Services.AddTransient<IGetRoleAsyncUserCase, GetRoleAsyncUseCase>();
+builder.Services.AddTransient<IUpdateRoleAsyncUserCase, UpdateRoleAsyncUseCase>();
 //Implement Policy Based Authorization (Used for specific roles)
 builder.Services.AddAuthorization(options =>
 {
