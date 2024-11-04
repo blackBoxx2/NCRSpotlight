@@ -101,6 +101,6 @@ using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
     NCRInitializer.Initialize(serviceProvider:services, DeleteDatabase:true,
-        UseMigrations:true,SeedSampleData:true);
+        UseMigrations:true,SeedSampleData:false);
 }
 app.Run();
