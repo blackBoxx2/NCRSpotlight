@@ -49,7 +49,7 @@ namespace NCRSPOTLIGHT.Controllers
                 return NotFound();
             }
 
-            var role = await _getRoleAsyncUserCase.Execute();
+            var role = await _getRoleByIDAsyncUserCase.Execute(id);
             if (role == null)
             {
                 return NotFound();
