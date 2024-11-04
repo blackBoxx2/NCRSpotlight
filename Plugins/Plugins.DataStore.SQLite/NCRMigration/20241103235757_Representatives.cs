@@ -3,10 +3,10 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace NCRSPOTLIGHT.Data.NCRMigrations
+namespace Plugins.DataStore.SQLite.NCRMigration
 {
     /// <inheritdoc />
-    public partial class TestingSampleData : Migration
+    public partial class Representatives : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

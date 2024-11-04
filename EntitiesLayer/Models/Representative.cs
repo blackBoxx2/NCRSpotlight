@@ -23,6 +23,5 @@ namespace EntitiesLayer.Models
 
         public ICollection<RoleRep> RoleReps { get; set; } = new HashSet<RoleRep>();
 
-
     }
 }
