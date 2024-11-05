@@ -12,7 +12,8 @@ namespace EntitiesLayer.Models
         [Key]
         public int ID { get; set; }
 
-
+        public int QualityPortionID { get; set; }
+        public QualityPortion? QualityPortion { get; set; }
 
         [Display(Name = "Date Created")]
         [Required]

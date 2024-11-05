@@ -5,6 +5,8 @@ using Plugins.DataStore.SQLite;
 using UseCasesLayer.DataStorePluginInterfaces;
 using UseCasesLayer.UseCaseInterfaces.ProductUseCaseInterfaces;
 using UseCasesLayer.UseCaseInterfaces.ProductUseCases;
+using UseCasesLayer.UseCaseInterfaces.QualityPortionUseCase;
+using UseCasesLayer.UseCaseInterfaces.QualityPortionUseCaseInterfaces;
 using UseCasesLayer.UseCaseInterfaces.RepresentativesUseCase;
 using UseCasesLayer.UseCaseInterfaces.RepresentitiveUseCaseInterfaces;
 using UseCasesLayer.UseCaseInterfaces.RepresentitvesUseCase;
@@ -37,6 +39,7 @@ builder.Services.AddTransient<IRoleRepository, RoleSQLRepository>();
 builder.Services.AddTransient<IRepresentativeRepository, RepresentativeSQLRepository>();
 builder.Services.AddTransient<IRoleRepRepository, RoleRepSQLRepository>();
 builder.Services.AddTransient<IProductRepository, ProductSQLRepository>();
+builder.Services.AddTransient<IQualityPortionSQLRepository, QualityPortionSQLRepository>();
 
 
 #region Register Supplier Services
@@ -74,6 +77,14 @@ builder.Services.AddTransient<IDeleteProductAsyncUseCase, DeleteProductAsyncUseC
 builder.Services.AddTransient<IUpdateProductAsyncUseCase, UpdateProductAsyncUseCase>();
 builder.Services.AddTransient<IGetProductByIDAsyncUseCase, GetProductByIDAsyncUseCase>();
 builder.Services.AddTransient<IGetProductsAsyncUseCase, GetProductsAsyncUseCase>();
+
+//QualityPortion
+builder.Services.AddTransient<IAddQualityPortionAsyncUseCase, AddQualityPortionAsyncUseCase>();
+builder.Services.AddTransient<IDeleteQualityPortionAsyncUseCase, DeleteQualityPortionAsyncUseCase>();
+builder.Services.AddTransient<IUpdateQualityPortionAsyncUseCase, UpdateQualityPortionAsyncUseCase>();
+builder.Services.AddTransient<IGetQualityPortionByIDAsyncUseCase, GetQualityPortionByIDAsyncUseCase>();
+builder.Services.AddTransient<IGetQualityPortionsAsyncUseCase, GetQualityPortionsAsyncUseCase>();
+
 
 #endregion
 

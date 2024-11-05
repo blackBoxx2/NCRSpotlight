@@ -14,38 +14,38 @@ namespace Plugins.DataStore.SQLite
         public static async void Initialize(IServiceProvider serviceProvider,
             bool DeleteDatabase = false, bool UseMigrations = true,
             bool SeedSampleData = true)
-        { 
+        {
             using (var context = new NCRContext(serviceProvider.GetRequiredService<DbContextOptions<NCRContext>>()))
             {
                 #region Prepare the Database
                 try
                 {
-                    if(DeleteDatabase || !context.Database.CanConnect())
+                    if (DeleteDatabase || !context.Database.CanConnect())
                     {
-                            context.Database.EnsureDeleted();
-                            if(UseMigrations)
-                            {
-                                context.Database.Migrate();
-                            }
-                            else
-                            {
-                                context.Database.EnsureCreated();
-                            }
+                        context.Database.EnsureDeleted();
+                        if (UseMigrations)
+                        {
+                            context.Database.Migrate();
+                        }
+                        else
+                        {
+                            context.Database.EnsureCreated();
+                        }
 
-                            //Will return to add Auditing
+                        //Will return to add Auditing
                     }
                     else
-                     {
-                            if(UseMigrations)
-                            {
-                                context.Database.Migrate();
-                            }
+                    {
+                        if (UseMigrations)
+                        {
+                            context.Database.Migrate();
+                        }
 
-                     }
-                    
+                    }
+
                 }
-                catch(Exception ex)
-                { 
+                catch (Exception ex)
+                {
                     Debug.WriteLine(ex.GetBaseException().Message);
                 }
                 #endregion
@@ -53,6 +53,7 @@ namespace Plugins.DataStore.SQLite
                 #region Start seeding data
                 try
                 {
+                    Random random = new Random();
                     List<string> supplierNames = new List<string>
                     {
                         "Apex Supplies Ltd.",
@@ -148,75 +149,146 @@ namespace Plugins.DataStore.SQLite
                             else
                             {
                                 continue;
-                            }                            
+                            }
                         }
                         context.SaveChanges();
                     }
-                    //Representatives
-                    if (!context.Representatives.Any())
-                    {
-                        context.Representatives.AddRange(
-                            new Representative()
+                    //Roles seed data
+                    string[] roles = [
+                        "QA",
+                        "ENG",
+                        "Admin"
+                    ];
+                    int rolesCount = roles.Length;
+                    
+                        foreach (string role in roles)
+                        {
+
+                            Role role1 = new Role()
                             {
-                                ID = 1,
-                                FirstName = "Josh",
-                                MiddleInitial = "P",
-                                LastName = "Allen"
-                            },
-                            new Representative()
+
+                                RoleName = role
+                            };
+
+                            try
                             {
-                                ID = 2,
-                                FirstName = "Dalton",
-                                LastName = "Kincaid"
-                            },
-                            new Representative()
-                            {
-                                ID = 3,
-                                FirstName = "Keon",
-                                MiddleInitial = "A",
-                                LastName = "Coleman"
+                                context.Roles.Add(role1);
+                                context.SaveChanges();
                             }
+                            catch (Exception ex)
+                            {
+                                context.Roles.Remove(role1);
+                            }
+                        }
+                    
+                    //Representatives seed data
+                    string[] firstNames = [
+                        "Alejandro",
+                        "Valeria",
+                        "Santiago",
+                        "Camila",
+                        "Diego",
+                        "Nathalia",
+                        "Luis",
+                        "Lorena",
+                        "Carlos",
+                        "Sofía",
+                        "Andrés",
+                        "Lucía",
+                        "Fernando",
+                        "Isabella",
+                        "Javier",
+                        "Gabriela",
+                        "Ricardo",
+                        "Mariana",
+                        "José",
+                        "Karen"];
+                    string[] middleNames = ["J.", "L.", "M.", "A.", "R.", "N.", "G.", "S.", "H.", "C.", "D.", "E.", "T.", "B.", "F.", "V.", "Q.", "P.", "K.", "Z."];
+
+                    string[] lastNames = [
+                        "Smith",
+                        "Johnson",
+                        "Williams",
+                        "Brown",
+                        "Jones",
+                        "Garcia",
+                        "Miller",
+                        "Davis",
+                        "Rodriguez",
+                        "Martinez",
+                        "Hernandez",
+                        "Lopez",
+                        "Gonzalez",
+                        "Wilson",
+                        "Anderson",
+                        "Taylor",
+                        "Thomas",
+                        "Moore",
+                        "Jackson",
+                        "Martin"];
+          
+                    List<string> SelectedFirst = new List<string>();
+                    List<string> SelectedMiddle = new List<string>();
+                    List<string> SelectedLast = new List<string>();
+                   
+                    foreach (string first in firstNames)
+                    {
+                        SelectedFirst.Add(firstNames[random.Next(firstNames.Length)]);
+                        SelectedLast.Add(lastNames[random.Next(lastNames.Length)]);
+                        SelectedMiddle.Add(middleNames[random.Next(middleNames.Length)]);
+                    }
+                    
+                    for (int i = 0; i < 20; i++)
+                    {
+                        Representative representative = new Representative()
+                        {
+                            FirstName = SelectedFirst[i],
+                            MiddleInitial = SelectedMiddle[i],
+                            LastName = SelectedLast[i],
+                        };
+                        try
+                        {
+                            context.Representatives.Add(representative);
+                            context.SaveChanges();
+
+                        }
+                        catch (Exception ex)
+                        {
+                            context.Representatives.Remove(representative);
+                        }
+                    }
+
+
+                    //RoleReps Seed Data                   
+
+                    foreach(var ID in context.Representatives.Select(r => r.ID) )
+                    {
+
+                        HashSet<int> nums = new HashSet<int>();
+                        for (int i = 0; i <= random.Next(0, 3); i++)
+                        {
+                            nums.Add(random.Next(1, 4));
+                        }
+                        foreach (int i in nums)
+                        {
+
+                            context.RoleReps.AddRange(
+
+                                new RoleRep()
+                                {
+                                    RoleID = i,
+                                    RepresentativeID = ID
+                                }
+
                             );
-                        context.SaveChanges();
-                    }
+                            context.SaveChanges();
 
-                    if (!context.Roles.Any())
-                    {
-                        context.Roles.AddRange(
-                            new Role()
-                            {
-                                ID = 1,
-                                RoleName = "Seed Role 1"
-                            }
-                           );
-                        context.SaveChanges();
-                    }
-                    if (!context.RoleReps.Any())
-                    {
-                        context.RoleReps.AddRange(
-                            new RoleRep()
-                            {
-                                RoleRepID = 1,
-                                RoleID = 1,
-                                RepresentativeID = 1
-                            },
-                            new RoleRep()
-                            {
-                                RoleRepID = 2,
-                                RoleID = 1,
-                                RepresentativeID = 2
-                            },
-                            new RoleRep()
-                            {
-                                RoleRepID = 3,
-                                RoleID = 1,
-                                RepresentativeID = 3
-                            }
-                        );
-                        context.SaveChanges();
-                    }
+                        }
 
-
+                    }
+                        
+                    
+                    //Product Initializer               
 
                     if (!context.Products.Any() || context.Products.Count() < 20)
                     {
@@ -284,7 +356,7 @@ namespace Plugins.DataStore.SQLite
 
                     }
                 }
-
+                
 
                 catch(Exception ex)
                 {
