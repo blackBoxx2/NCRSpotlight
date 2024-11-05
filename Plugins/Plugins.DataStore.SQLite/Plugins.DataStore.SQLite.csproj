@@ -7,6 +7,17 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="images\1200px-Bow_of_faerdhinen_(inactive)_detail.webp" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="images\1200px-Bow_of_faerdhinen_(inactive)_detail.webp">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\EntitiesLayer\EntitiesLayer.csproj" />
     <ProjectReference Include="..\..\UseCasesLayer\UseCasesLayer.csproj" />
   </ItemGroup>

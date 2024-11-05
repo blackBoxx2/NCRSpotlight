@@ -160,6 +160,37 @@ namespace Plugins.DataStore.SQLite
                         );
                         context.SaveChanges();
                     }
+                    
+
+
+                    if (!context.Products.Any())
+                    {
+
+                        context.Products.AddRange(
+                            new Product()
+                            {
+                                SupplierID = 1,
+                                ProductNumber = "25585",
+                                Description = "Bow of faerdhinen",
+                                ProductPictures = new HashSet<ProductPicture>(){}
+                            },
+                            new Product()
+                            {
+                                SupplierID = 2,
+                                ProductNumber = "A45H34a",
+                                Description = "Beer",
+                                ProductPictures = new HashSet<ProductPicture>(){}
+                            },
+                            new Product()
+                            {
+                                SupplierID = 3,
+                                ProductNumber = "B567ah",
+                                Description = "Ladder",
+                                ProductPictures = new HashSet<ProductPicture>() { }
+                            }
+                        );
+                        context.SaveChanges();
+                    }
                 }
 
 
@@ -171,6 +202,11 @@ namespace Plugins.DataStore.SQLite
                 
                 #endregion
             }
+            
         }
+    
+        
     }
+
+
 }
