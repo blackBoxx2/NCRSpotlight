@@ -1,8 +1,8 @@
 ﻿using EntitiesLayer.Models;
 
-namespace Plugins.DataStore.SQLite
+namespace UseCasesLayer.DataStorePluginInterfaces
 {
-    public interface INCRLogSQLRepository
+    public interface INCRLogRepository
     {
         Task AddNCRLogAsync(NCRLog log);
         Task DeleteNCRLogAsync(int? id);
