@@ -2,9 +2,10 @@
 using EntitiesLayer.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-
-using NCRSPOTLIGHT.Plugins.Plugins.SQLite;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Internal;
 using System.Diagnostics;
+using Plugins.DataStore.SQLite.Utilities;
 
 namespace Plugins.DataStore.SQLite
 {
@@ -123,29 +124,6 @@ namespace Plugins.DataStore.SQLite
                         "A0-0019",
                         "A0-0020"
                     };
-                    List<string> productPicsList = new List<string>
-                    {
-                        "https://unsplash.com/photos/person-playing-keyboard-i6VNX0-o7ro",
-                        "https://unsplash.com/photos/a-bunch-of-different-types-of-memory-cards-on-a-table-Mg7pduO-CHY",
-                        "https://unsplash.com/photos/white-and-green-hard-disk-drive-JMwCe3w7qKk",
-                        "https://unsplash.com/photos/person-holding-intel-processor-4Iv0Z1e2nNY",
-                        "https://unsplash.com/photos/a-close-up-of-a-computer-screen-with-the-word-geforcertx-on-it-YQf19uMsRgY",
-                        "https://unsplash.com/photos/a-close-up-of-a-motherboard-and-a-pen-on-a-table-boMKfQkphro",
-                        "https://unsplash.com/photos/gold-iphone-6-on-black-asus-laptop-KcF7fUhKFeg",
-                        "https://unsplash.com/photos/a-black-and-yellow-computer-case-on-a-white-background-STqUfdlro-I",
-                        "https://unsplash.com/photos/black-computer-tower-on-brown-wooden-table-Z-UuXG6iaA8",
-                        "https://unsplash.com/photos/a-close-up-of-a-computer-fan-on-a-table-zt4CPdEiRW4",
-                        "https://unsplash.com/photos/black-and-white-corded-computer-mouse-iO0I6-mhDEY",
-                        "https://unsplash.com/photos/a-pair-of-headphones-sitting-on-top-of-a-blue-surface-qtBRUc0PADc",
-                        "https://unsplash.com/photos/person-holding-silver-and-black-laptop-computer-lYI66oToyCs",
-                        "https://unsplash.com/photos/white-router-on-white-table-hXVVNB6Qctg",
-                        "https://unsplash.com/photos/black-and-gray-internal-hdd-wYD_wfifJVs",
-                        "https://unsplash.com/photos/laptop-computer-beside-monitor-with-keyboard-and-mouse-EJMTKCZ00I0",
-                        "https://unsplash.com/photos/a-white-and-black-printer-sitting-on-top-of-a-counter-CGnoRQZGWmw",
-                        "https://unsplash.com/photos/black-sony-xperia-on-blue-surface-Ux2j3EAD-_g",
-                        "https://unsplash.com/photos/a-keyboard-and-a-mouse-on-a-desk-OkzfCHBVTH8",
-                        "https://unsplash.com/photos/person-holding-white-huawei-smartphone-LeVpS-RYGm8"
-                    }; 
 
                     #endregion
 
@@ -269,22 +247,32 @@ namespace Plugins.DataStore.SQLite
                                     Supplier = context.Suppliers.FirstOrDefault(s => s.ID == supplierID),
                                 };
 
-                                await WebImagestoByArrayStatic.SeedProductPictures(productPicsList[imgCounter % productPicsList.Count], product);
-                                //string localFilePath = Path.Combine(Environment.CurrentDirectory, $"test_image_{imgCounter}.jpg");
-                                //await File.WriteAllBytesAsync(localFilePath, imageBytes);
-                                //string fileName = $"image_{product.ID}_{Guid.NewGuid()}.png";
-                                //var productPic = new ProductPicture
-                                //{
-                                //    ProductID = product.ID,
-                                //    FileName = fileName,
-                                //    MimeType = "image/png",
-                                //    FileContent = new FileContent
-                                //    {
-                                //        Content = imageBytes
-                                //    }
-                                //};
+                                List<string> imgPaths = new List<string>()
+                                {
+                                    @"Assets\ProductImages\keyboard.jpg",
+                                    @"Assets\ProductImages\ram.jpg",
+                                    @"Assets\ProductImages\ryzen.jpg",
+                                    @"Assets\ProductImages\intel.jpg",
+                                    @"Assets\ProductImages\nvidia.jpg",
+                                    @"Assets\ProductImages\ssd.jpg",
+                                    @"Assets\ProductImages\rog-motherboard.jpg",
+                                    @"Assets\ProductImages\towercase.jpg",
+                                    @"Assets\ProductImages\powersupply.jpg",
+                                    @"Assets\ProductImages\pccooler.jpg",
+                                    @"Assets\ProductImages\mouse.jpg",
+                                    @"Assets\ProductImages\headset.jpg",
+                                    @"Assets\ProductImages\kingstonssd.jpg",
+                                    @"Assets\ProductImages\router.jpg",
+                                    @"Assets\ProductImages\hdd.jpg",
+                                    @"Assets\ProductImages\monitor.jpg",
+                                    @"Assets\ProductImages\printer.jpg",
+                                    @"Assets\ProductImages\NAS.jpg",
+                                    @"Assets\ProductImages\steamdeck.jpg",
+                                    @"Assets\ProductImages\portablecharger.jpg"
+                                };
 
-                                //product.ProductPictures.Add(productPic);
+                                await WebImagestoByArrayStatic.SeedProductPictures(imgPaths[imgCounter], product);
+
                                 context.Products.Add(product);
 
                                 imgCounter++;
@@ -298,9 +286,9 @@ namespace Plugins.DataStore.SQLite
                 }
 
 
-                catch
+                catch(Exception ex)
                 {
-
+                    Debug.WriteLine($"Error here: {ex.Message}");
                 }
 
                 

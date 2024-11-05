@@ -5,83 +5,63 @@ using Microsoft.EntityFrameworkCore;
 using Plugins.DataStore.SQLite;
 using System.Net.Http;
 using System.Threading.Tasks;
-namespace NCRSPOTLIGHT.Plugins.Plugins.SQLite
+namespace Plugins.DataStore.SQLite.Utilities
 {
     public static class WebImagestoByArrayStatic
     {
 
 
-        public static async Task<IFormFile> DownloadImageAsync(string imageUrl)
+        public static async Task<byte[]> DownloadImageAsync(string filePath)
         {
-            //using (HttpClient httpClient = new HttpClient())
-            //{
-            //    httpClient.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.121 Safari/537.36");
-            //    IFormFile imageBytes = await httpClient.GetByteArrayAsync(imageUrl);
-            //    return imageBytes;
-            //}
-            using (HttpClient httpClient = new HttpClient())
+
+
+            if (!File.Exists(filePath))
             {
-                httpClient.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.121 Safari/537.36"); //stop blocking my request! grrrr
+                Console.WriteLine($"File not found: {filePath}");
+                return null;
+            }
 
-                try
+            try
+            {
+                // Read the file into a byte array
+                byte[] imageBytes = await File.ReadAllBytesAsync(filePath);
+                return imageBytes;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error reading file: {ex.Message}");
+                return null;
+            }
+        }
+  
+        public static async Task SeedProductPictures(string filePath, Product product)
+        {
+
+
+            // Download the image as a byte array
+            byte[] imageBytes = await DownloadImageAsync(filePath);
+
+            if (imageBytes != null && imageBytes.Length > 0)
+            {
+                // Create a new ProductPicture instance and set its properties
+                ProductPicture productPicture = new ProductPicture
                 {
-                    byte[] imageBytes = await httpClient.GetByteArrayAsync(imageUrl);
-
-                    var stream = new MemoryStream(imageBytes);
-
-                    var formFile = new FormFile(stream, 0, stream.Length, "file", Path.GetFileName(imageUrl))
+                    MimeType = "image/jpeg", // or detect dynamically if required
+                    FileName = Path.GetFileName(filePath),
+                    FileContent = new FileContent
                     {
-                        Headers = new HeaderDictionary(), 
-                        ContentType = "image/jpeg"
-                    };
+                        Content = imageBytes // Store the byte array directly
+                    }
+                };
 
-                    return formFile;
-                }
-                catch (HttpRequestException ex)
-                {
-                    Console.WriteLine($"Error downloading image: {ex.Message}");
-                    return null;
-                }
+                // Add the ProductPicture to the product
+                product.ProductPictures.Add(productPicture);
             }
         }
 
-        public static async Task SeedProductPictures(string imgUrl, Product product)
-        {
-
-            string imageUrl = imgUrl;
-            IFormFile img = await DownloadImageAsync(imageUrl);
-
-                    string mimeType = img.ContentType;
-                    string fileName = Path.GetFileName(img.FileName);
-                    long fileLength = img.Length;
-                    if (!(fileName == "" || fileLength == 0))
-                    {
-                        ProductPicture p = new ProductPicture();
-                        using (var memoryStream = new MemoryStream())
-                        {
-                            await img.CopyToAsync(memoryStream);
-
-                            p.FileContent.Content = memoryStream.ToArray();
-
-                        }
-                        p.MimeType = mimeType;
-                        p.FileName = fileName;
-                        product.ProductPictures.Add(p);
-                    };
-        }
 
 
 
 
-                //var productPicture = new ProductPicture
-                //{
-                //ProductID = 1, // Example product ID
-                //FileName = "image.jpg",
-                //ContentType = "image/jpeg",
-                //FileContent = imageBytes
-                //};
-                //return imageBytes;
-
-//    }
-}
+    }
 }
