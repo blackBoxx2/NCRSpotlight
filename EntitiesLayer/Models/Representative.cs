@@ -13,6 +13,16 @@ namespace EntitiesLayer.Models
         [Key]
         public int ID { get; set; }
 
+        #region summary
+
+        public string FullName
+        {
+            get { return $"{FirstName} {MiddleInitial} {LastName}"; }
+        }
+
+
+        #endregion
+
         [Required(ErrorMessage = "A first name is required")]
         public string FirstName { get; set; }
 

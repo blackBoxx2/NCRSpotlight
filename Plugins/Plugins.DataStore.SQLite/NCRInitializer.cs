@@ -258,7 +258,12 @@ namespace Plugins.DataStore.SQLite
                             HashSet<int> SelectedRepresentative = new HashSet<int>();
                             while(SelectedRepresentative.Count() < 1) 
                             {
+<<<<<<< HEAD
                                 SelectedRepresentative.Add(random.Next(RepresentativeIDCount));
+=======
+                                ID = 1,
+                                RoleName = "QA"
+>>>>>>> 8c1359328423186a3a2e58edb737a779226f6490
                             }
                             foreach(int representativeID in SelectedRepresentative) 
                             {
@@ -368,6 +373,37 @@ namespace Plugins.DataStore.SQLite
                             
                         }
                     }
+                    
+
+
+                    if (!context.Products.Any())
+                    {
+
+                        context.Products.AddRange(
+                            new Product()
+                            {
+                                SupplierID = 1,
+                                ProductNumber = "25585",
+                                Description = "Bow of faerdhinen",
+                                ProductPictures = new HashSet<ProductPicture>(){}
+                            },
+                            new Product()
+                            {
+                                SupplierID = 2,
+                                ProductNumber = "A45H34a",
+                                Description = "Beer",
+                                ProductPictures = new HashSet<ProductPicture>(){}
+                            },
+                            new Product()
+                            {
+                                SupplierID = 3,
+                                ProductNumber = "B567ah",
+                                Description = "Ladder",
+                                ProductPictures = new HashSet<ProductPicture>() { }
+                            }
+                        );
+                        context.SaveChanges();
+                    }
                 }
                 
 
@@ -379,6 +415,11 @@ namespace Plugins.DataStore.SQLite
                 
                 #endregion
             }
+            
         }
+    
+        
     }
+
+
 }

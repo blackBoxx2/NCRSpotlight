@@ -198,7 +198,7 @@ namespace NCRSPOTLIGHT.Controllers
 
         private async Task AddDocumentsAsync(Product product, List<IFormFile> theFiles)
         {
-
+           
             foreach (var f in theFiles)
             {
                 if (f != null)
