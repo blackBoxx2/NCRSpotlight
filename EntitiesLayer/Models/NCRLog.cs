@@ -17,7 +17,7 @@ namespace EntitiesLayer.Models
 
         [Display(Name = "Date Created")]
         [Required]
-        public DateTime DateCreated { get; set; }
+        public DateTime DateCreated { get; set; } = DateTime.Now;
 
         public NCRStatus Status { get; set; }
 
