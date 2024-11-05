@@ -21,6 +21,9 @@ namespace Plugins.DataStore.SQLite
         public DbSet<QualityPortion> QualityPortions { get; set; }
         public DbSet<NCRLog> NCRLog { get; set; }
         public DbSet<NCRLogHistory> NCRLogHistory { get; set; }
+        public DbSet<ProductPicture> ProductPictures{ get; set; }
+        public DbSet<QualityPicture> QualityPictures { get; set; }    
+
         #endregion
 
         #region Create Relationships
@@ -44,6 +47,11 @@ namespace Plugins.DataStore.SQLite
                 .HasMany<QualityPortion>(p => p.QualityPortions)
                 .WithOne(qp => qp.Product)
                 .HasForeignKey(qp => qp.ProductID);
+
+            modelBuilder.Entity<Product>()
+                .HasMany<ProductPicture>(p => p.ProductPictures)
+                .WithOne(p => p.product)
+                .HasForeignKey(p => p.ProductID);
 
             modelBuilder.Entity<Product>()
                 .HasIndex(p => new { p.SupplierID, p.Description })
@@ -92,6 +100,7 @@ namespace Plugins.DataStore.SQLite
                 .HasOne<RoleRep>(n => n.RoleRep)
                 .WithMany(r => r.QualityPortions)
                 .HasForeignKey(n => n.RoleRepID);
+
         }
         #endregion
     }

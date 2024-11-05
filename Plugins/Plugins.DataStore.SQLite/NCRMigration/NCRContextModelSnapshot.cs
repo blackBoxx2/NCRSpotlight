@@ -17,6 +17,19 @@ namespace Plugins.DataStore.SQLite.NCRMigration
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.10");
 
+            modelBuilder.Entity("EntitiesLayer.Models.FileContent", b =>
+                {
+                    b.Property<int>("FileContentID")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<byte[]>("Content")
+                        .HasColumnType("BLOB");
+
+                    b.HasKey("FileContentID");
+
+                    b.ToTable("FileContent");
+                });
+
             modelBuilder.Entity("EntitiesLayer.Models.NCRLog", b =>
                 {
                     b.Property<int>("ID")
@@ -71,10 +84,6 @@ namespace Plugins.DataStore.SQLite.NCRMigration
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<byte[]>("Picture")
-                        .IsRequired()
-                        .HasColumnType("BLOB");
-
                     b.Property<string>("ProductNumber")
                         .IsRequired()
                         .HasColumnType("TEXT");
@@ -102,10 +111,6 @@ namespace Plugins.DataStore.SQLite.NCRMigration
                     b.Property<string>("DefectDescription")
                         .IsRequired()
                         .HasColumnType("TEXT");
-
-                    b.Property<byte[]>("DefectPicture")
-                        .IsRequired()
-                        .HasColumnType("BLOB");
 
                     b.Property<string>("OrderNumber")
                         .IsRequired()
@@ -215,6 +220,69 @@ namespace Plugins.DataStore.SQLite.NCRMigration
                     b.ToTable("Suppliers");
                 });
 
+            modelBuilder.Entity("EntitiesLayer.Models.UploadedFile", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Discriminator")
+                        .IsRequired()
+                        .HasMaxLength(21)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("FileName")
+                        .HasMaxLength(255)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("MimeType")
+                        .HasMaxLength(255)
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("UploadedFile");
+
+                    b.HasDiscriminator().HasValue("UploadedFile");
+
+                    b.UseTphMappingStrategy();
+                });
+
+            modelBuilder.Entity("EntitiesLayer.Models.ProductPicture", b =>
+                {
+                    b.HasBaseType("EntitiesLayer.Models.UploadedFile");
+
+                    b.Property<int>("ProductID")
+                        .HasColumnType("INTEGER");
+
+                    b.HasIndex("ProductID");
+
+                    b.HasDiscriminator().HasValue("ProductPicture");
+                });
+
+            modelBuilder.Entity("EntitiesLayer.Models.QualityPicture", b =>
+                {
+                    b.HasBaseType("EntitiesLayer.Models.UploadedFile");
+
+                    b.Property<int>("QualityPortionID")
+                        .HasColumnType("INTEGER");
+
+                    b.HasIndex("QualityPortionID");
+
+                    b.HasDiscriminator().HasValue("QualityPicture");
+                });
+
+            modelBuilder.Entity("EntitiesLayer.Models.FileContent", b =>
+                {
+                    b.HasOne("EntitiesLayer.Models.UploadedFile", "UploadedFile")
+                        .WithOne("FileContent")
+                        .HasForeignKey("EntitiesLayer.Models.FileContent", "FileContentID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("UploadedFile");
+                });
+
             modelBuilder.Entity("EntitiesLayer.Models.NCRLogHistory", b =>
                 {
                     b.HasOne("EntitiesLayer.Models.NCRLog", "NCRLog")
@@ -275,6 +343,28 @@ namespace Plugins.DataStore.SQLite.NCRMigration
                     b.Navigation("Role");
                 });
 
+            modelBuilder.Entity("EntitiesLayer.Models.ProductPicture", b =>
+                {
+                    b.HasOne("EntitiesLayer.Models.Product", "product")
+                        .WithMany("ProductPictures")
+                        .HasForeignKey("ProductID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("product");
+                });
+
+            modelBuilder.Entity("EntitiesLayer.Models.QualityPicture", b =>
+                {
+                    b.HasOne("EntitiesLayer.Models.QualityPortion", "QualityPortion")
+                        .WithMany("qualityPictures")
+                        .HasForeignKey("QualityPortionID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("QualityPortion");
+                });
+
             modelBuilder.Entity("EntitiesLayer.Models.NCRLog", b =>
                 {
                     b.Navigation("History");
@@ -282,7 +372,14 @@ namespace Plugins.DataStore.SQLite.NCRMigration
 
             modelBuilder.Entity("EntitiesLayer.Models.Product", b =>
                 {
+                    b.Navigation("ProductPictures");
+
                     b.Navigation("QualityPortions");
+                });
+
+            modelBuilder.Entity("EntitiesLayer.Models.QualityPortion", b =>
+                {
+                    b.Navigation("qualityPictures");
                 });
 
             modelBuilder.Entity("EntitiesLayer.Models.Representative", b =>
@@ -303,6 +400,11 @@ namespace Plugins.DataStore.SQLite.NCRMigration
             modelBuilder.Entity("EntitiesLayer.Models.Supplier", b =>
                 {
                     b.Navigation("Products");
+                });
+
+            modelBuilder.Entity("EntitiesLayer.Models.UploadedFile", b =>
+                {
+                    b.Navigation("FileContent");
                 });
 #pragma warning restore 612, 618
         }

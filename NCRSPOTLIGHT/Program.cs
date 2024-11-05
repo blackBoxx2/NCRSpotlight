@@ -3,9 +3,15 @@ using Microsoft.EntityFrameworkCore;
 using NCRSPOTLIGHT.Data;
 using Plugins.DataStore.SQLite;
 using UseCasesLayer.DataStorePluginInterfaces;
+using UseCasesLayer.UseCaseInterfaces.ProductUseCaseInterfaces;
+using UseCasesLayer.UseCaseInterfaces.ProductUseCases;
+using UseCasesLayer.UseCaseInterfaces.QualityPortionUseCase;
+using UseCasesLayer.UseCaseInterfaces.QualityPortionUseCaseInterfaces;
 using UseCasesLayer.UseCaseInterfaces.RepresentativesUseCase;
 using UseCasesLayer.UseCaseInterfaces.RepresentitiveUseCaseInterfaces;
 using UseCasesLayer.UseCaseInterfaces.RepresentitvesUseCase;
+using UseCasesLayer.UseCaseInterfaces.RoleRepUseCaseInterfaces;
+using UseCasesLayer.UseCaseInterfaces.RoleRepUseCases;
 using UseCasesLayer.UseCaseInterfaces.RoleUseCaseInterfaces;
 using UseCasesLayer.UseCaseInterfaces.RoleUseCases;
 using UseCasesLayer.UseCaseInterfaces.SuppliersUseCaseInterfaces;
@@ -30,8 +36,10 @@ builder.Services.AddControllersWithViews();
 //We will come back and add an If statement to check if its in development or QA
 builder.Services.AddTransient<ISupplierRepository, SupplierSQLRepository>();
 builder.Services.AddTransient<IRoleRepository, RoleSQLRepository>();
-
 builder.Services.AddTransient<IRepresentativeRepository, RepresentativeSQLRepository>();
+builder.Services.AddTransient<IRoleRepRepository, RoleRepSQLRepository>();
+builder.Services.AddTransient<IProductRepository, ProductSQLRepository>();
+builder.Services.AddTransient<IQualityPortionSQLRepository, QualityPortionSQLRepository>();
 
 
 #region Register Supplier Services
@@ -55,6 +63,29 @@ builder.Services.AddTransient<IDeleteRoleAsyncUserCase, DeleteRoleAsyncUseCase>(
 builder.Services.AddTransient<IGetRoleByIDAsyncUserCase, GetRolByIDUseCase>();
 builder.Services.AddTransient<IGetRoleAsyncUserCase, GetRoleAsyncUseCase>();
 builder.Services.AddTransient<IUpdateRoleAsyncUserCase, UpdateRoleAsyncUseCase>();
+
+//RoleRep
+builder.Services.AddTransient<IAddRoleRepAsyncUseCase, AddRoleRepAsyncUseCase>();
+builder.Services.AddTransient<IDeleteRoleRepAsyncUseCase, DeleteRoleRepAsyncUseCase>();
+builder.Services.AddTransient<IGetRoleRepByIDAsyncUseCase, GetRoleRepByIdAsyncUseCase>();
+builder.Services.AddTransient<IGetRoleRepAsyncUseCase, GetRoleRepAsyncUseCase>();
+builder.Services.AddTransient<IUpdateRoleRepAsyncUseCase, UpdateRoleRepAsyncUseCase>();
+
+//product
+builder.Services.AddTransient<IAddProductAsyncUseCase, AddProductAsyncUseCase>();
+builder.Services.AddTransient<IDeleteProductAsyncUseCase, DeleteProductAsyncUseCase>();
+builder.Services.AddTransient<IUpdateProductAsyncUseCase, UpdateProductAsyncUseCase>();
+builder.Services.AddTransient<IGetProductByIDAsyncUseCase, GetProductByIDAsyncUseCase>();
+builder.Services.AddTransient<IGetProductsAsyncUseCase, GetProductsAsyncUseCase>();
+
+//QualityPortion
+builder.Services.AddTransient<IAddQualityPortionAsyncUseCase, AddQualityPortionAsyncUseCase>();
+builder.Services.AddTransient<IDeleteQualityPortionAsyncUseCase, DeleteQualityPortionAsyncUseCase>();
+builder.Services.AddTransient<IUpdateQualityPortionAsyncUseCase, UpdateQualityPortionAsyncUseCase>();
+builder.Services.AddTransient<IGetQualityPortionByIDAsyncUseCase, GetQualityPortionByIDAsyncUseCase>();
+builder.Services.AddTransient<IGetQualityPortionsAsyncUseCase, GetQualityPortionsAsyncUseCase>();
+
+
 #endregion
 
 

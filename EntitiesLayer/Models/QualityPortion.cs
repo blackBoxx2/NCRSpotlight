@@ -31,11 +31,7 @@ namespace EntitiesLayer.Models
         public string OrderNumber { get; set; }
 
         [Required]
-        [Display(Name = "Defect Picture")]
-        public byte[] DefectPicture { get; set; }
-
-        [Required]
-        [Display(Name = "Defect Description``")]
+        [Display(Name = "Defect Description")]
         public string DefectDescription { get; set; }
 
         [Required]
@@ -43,7 +39,6 @@ namespace EntitiesLayer.Models
         [Display(Name = "Quality Assurance Rep")]
         public RoleRep? RoleRep { get; set; }
 
-
-
+        public ICollection<QualityPicture> qualityPictures { get; set; } = new HashSet<QualityPicture>();  
     }
 }
