@@ -46,6 +46,11 @@ namespace Plugins.DataStore.SQLite
                 .HasForeignKey(qp => qp.ProductID);
 
             modelBuilder.Entity<Product>()
+                .HasMany<ProductPicture>(p => p.ProductPictures)
+                .WithOne(p => p.product)
+                .HasForeignKey(p => p.ProductID);
+
+            modelBuilder.Entity<Product>()
                 .HasIndex(p => new { p.SupplierID, p.Description })
                 .IsUnique();
 
@@ -92,6 +97,7 @@ namespace Plugins.DataStore.SQLite
                 .HasOne<RoleRep>(n => n.RoleRep)
                 .WithMany(r => r.QualityPortions)
                 .HasForeignKey(n => n.RoleRepID);
+
         }
         #endregion
     }
