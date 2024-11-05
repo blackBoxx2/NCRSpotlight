@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore;
 using NCRSPOTLIGHT.Data;
 using Plugins.DataStore.SQLite;
 using UseCasesLayer.DataStorePluginInterfaces;
+using UseCasesLayer.UseCaseInterfaces.NCRLogUseCase;
+using UseCasesLayer.UseCaseInterfaces.NCRLogUseCaseInterfaces;
 using UseCasesLayer.UseCaseInterfaces.ProductUseCaseInterfaces;
 using UseCasesLayer.UseCaseInterfaces.ProductUseCases;
 using UseCasesLayer.UseCaseInterfaces.QualityPortionUseCase;
@@ -40,6 +42,7 @@ builder.Services.AddTransient<IRepresentativeRepository, RepresentativeSQLReposi
 builder.Services.AddTransient<IRoleRepRepository, RoleRepSQLRepository>();
 builder.Services.AddTransient<IProductRepository, ProductSQLRepository>();
 builder.Services.AddTransient<IQualityPortionSQLRepository, QualityPortionSQLRepository>();
+builder.Services.AddTransient<INCRLogRepository, NCRLogSQLRepository>();
 
 
 #region Register Supplier Services
@@ -85,6 +88,12 @@ builder.Services.AddTransient<IUpdateQualityPortionAsyncUseCase, UpdateQualityPo
 builder.Services.AddTransient<IGetQualityPortionByIDAsyncUseCase, GetQualityPortionByIDAsyncUseCase>();
 builder.Services.AddTransient<IGetQualityPortionsAsyncUseCase, GetQualityPortionsAsyncUseCase>();
 
+//NCRLog
+builder.Services.AddTransient<IAddNCRLogAsyncUseCase, AddNCRLogAsyncUseCase>();
+builder.Services.AddTransient<IDeleteNCRLogAsyncUseCase, DeleteNCRLogAsyncUseCase>();
+builder.Services.AddTransient<IUpdateNCRLogAsyncUseCase, UpdateNCRLogAsyncUseCase>();
+builder.Services.AddTransient<IGetNCRLogByIDAsyncUseCase, GetNCRLogByIDAsyncUseCase>();
+builder.Services.AddTransient<IGetNCRLogsAsyncUseCase, GetNCRLogsAsyncUseCase>();
 
 #endregion
 

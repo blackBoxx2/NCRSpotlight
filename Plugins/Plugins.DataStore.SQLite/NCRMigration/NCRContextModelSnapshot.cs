@@ -39,10 +39,15 @@ namespace Plugins.DataStore.SQLite.NCRMigration
                     b.Property<DateTime>("DateCreated")
                         .HasColumnType("TEXT");
 
+                    b.Property<int>("QualityPortionID")
+                        .HasColumnType("INTEGER");
+
                     b.Property<int>("Status")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("ID");
+
+                    b.HasIndex("QualityPortionID");
 
                     b.ToTable("NCRLog");
                 });
@@ -281,6 +286,17 @@ namespace Plugins.DataStore.SQLite.NCRMigration
                         .IsRequired();
 
                     b.Navigation("UploadedFile");
+                });
+
+            modelBuilder.Entity("EntitiesLayer.Models.NCRLog", b =>
+                {
+                    b.HasOne("EntitiesLayer.Models.QualityPortion", "QualityPortion")
+                        .WithMany()
+                        .HasForeignKey("QualityPortionID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("QualityPortion");
                 });
 
             modelBuilder.Entity("EntitiesLayer.Models.NCRLogHistory", b =>

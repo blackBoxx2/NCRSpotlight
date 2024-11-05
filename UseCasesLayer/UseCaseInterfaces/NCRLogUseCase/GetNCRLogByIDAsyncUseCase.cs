@@ -11,15 +11,16 @@ namespace UseCasesLayer.UseCaseInterfaces.NCRLogUseCase
 {
     public class GetNCRLogByIDAsyncUseCase : IGetNCRLogByIDAsyncUseCase
     {
-        private readonly INCRLogRepository _repository;
-        public GetNCRLogByIDAsyncUseCase(INCRLogRepository repository)
+        private readonly INCRLogRepository _logRepository;
+
+        public GetNCRLogByIDAsyncUseCase(INCRLogRepository nCRLogRepository)
         {
-            _repository = repository;
+            _logRepository = nCRLogRepository;
         }
 
         public async Task<NCRLog> Execute(int? id)
         {
-            return await _repository.GetNCRLogByIDAsync(id);
+            return await _logRepository.GetNCRLogByIDAsync(id);
         }
     }
 }

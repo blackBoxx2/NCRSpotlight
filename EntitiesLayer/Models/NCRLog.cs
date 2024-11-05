@@ -16,7 +16,6 @@ namespace EntitiesLayer.Models
         public QualityPortion? QualityPortion { get; set; }
 
         [Display(Name = "Date Created")]
-        [Required]
         public DateTime DateCreated { get; set; } = DateTime.Now;
 
         public NCRStatus Status { get; set; }

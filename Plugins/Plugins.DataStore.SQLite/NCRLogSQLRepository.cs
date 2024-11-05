@@ -9,7 +9,7 @@ using UseCasesLayer.DataStorePluginInterfaces;
 
 namespace Plugins.DataStore.SQLite
 {
-    public class NCRLogSQLRepository : INCRLogSQLRepository
+    public class NCRLogSQLRepository : INCRLogRepository
     {
 
         private readonly NCRContext _context;

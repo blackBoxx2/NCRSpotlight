@@ -9,6 +9,6 @@ namespace UseCasesLayer.UseCaseInterfaces.NCRLogUseCaseInterfaces
 {
     public interface IGetNCRLogsAsyncUseCase
     {
-        Task<IEnumerable<NCRLog>> GetNCRLogsAsync();
+        Task<IEnumerable<NCRLog>> Execute();
     }
 }

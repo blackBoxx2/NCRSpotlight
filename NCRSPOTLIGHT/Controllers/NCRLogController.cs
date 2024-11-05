@@ -7,23 +7,43 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using EntitiesLayer.Models;
 using Plugins.DataStore.SQLite;
+using UseCasesLayer.UseCaseInterfaces.NCRLogUseCaseInterfaces;
+using UseCasesLayer.UseCaseInterfaces.QualityPortionUseCaseInterfaces;
+using UseCasesLayer.UseCaseInterfaces.QualityPortionUseCase;
 
 namespace NCRSPOTLIGHT.Controllers
 {
     public class NCRLogController : Controller
     {
-        private readonly NCRContext _context;
 
-        public NCRLogController(NCRContext context)
+        private readonly IAddNCRLogAsyncUseCase _addNCRLogAsyncUseCase;
+        private readonly IDeleteNCRLogAsyncUseCase _delNCRLogAsyncUseCase;
+        private readonly IGetNCRLogByIDAsyncUseCase _getNCRLogByIDAsyncUseCase;
+        private readonly IGetNCRLogsAsyncUseCase _getNCRLogsAsyncUseCase;
+        private readonly IUpdateNCRLogAsyncUseCase _updateNCRLogAsyncUseCase;
+        private readonly IGetQualityPortionsAsyncUseCase _getQualityPortionsAsyncUseCase;
+
+        public NCRLogController(IAddNCRLogAsyncUseCase addNCRLogAsyncUseCase,
+                                IDeleteNCRLogAsyncUseCase deleteNCRLogAsyncUseCase,
+                                IGetNCRLogByIDAsyncUseCase getNCRLogByIDAsyncUseCase,
+                                IGetNCRLogsAsyncUseCase getNCRLogsAsyncUseCase,
+                                IUpdateNCRLogAsyncUseCase updateNCRLogAsyncUseCase,
+                                IGetQualityPortionsAsyncUseCase getQualityPortionsAsyncUseCase
+                                )
         {
-            _context = context;
+            _addNCRLogAsyncUseCase = addNCRLogAsyncUseCase;
+            _delNCRLogAsyncUseCase = deleteNCRLogAsyncUseCase;
+            _getNCRLogByIDAsyncUseCase = getNCRLogByIDAsyncUseCase;
+            _getNCRLogsAsyncUseCase = getNCRLogsAsyncUseCase;
+            _updateNCRLogAsyncUseCase = updateNCRLogAsyncUseCase;
+            _getQualityPortionsAsyncUseCase = getQualityPortionsAsyncUseCase;
         }
 
         // GET: NCRLog
         public async Task<IActionResult> Index()
         {
-            var nCRContext = _context.NCRLog.Include(n => n.QualityPortion);
-            return View(await nCRContext.ToListAsync());
+            var nCRContext = await _getNCRLogsAsyncUseCase.Execute();
+            return View(nCRContext);
         }
 
         // GET: NCRLog/Details/5
@@ -34,9 +54,7 @@ namespace NCRSPOTLIGHT.Controllers
                 return NotFound();
             }
 
-            var nCRLog = await _context.NCRLog
-                .Include(n => n.QualityPortion)
-                .FirstOrDefaultAsync(m => m.ID == id);
+            var nCRLog = await _getNCRLogByIDAsyncUseCase.Execute(id);
             if (nCRLog == null)
             {
                 return NotFound();
@@ -46,9 +64,9 @@ namespace NCRSPOTLIGHT.Controllers
         }
 
         // GET: NCRLog/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            ViewData["QualityPortionID"] = new SelectList(_context.QualityPortions, "ID", "DefectDescription");
+            ViewData["QualityPortionID"] = new SelectList(await _getQualityPortionsAsyncUseCase.Execute(), "ID", "DefectDescription");
             return View();
         }
 
@@ -61,11 +79,11 @@ namespace NCRSPOTLIGHT.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Add(nCRLog);
-                await _context.SaveChangesAsync();
+                await _addNCRLogAsyncUseCase.Execute(nCRLog);
+                
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["QualityPortionID"] = new SelectList(_context.QualityPortions, "ID", "DefectDescription", nCRLog.QualityPortionID);
+            ViewData["QualityPortionID"] = new SelectList(await _getQualityPortionsAsyncUseCase.Execute(), "ID", "DefectDescription", nCRLog.QualityPortionID);
             return View(nCRLog);
         }
 
@@ -77,12 +95,12 @@ namespace NCRSPOTLIGHT.Controllers
                 return NotFound();
             }
 
-            var nCRLog = await _context.NCRLog.FindAsync(id);
+            var nCRLog = await _getNCRLogByIDAsyncUseCase.Execute(id);
             if (nCRLog == null)
             {
                 return NotFound();
             }
-            ViewData["QualityPortionID"] = new SelectList(_context.QualityPortions, "ID", "DefectDescription", nCRLog.QualityPortionID);
+            ViewData["QualityPortionID"] = new SelectList(await _getQualityPortionsAsyncUseCase.Execute(), "ID", "DefectDescription", nCRLog.QualityPortionID);
             return View(nCRLog);
         }
 
@@ -102,8 +120,7 @@ namespace NCRSPOTLIGHT.Controllers
             {
                 try
                 {
-                    _context.Update(nCRLog);
-                    await _context.SaveChangesAsync();
+                    await _updateNCRLogAsyncUseCase.Execute(id, nCRLog);                    
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -118,7 +135,7 @@ namespace NCRSPOTLIGHT.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["QualityPortionID"] = new SelectList(_context.QualityPortions, "ID", "DefectDescription", nCRLog.QualityPortionID);
+            ViewData["QualityPortionID"] = new SelectList(await _getQualityPortionsAsyncUseCase.Execute(), "ID", "DefectDescription", nCRLog.QualityPortionID);
             return View(nCRLog);
         }
 
@@ -130,9 +147,7 @@ namespace NCRSPOTLIGHT.Controllers
                 return NotFound();
             }
 
-            var nCRLog = await _context.NCRLog
-                .Include(n => n.QualityPortion)
-                .FirstOrDefaultAsync(m => m.ID == id);
+            var nCRLog = await _getNCRLogByIDAsyncUseCase.Execute(id);
             if (nCRLog == null)
             {
                 return NotFound();
@@ -146,19 +161,19 @@ namespace NCRSPOTLIGHT.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var nCRLog = await _context.NCRLog.FindAsync(id);
+            var nCRLog = await _getNCRLogByIDAsyncUseCase.Execute(id);
             if (nCRLog != null)
             {
-                _context.NCRLog.Remove(nCRLog);
+                await _delNCRLogAsyncUseCase.Execute(nCRLog.ID);
             }
-
-            await _context.SaveChangesAsync();
+          
             return RedirectToAction(nameof(Index));
         }
 
         private bool NCRLogExists(int id)
         {
-            return _context.NCRLog.Any(e => e.ID == id);
-        }
+            var log = _getNCRLogByIDAsyncUseCase.Execute(id);
+            return log != null;
+        }     
     }
 }
