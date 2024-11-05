@@ -21,6 +21,9 @@ namespace Plugins.DataStore.SQLite
         public DbSet<QualityPortion> QualityPortions { get; set; }
         public DbSet<NCRLog> NCRLog { get; set; }
         public DbSet<NCRLogHistory> NCRLogHistory { get; set; }
+        public DbSet<ProductPicture> ProductPictures{ get; set; }
+        public DbSet<QualityPicture> QualityPictures { get; set; }    
+
         #endregion
 
         #region Create Relationships

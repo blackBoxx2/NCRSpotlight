@@ -131,7 +131,7 @@ namespace Plugins.DataStore.SQLite
                             new Role()
                             {
                                 ID = 1,
-                                RoleName = "Seed Role 1"
+                                RoleName = "QA"
                             }
                            );
                         context.SaveChanges();

@@ -10,7 +10,7 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Create">
+        <form asp-action="Create" method="post" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="ProductID" class="control-label"></label>
@@ -33,12 +33,20 @@
             </div>
             <div class="form-group">
                 <label asp-for="DefectDescription" class="control-label"></label>
-                <input asp-for="DefectDescription" class="form-control" />
+                <textarea asp-for="DefectDescription" class="form-control" rows="4" cols="50"></textarea>
                 <span asp-validation-for="DefectDescription" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="RoleRepID" class="control-label"></label>
                 <select asp-for="RoleRepID" class ="form-control" asp-items="ViewBag.RoleRepID"></select>
+            </div>
+            <div class="form-group">
+                <label class="control-label custom-file-label">Upload Pictures: </label>
+                <div>
+                    <input type="file" class="form-control" name="theFiles" multiple="multiple"
+                           onchange="document.getElementById('ImagePreview').src = window.URL.createObjectURL(this.files[0])" />
+                </div>
+                <img id="ImagePreview" src="" />
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />

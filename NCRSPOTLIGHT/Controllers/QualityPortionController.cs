@@ -7,23 +7,47 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using EntitiesLayer.Models;
 using Plugins.DataStore.SQLite;
+using UseCasesLayer.UseCaseInterfaces.RepresentitiveUseCaseInterfaces;
+using UseCasesLayer.UseCaseInterfaces.QualityPortionUseCaseInterfaces;
+using UseCasesLayer.UseCaseInterfaces.QualityPortionUseCase;
+using UseCasesLayer.UseCaseInterfaces.RoleRepUseCaseInterfaces;
+using UseCasesLayer.UseCaseInterfaces.ProductUseCaseInterfaces;
+using Plugins.DataStore.SQLite.NCRMigration;
 
 namespace NCRSPOTLIGHT.Controllers
 {
     public class QualityPortionController : Controller
     {
-        private readonly NCRContext _context;
+        private readonly IAddQualityPortionAsyncUseCase _addQualityPortionAsyncUseCase;
+        private readonly IDeleteQualityPortionAsyncUseCase _deleteQualityPortionAsyncUseCase;
+        private readonly IGetQualityPortionsAsyncUseCase _getQualityPortionsAsyncUseCase;
+        private readonly IGetQualityPortionByIDAsyncUseCase _getQualityPortionByIDAsyncUseCase;
+        private readonly IUpdateQualityPortionAsyncUseCase _updateQualityPortionAsyncUseCase;
+        private readonly IGetRoleRepAsyncUseCase _getRoleRepAsyncUseCase;
+        private readonly IGetProductsAsyncUseCase _getProductsAsyncUseCase;
 
-        public QualityPortionController(NCRContext context)
+        public QualityPortionController(IAddQualityPortionAsyncUseCase addQualityPortionAsyncUseCase,
+                                        IDeleteQualityPortionAsyncUseCase deleteQualityPortionAsyncUseCase,
+                                        IGetQualityPortionsAsyncUseCase getQualityPortionsAsyncUseCase,
+                                        IGetQualityPortionByIDAsyncUseCase getQualityPortionByIDAsyncUseCase,
+                                        IUpdateQualityPortionAsyncUseCase updateQualityPortionAsyncUseCase,
+                                        IGetRoleRepAsyncUseCase getRoleRepAsyncUseCase,
+                                        IGetProductsAsyncUseCase getProductsAsyncUseCase)
         {
-            _context = context;
+            _addQualityPortionAsyncUseCase = addQualityPortionAsyncUseCase;
+            _deleteQualityPortionAsyncUseCase = deleteQualityPortionAsyncUseCase;
+            _getQualityPortionByIDAsyncUseCase = getQualityPortionByIDAsyncUseCase;
+            _getQualityPortionsAsyncUseCase = getQualityPortionsAsyncUseCase;
+            _updateQualityPortionAsyncUseCase = updateQualityPortionAsyncUseCase;
+            _getRoleRepAsyncUseCase = getRoleRepAsyncUseCase;  
+            _getProductsAsyncUseCase = getProductsAsyncUseCase;           
         }
 
         // GET: QualityPortion
         public async Task<IActionResult> Index()
         {
-            var nCRContext = _context.QualityPortions.Include(q => q.Product).Include(q => q.RoleRep);
-            return View(await nCRContext.ToListAsync());
+            var NCRContext = await _getQualityPortionsAsyncUseCase.Execute();
+            return View(NCRContext);
         }
 
         // GET: QualityPortion/Details/5
@@ -34,10 +58,7 @@ namespace NCRSPOTLIGHT.Controllers
                 return NotFound();
             }
 
-            var qualityPortion = await _context.QualityPortions
-                .Include(q => q.Product)
-                .Include(q => q.RoleRep)
-                .FirstOrDefaultAsync(m => m.ID == id);
+            var qualityPortion = await _getQualityPortionByIDAsyncUseCase.Execute(id);
             if (qualityPortion == null)
             {
                 return NotFound();
@@ -47,10 +68,10 @@ namespace NCRSPOTLIGHT.Controllers
         }
 
         // GET: QualityPortion/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            ViewData["ProductID"] = new SelectList(_context.Products, "ID", "Description");
-            ViewData["RoleRepID"] = new SelectList(_context.RoleReps, "RoleRepID", "RoleRepID");
+            var qualityPortion = new QualityPortion();
+            LoadSelectList(qualityPortion);
             return View();
         }
 
@@ -59,16 +80,15 @@ namespace NCRSPOTLIGHT.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ID,ProductID,Quantity,QuantityDefective,OrderNumber,DefectDescription,RoleRepID")] QualityPortion qualityPortion)
+        public async Task<IActionResult> Create([Bind("ID,ProductID,Quantity,QuantityDefective,OrderNumber,DefectDescription,RoleRepID")] QualityPortion qualityPortion, List<IFormFile> theFiles)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(qualityPortion);
-                await _context.SaveChangesAsync();
+                await AddDocumentsAsync(qualityPortion, theFiles);
+                await _addQualityPortionAsyncUseCase.Execute(qualityPortion);            
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ProductID"] = new SelectList(_context.Products, "ID", "Description", qualityPortion.ProductID);
-            ViewData["RoleRepID"] = new SelectList(_context.RoleReps, "RoleRepID", "RoleRepID", qualityPortion.RoleRepID);
+            LoadSelectList(qualityPortion);
             return View(qualityPortion);
         }
 
@@ -80,13 +100,12 @@ namespace NCRSPOTLIGHT.Controllers
                 return NotFound();
             }
 
-            var qualityPortion = await _context.QualityPortions.FindAsync(id);
+            var qualityPortion = await _getQualityPortionByIDAsyncUseCase.Execute(id);
             if (qualityPortion == null)
             {
                 return NotFound();
             }
-            ViewData["ProductID"] = new SelectList(_context.Products, "ID", "Description", qualityPortion.ProductID);
-            ViewData["RoleRepID"] = new SelectList(_context.RoleReps, "RoleRepID", "RoleRepID", qualityPortion.RoleRepID);
+            LoadSelectList(qualityPortion);
             return View(qualityPortion);
         }
 
@@ -95,8 +114,11 @@ namespace NCRSPOTLIGHT.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ID,ProductID,Quantity,QuantityDefective,OrderNumber,DefectDescription,RoleRepID")] QualityPortion qualityPortion)
+        public async Task<IActionResult> Edit(int id, [Bind("ID,ProductID,Quantity,QuantityDefective,OrderNumber,DefectDescription,RoleRepID")] QualityPortion qualityPortion, List<IFormFile> theFiles)
         {
+
+            qualityPortion.qualityPictures = _getQualityPortionByIDAsyncUseCase.Execute(id).Result.qualityPictures;
+
             if (id != qualityPortion.ID)
             {
                 return NotFound();
@@ -106,12 +128,13 @@ namespace NCRSPOTLIGHT.Controllers
             {
                 try
                 {
-                    _context.Update(qualityPortion);
-                    await _context.SaveChangesAsync();
+                    await AddDocumentsAsync(qualityPortion, theFiles);
+                    await _updateQualityPortionAsyncUseCase.Execute(id, qualityPortion);
+                    return RedirectToAction(nameof(Index));
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!QualityPortionExists(qualityPortion.ID))
+                    if (! await QualityPortionExists(qualityPortion.ID))
                     {
                         return NotFound();
                     }
@@ -120,10 +143,9 @@ namespace NCRSPOTLIGHT.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                
             }
-            ViewData["ProductID"] = new SelectList(_context.Products, "ID", "Description", qualityPortion.ProductID);
-            ViewData["RoleRepID"] = new SelectList(_context.RoleReps, "RoleRepID", "RoleRepID", qualityPortion.RoleRepID);
+            LoadSelectList(qualityPortion);
             return View(qualityPortion);
         }
 
@@ -135,10 +157,7 @@ namespace NCRSPOTLIGHT.Controllers
                 return NotFound();
             }
 
-            var qualityPortion = await _context.QualityPortions
-                .Include(q => q.Product)
-                .Include(q => q.RoleRep)
-                .FirstOrDefaultAsync(m => m.ID == id);
+            var qualityPortion = await _getQualityPortionByIDAsyncUseCase.Execute(id);
             if (qualityPortion == null)
             {
                 return NotFound();
@@ -152,19 +171,58 @@ namespace NCRSPOTLIGHT.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var qualityPortion = await _context.QualityPortions.FindAsync(id);
+            var qualityPortion = await _getQualityPortionByIDAsyncUseCase.Execute(id);
             if (qualityPortion != null)
             {
-                _context.QualityPortions.Remove(qualityPortion);
+                await _deleteQualityPortionAsyncUseCase.Execute(qualityPortion.ID);
             }
 
-            await _context.SaveChangesAsync();
+            
             return RedirectToAction(nameof(Index));
         }
-
-        private bool QualityPortionExists(int id)
+        public async void LoadSelectList(QualityPortion qualityPortion)
         {
-            return _context.QualityPortions.Any(e => e.ID == id);
+            var selectListItems = await _getRoleRepAsyncUseCase.Execute();
+            selectListItems = selectListItems.Where(r => r.Role.RoleName == "QA");
+
+            ViewData["ProductID"] = new SelectList(await _getProductsAsyncUseCase.Execute(), "ID", "Description", qualityPortion.ProductID);
+            ViewData["RoleRepID"] = new SelectList(selectListItems, "RoleRepID", "Representative.FullName", qualityPortion.RoleRepID);
+
         }
+
+        private async Task<bool> QualityPortionExists(int id)
+        {
+            var portion = await _getQualityPortionByIDAsyncUseCase.Execute(id);
+            return portion != null;
+        }
+
+        private async Task AddDocumentsAsync(QualityPortion qualityPortion, List<IFormFile> theFiles)
+        {
+
+            foreach (var f in theFiles)
+            {
+                if (f != null)
+                {
+                    string mimeType = f.ContentType;
+                    string fileName = Path.GetFileName(f.FileName);
+                    long fileLength = f.Length;
+                    if (!(fileName == "" || fileLength == 0))
+                    {
+                        QualityPicture p = new QualityPicture();
+                        using (var memoryStream = new MemoryStream())
+                        {
+                            await f.CopyToAsync(memoryStream);
+
+                            p.FileContent.Content = memoryStream.ToArray();
+
+                        }
+                        p.MimeType = mimeType;
+                        p.FileName = fileName;
+                        qualityPortion.qualityPictures.Add(p);
+                    };
+                }
+            }
+        }
+
     }
 }
