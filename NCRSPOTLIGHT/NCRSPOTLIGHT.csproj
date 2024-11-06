@@ -29,4 +29,8 @@
     <ProjectReference Include="..\UseCasesLayer\UseCasesLayer.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Areas\Identity\Data\Migrations\" />
+  </ItemGroup>
+
 </Project>

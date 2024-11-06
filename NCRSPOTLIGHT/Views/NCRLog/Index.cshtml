@@ -26,9 +26,12 @@
     </thead>
     <tbody>
 @foreach (var item in Model) {
-        <tr>
+            <tr onclick="window.open=('@Url.Action("Details", "NCRLog", new{ID = item.ID})','_blank');" target="_blank" style="cursor:pointer"
+                ncrlog-id="@item.ID"> 
+
             <td>
                 @Html.DisplayFor(modelItem => item.QualityPortion.DefectDescription)
+                
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.DateCreated)
