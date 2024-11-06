@@ -106,12 +106,7 @@ builder.Services.AddTransient<IGetNCRLogsAsyncUseCase, GetNCRLogsAsyncUseCase>()
 //Implement Policy Based Authorization (Used for specific roles)
 //builder.Services.AddAuthorization(options =>
 //{
-//    options.AddPolicy("QARep", p => p.RequireClaim("Role", "QARep"));
-
-//    options.AddPolicy("ENRep", p => p.RequireClaim("Role", "ENRep"));
-
-//    options.AddPolicy("Admin", p => p.RequireClaim("Role", "Admin"));
-//    options.AddPolicy("OPManager", p => p.RequireClaim("Role", "OPManager"));
+    
 //});
 
 var app = builder.Build();
@@ -146,14 +141,14 @@ using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
     await IdentityUsersInitializer.InitializeAsync(serviceProvider: services, DeleteDatabase: false,
-        UseMigrations: true, SeedSampleData: true);
+        UseMigrations: false, SeedSampleData: false);
 }
 
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
-    NCRInitializer.Initialize(serviceProvider:services, DeleteDatabase:true,
-        UseMigrations:true,SeedSampleData:true);
+    NCRInitializer.Initialize(serviceProvider:services, DeleteDatabase:false,
+        UseMigrations:false,SeedSampleData:false);
 }
 
 
