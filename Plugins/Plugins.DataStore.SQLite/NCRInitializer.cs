@@ -11,15 +11,23 @@ namespace Plugins.DataStore.SQLite
 {
     public class NCRInitializer
     {
+
+        
+
         public static async void Initialize(IServiceProvider serviceProvider,
             bool DeleteDatabase = false, bool UseMigrations = true,
             bool SeedSampleData = true)
         {
             using (var context = new NCRContext(serviceProvider.GetRequiredService<DbContextOptions<NCRContext>>()))
             {
-                #region Prepare the Database
-                try
-                {
+                using var identityContext = new IdentityContext(serviceProvider.GetRequiredService<DbContextOptions<IdentityContext>>());
+
+                
+
+
+                    #region Prepare the Database
+                    try
+                    {
                     if (DeleteDatabase || !context.Database.CanConnect())
                     {
                         context.Database.EnsureDeleted();
@@ -53,6 +61,7 @@ namespace Plugins.DataStore.SQLite
                 #region Start seeding data
                 try
                 {
+                    var identityRoles = await identityContext.Roles.Select(r => r.Name).ToListAsync();
                     Random random = new Random();
                     List<string> supplierNames = new List<string>
                     {
@@ -154,14 +163,12 @@ namespace Plugins.DataStore.SQLite
                         context.SaveChanges();
                     }
                     //Roles seed data
-                    string[] roles = [
-                        "QA",
-                        "ENG",
-                        "Admin"
-                    ];
-                    int rolesCount = roles.Length;
+                    //string[] roles = ["Admin", "QA"];
+
+
+                    //int rolesCount = identityRoles.Count;
                     
-                        foreach (string role in roles)
+                        foreach (string role in identityRoles)
                         {
 
                             Role role1 = new Role()
@@ -346,6 +353,7 @@ namespace Plugins.DataStore.SQLite
                                 await WebImagestoByArrayStatic.SeedProductPictures(imgPaths[imgCounter], product);
 
                                 context.Products.Add(product);
+                                context.SaveChanges();
 
                                 imgCounter++;
                                 id++;
@@ -372,5 +380,5 @@ namespace Plugins.DataStore.SQLite
         
     }
 
-
+    
 }

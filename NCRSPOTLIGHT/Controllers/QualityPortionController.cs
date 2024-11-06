@@ -12,7 +12,6 @@ using UseCasesLayer.UseCaseInterfaces.QualityPortionUseCaseInterfaces;
 using UseCasesLayer.UseCaseInterfaces.QualityPortionUseCase;
 using UseCasesLayer.UseCaseInterfaces.RoleRepUseCaseInterfaces;
 using UseCasesLayer.UseCaseInterfaces.ProductUseCaseInterfaces;
-using Plugins.DataStore.SQLite.NCRMigration;
 
 namespace NCRSPOTLIGHT.Controllers
 {
@@ -183,7 +182,7 @@ namespace NCRSPOTLIGHT.Controllers
         public async void LoadSelectList(QualityPortion qualityPortion)
         {
             var selectListItems = await _getRoleRepAsyncUseCase.Execute();
-            selectListItems = selectListItems.Where(r => r.Role.RoleName == "QA");
+            selectListItems = selectListItems.Where(r => r.Role.RoleName == "QualityAssurance");
 
             ViewData["ProductID"] = new SelectList(await _getProductsAsyncUseCase.Execute(), "ID", "Description", qualityPortion.ProductID);
             ViewData["RoleRepID"] = new SelectList(selectListItems, "RoleRepID", "Representative.FullName", qualityPortion.RoleRepID);

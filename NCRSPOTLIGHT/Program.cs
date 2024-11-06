@@ -1,8 +1,10 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using NCRSPOTLIGHT.Data;
+using NCRSPOTLIGHT.Areas.Identity.Data;
 using Plugins.DataStore.SQLite;
 using UseCasesLayer.DataStorePluginInterfaces;
+using UseCasesLayer.UseCaseInterfaces.NCRLogUseCase;
+using UseCasesLayer.UseCaseInterfaces.NCRLogUseCaseInterfaces;
 using UseCasesLayer.UseCaseInterfaces.ProductUseCaseInterfaces;
 using UseCasesLayer.UseCaseInterfaces.ProductUseCases;
 using UseCasesLayer.UseCaseInterfaces.QualityPortionUseCase;
@@ -17,16 +19,21 @@ using UseCasesLayer.UseCaseInterfaces.RoleUseCases;
 using UseCasesLayer.UseCaseInterfaces.SuppliersUseCaseInterfaces;
 using UseCasesLayer.UseCaseInterfaces.SuppliersUseCases;
 var builder = WebApplication.CreateBuilder(args);
-var connectionString = builder.Configuration.GetConnectionString("IdentityContextConnection") ?? throw new InvalidOperationException("Connection string 'IdentityContextConnection' not found.");
+var connectionStringNCRSpotlight = builder.Configuration.GetConnectionString("NCRContext") ?? throw new InvalidOperationException("Connection string 'IdentityContextConnection' not found.");
 
-builder.Services.AddDbContext<IdentityContext>(options => options.UseSqlite(connectionString));
+var connectionStringIdentity = builder.Configuration.GetConnectionString("IdentityContextConnection") ?? throw new InvalidOperationException("Connection string 'IdentityContextConnection' not found.");
 
-builder.Services.AddDbContext<NCRContext>(options => options.UseSqlite(connectionString));
+builder.Services.AddDbContext<IdentityContext>(options => options.UseSqlite(connectionStringIdentity));
 
-builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<IdentityContext>();
+builder.Services.AddDbContext<NCRContext>(options => options.UseSqlite(connectionStringNCRSpotlight));
 
-builder.Services.AddDbContext<NCRContext>(options =>
-options.UseSqlite(connectionString));
+builder.Services.AddDefaultIdentity<IdentityUser>(options => 
+{
+    options.SignIn.RequireConfirmedAccount = false;
+    options.User.RequireUniqueEmail = true;
+    options.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
+}).AddEntityFrameworkStores<IdentityContext>();
+
 
 // Add services to the container.
 //Without the .AddRazorPages we cant use .cshtml pages
@@ -40,6 +47,7 @@ builder.Services.AddTransient<IRepresentativeRepository, RepresentativeSQLReposi
 builder.Services.AddTransient<IRoleRepRepository, RoleRepSQLRepository>();
 builder.Services.AddTransient<IProductRepository, ProductSQLRepository>();
 builder.Services.AddTransient<IQualityPortionSQLRepository, QualityPortionSQLRepository>();
+builder.Services.AddTransient<INCRLogRepository, NCRLogSQLRepository>();
 
 
 #region Register Supplier Services
@@ -85,20 +93,26 @@ builder.Services.AddTransient<IUpdateQualityPortionAsyncUseCase, UpdateQualityPo
 builder.Services.AddTransient<IGetQualityPortionByIDAsyncUseCase, GetQualityPortionByIDAsyncUseCase>();
 builder.Services.AddTransient<IGetQualityPortionsAsyncUseCase, GetQualityPortionsAsyncUseCase>();
 
+//NCRLog
+builder.Services.AddTransient<IAddNCRLogAsyncUseCase, AddNCRLogAsyncUseCase>();
+builder.Services.AddTransient<IDeleteNCRLogAsyncUseCase, DeleteNCRLogAsyncUseCase>();
+builder.Services.AddTransient<IUpdateNCRLogAsyncUseCase, UpdateNCRLogAsyncUseCase>();
+builder.Services.AddTransient<IGetNCRLogByIDAsyncUseCase, GetNCRLogByIDAsyncUseCase>();
+builder.Services.AddTransient<IGetNCRLogsAsyncUseCase, GetNCRLogsAsyncUseCase>();
 
 #endregion
 
 
 //Implement Policy Based Authorization (Used for specific roles)
-builder.Services.AddAuthorization(options =>
-{
-    options.AddPolicy("QARep", p => p.RequireClaim("Role", "QARep"));
+//builder.Services.AddAuthorization(options =>
+//{
+//    options.AddPolicy("QARep", p => p.RequireClaim("Role", "QARep"));
 
-    options.AddPolicy("ENRep", p => p.RequireClaim("Role", "ENRep"));
+//    options.AddPolicy("ENRep", p => p.RequireClaim("Role", "ENRep"));
 
-    options.AddPolicy("Admin", p => p.RequireClaim("Role", "Admin"));
-    options.AddPolicy("OPManager", p => p.RequireClaim("Role", "OPManager"));
-});
+//    options.AddPolicy("Admin", p => p.RequireClaim("Role", "Admin"));
+//    options.AddPolicy("OPManager", p => p.RequireClaim("Role", "OPManager"));
+//});
 
 var app = builder.Build();
 
@@ -131,7 +145,21 @@ app.MapRazorPages();
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
+    await IdentityUsersInitializer.InitializeAsync(serviceProvider: services, DeleteDatabase: false,
+        UseMigrations: true, SeedSampleData: true);
+}
+
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
     NCRInitializer.Initialize(serviceProvider:services, DeleteDatabase:true,
         UseMigrations:true,SeedSampleData:true);
 }
+
+
+
+
+
+
+
 app.Run();
