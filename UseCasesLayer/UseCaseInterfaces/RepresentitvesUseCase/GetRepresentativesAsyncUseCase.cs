@@ -1,5 +1,5 @@
 ﻿using EntitiesLayer.Models;
-using Plugins.DataStore.SQLite;
+using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,7 +18,7 @@ namespace UseCasesLayer.UseCaseInterfaces.RepresentativesUseCase
         {
             this._representativeRepository = representativeRepository;
         }
-        public async Task<IEnumerable<Representative>> Execute()
+        public async Task<IEnumerable<IdentityUser>> Execute()
         {
             return await _representativeRepository.GetRepresentativesAsync();
         }

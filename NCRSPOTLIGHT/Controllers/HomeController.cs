@@ -5,7 +5,6 @@ using System.Diagnostics;
 
 namespace NCRSPOTLIGHT.Controllers
 {
-    //[Authorize(Policy = "Admin")]
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;

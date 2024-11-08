@@ -26,7 +26,7 @@
     </thead>
     <tbody>
 @foreach (var item in Model) {
-            <tr onclick="window.open=('@Url.Action("Details", "NCRLog", new{ID = item.ID})','_blank');" target="_blank" style="cursor:pointer"
+            <tr onclick="window.open('@Url.Action("Details", "NCRLog", new{ID = item.ID})','_blank', 'width=800,height=600,toolbar=yes, location=yes, scrollbars=yes');" style="cursor:pointer;"
                 ncrlog-id="@item.ID"> 
 
             <td>

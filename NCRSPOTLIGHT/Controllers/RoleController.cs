@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using EntitiesLayer.Models;
 using Plugins.DataStore.SQLite;
 using UseCasesLayer.UseCaseInterfaces.RoleUseCaseInterfaces;
+using Microsoft.AspNetCore.Authorization;
 
 namespace NCRSPOTLIGHT.Controllers
 {
@@ -59,6 +60,7 @@ namespace NCRSPOTLIGHT.Controllers
         }
 
         // GET: Roles/Create
+
         public IActionResult Create()
         {
             return View();

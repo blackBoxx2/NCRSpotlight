@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using NCRSPOTLIGHT.Areas.Identity.Data;
+using NCRSPOTLIGHT.Utilities;
 using Plugins.DataStore.SQLite;
 using UseCasesLayer.DataStorePluginInterfaces;
 using UseCasesLayer.UseCaseInterfaces.NCRLogUseCase;
@@ -22,17 +24,19 @@ var builder = WebApplication.CreateBuilder(args);
 var connectionStringNCRSpotlight = builder.Configuration.GetConnectionString("NCRContext") ?? throw new InvalidOperationException("Connection string 'IdentityContextConnection' not found.");
 
 var connectionStringIdentity = builder.Configuration.GetConnectionString("IdentityContextConnection") ?? throw new InvalidOperationException("Connection string 'IdentityContextConnection' not found.");
+builder.Services.Configure<SmtpSettings>(builder.Configuration.GetSection("Smtp"));
 
 builder.Services.AddDbContext<IdentityContext>(options => options.UseSqlite(connectionStringIdentity));
 
 builder.Services.AddDbContext<NCRContext>(options => options.UseSqlite(connectionStringNCRSpotlight));
-
-builder.Services.AddDefaultIdentity<IdentityUser>(options => 
+builder.Services.AddTransient<IEmailSender, NCRSpotlightEmailer>();
+builder.Services.AddIdentity<IdentityUser, IdentityRole>(options => 
 {
     options.SignIn.RequireConfirmedAccount = false;
     options.User.RequireUniqueEmail = true;
     options.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
-}).AddEntityFrameworkStores<IdentityContext>();
+}).AddEntityFrameworkStores<IdentityContext>()
+.AddDefaultTokenProviders();
 
 
 // Add services to the container.
@@ -104,15 +108,18 @@ builder.Services.AddTransient<IGetNCRLogsAsyncUseCase, GetNCRLogsAsyncUseCase>()
 
 
 //Implement Policy Based Authorization (Used for specific roles)
-//builder.Services.AddAuthorization(options =>
-//{
-//    options.AddPolicy("QARep", p => p.RequireClaim("Role", "QARep"));
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("BasicUser", p => p.RequireRole("BasicUser"));
 
-//    options.AddPolicy("ENRep", p => p.RequireClaim("Role", "ENRep"));
 
-//    options.AddPolicy("Admin", p => p.RequireClaim("Role", "Admin"));
-//    options.AddPolicy("OPManager", p => p.RequireClaim("Role", "OPManager"));
-//});
+    options.AddPolicy("Engineer", p => p.RequireRole("Engineer"));
+    //    options.AddPolicy("ENRep", p => p.RequireClaim("Role", "ENRep"));
+
+    options.AddPolicy("Admin", p => p.RequireRole("Admin"));
+    options.AddPolicy("QualityAssurance", p => p.RequireRole("QualityAssurance"));
+});
+
 
 var app = builder.Build();
 

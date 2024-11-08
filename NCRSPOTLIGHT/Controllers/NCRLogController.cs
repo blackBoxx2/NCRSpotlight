@@ -10,9 +10,11 @@ using Plugins.DataStore.SQLite;
 using UseCasesLayer.UseCaseInterfaces.NCRLogUseCaseInterfaces;
 using UseCasesLayer.UseCaseInterfaces.QualityPortionUseCaseInterfaces;
 using UseCasesLayer.UseCaseInterfaces.QualityPortionUseCase;
+using Microsoft.AspNetCore.Authorization;
 
 namespace NCRSPOTLIGHT.Controllers
 {
+
     public class NCRLogController : Controller
     {
 
@@ -64,6 +66,7 @@ namespace NCRSPOTLIGHT.Controllers
         }
 
         // GET: NCRLog/Create
+        [Authorize(Policy = "Admin")]
         public async Task<IActionResult> Create()
         {
             ViewData["QualityPortionID"] = new SelectList(await _getQualityPortionsAsyncUseCase.Execute(), "ID", "DefectDescription");

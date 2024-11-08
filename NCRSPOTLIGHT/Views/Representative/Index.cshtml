@@ -1,4 +1,5 @@
-﻿@model IEnumerable<EntitiesLayer.Models.Representative>
+﻿@using Microsoft.AspNetCore.Identity
+@model IEnumerable<IdentityUser>
 
 @{
     ViewData["Title"] = "Index";
@@ -13,14 +14,14 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.FirstName)
+                @Html.DisplayNameFor(model => model.UserName)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.MiddleInitial)
+                @Html.DisplayNameFor(model => model.NormalizedEmail)
             </th>
-            <th>
+@*             <th>
                 @Html.DisplayNameFor(model => model.LastName)
-            </th>
+            </th> *@
             <th></th>
         </tr>
     </thead>
@@ -28,18 +29,18 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.FirstName)
+                @Html.DisplayFor(modelItem => item.UserName)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.MiddleInitial)
+                @Html.DisplayFor(modelItem => item.NormalizedEmail)
             </td>
-            <td>
+@*             <td>
                 @Html.DisplayFor(modelItem => item.LastName)
-            </td>
+            </td> *@
             <td>
-                <a asp-action="Edit" asp-route-id="@item.ID">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.ID">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.ID">Delete</a>
+                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
             </td>
         </tr>
 }

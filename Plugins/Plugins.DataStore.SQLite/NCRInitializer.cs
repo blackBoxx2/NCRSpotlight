@@ -167,7 +167,8 @@ namespace Plugins.DataStore.SQLite
 
 
                     //int rolesCount = identityRoles.Count;
-                    
+                    if(!context.Roles.Any())
+                    {
                         foreach (string role in identityRoles)
                         {
 
@@ -187,10 +188,13 @@ namespace Plugins.DataStore.SQLite
                                 context.Roles.Remove(role1);
                             }
                         }
-                    
-                    //Representatives seed data
-                    string[] firstNames = [
-                        "Alejandro",
+                    }
+                        
+                    if(!context.Representatives.Any())
+                    {
+                        //Representatives seed data
+                        string[] firstNames = [
+                            "Alejandro",
                         "Valeria",
                         "Santiago",
                         "Camila",
@@ -210,10 +214,10 @@ namespace Plugins.DataStore.SQLite
                         "Mariana",
                         "José",
                         "Karen"];
-                    string[] middleNames = ["J.", "L.", "M.", "A.", "R.", "N.", "G.", "S.", "H.", "C.", "D.", "E.", "T.", "B.", "F.", "V.", "Q.", "P.", "K.", "Z."];
+                        string[] middleNames = ["J.", "L.", "M.", "A.", "R.", "N.", "G.", "S.", "H.", "C.", "D.", "E.", "T.", "B.", "F.", "V.", "Q.", "P.", "K.", "Z."];
 
-                    string[] lastNames = [
-                        "Smith",
+                        string[] lastNames = [
+                            "Smith",
                         "Johnson",
                         "Williams",
                         "Brown",
@@ -233,66 +237,72 @@ namespace Plugins.DataStore.SQLite
                         "Moore",
                         "Jackson",
                         "Martin"];
-          
-                    List<string> SelectedFirst = new List<string>();
-                    List<string> SelectedMiddle = new List<string>();
-                    List<string> SelectedLast = new List<string>();
-                   
-                    foreach (string first in firstNames)
-                    {
-                        SelectedFirst.Add(firstNames[random.Next(firstNames.Length)]);
-                        SelectedLast.Add(lastNames[random.Next(lastNames.Length)]);
-                        SelectedMiddle.Add(middleNames[random.Next(middleNames.Length)]);
-                    }
-                    
-                    for (int i = 0; i < 20; i++)
-                    {
-                        Representative representative = new Representative()
-                        {
-                            FirstName = SelectedFirst[i],
-                            MiddleInitial = SelectedMiddle[i],
-                            LastName = SelectedLast[i],
-                        };
-                        try
-                        {
-                            context.Representatives.Add(representative);
-                            context.SaveChanges();
 
-                        }
-                        catch (Exception ex)
+                        List<string> SelectedFirst = new List<string>();
+                        List<string> SelectedMiddle = new List<string>();
+                        List<string> SelectedLast = new List<string>();
+
+                        foreach (string first in firstNames)
                         {
-                            context.Representatives.Remove(representative);
+                            SelectedFirst.Add(firstNames[random.Next(firstNames.Length)]);
+                            SelectedLast.Add(lastNames[random.Next(lastNames.Length)]);
+                            SelectedMiddle.Add(middleNames[random.Next(middleNames.Length)]);
+                        }
+
+                        for (int i = 0; i < 20; i++)
+                        {
+                            Representative representative = new Representative()
+                            {
+                                FirstName = SelectedFirst[i],
+                                MiddleInitial = SelectedMiddle[i],
+                                LastName = SelectedLast[i],
+                            };
+                            try
+                            {
+                                context.Representatives.Add(representative);
+                                context.SaveChanges();
+
+                            }
+                            catch (Exception ex)
+                            {
+                                context.Representatives.Remove(representative);
+                            }
                         }
                     }
+
 
 
                     //RoleReps Seed Data                   
-
-                    foreach(var ID in context.Representatives.Select(r => r.ID) )
+                    if (!context.RoleReps.Any()) 
                     {
-
-                        HashSet<int> nums = new HashSet<int>();
-                        for (int i = 0; i <= random.Next(0, 3); i++)
-                        {
-                            nums.Add(random.Next(1, 4));
-                        }
-                        foreach (int i in nums)
+                        foreach (var ID in context.Representatives.Select(r => r.ID))
                         {
 
-                            context.RoleReps.AddRange(
+                            HashSet<int> nums = new HashSet<int>();
+                            for (int i = 0; i <= random.Next(0, 3); i++)
+                            {
+                                nums.Add(random.Next(1, 4));
+                            }
+                            foreach (int i in nums)
+                            {
 
-                                new RoleRep()
-                                {
-                                    RoleID = i,
-                                    RepresentativeID = ID
-                                }
+                                context.RoleReps.AddRange(
 
-                            );
-                            context.SaveChanges();
+                                    new RoleRep()
+                                    {
+                                        RoleID = i,
+                                        RepresentativeID = ID
+                                    }
+
+                                );
+
+                            }
 
                         }
-
+ 
+                            await context.SaveChangesAsync();
                     }
+                    
                         
                     
                     //Product Initializer               
@@ -353,8 +363,6 @@ namespace Plugins.DataStore.SQLite
                                 await WebImagestoByArrayStatic.SeedProductPictures(imgPaths[imgCounter], product);
 
                                 context.Products.Add(product);
-                                context.SaveChanges();
-
                                 imgCounter++;
                                 id++;
                             }
