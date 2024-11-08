@@ -12,7 +12,7 @@ namespace NCRSPOTLIGHT.Utilities
 
 
             var email = new MimeMessage();
-            email.From.Add(new MailboxAddress("devin@devsitconsulting.ca", "devin@devsitconsulting.ca"));
+            email.From.Add(new MailboxAddress("rojaylarinze@gmail.com", "rojaylarinzegmail.com"));
             email.To.Add(MailboxAddress.Parse(toEmail));
 
             email.Subject = subject;
@@ -25,7 +25,7 @@ namespace NCRSPOTLIGHT.Utilities
             {
                 smtp.Connect("smtp.resend.com", 587, MailKit.Security.SecureSocketOptions.StartTls);
 
-                smtp.Authenticate("resend", "re_U2sfe9Th_NXeYs6dniKGgpHmF6B26X5NT");
+                smtp.Authenticate("resend", "re_Xpb1Licc_MratmivBhQMsPm3QPJbFZ7de");
                 smtp.Send(email);
                 smtp.Disconnect(true);
             }

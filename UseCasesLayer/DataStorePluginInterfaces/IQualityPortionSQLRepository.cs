@@ -1,6 +1,7 @@
-﻿using EntitiesLayer.Models;
+﻿
+using EntitiesLayer.Models;
 
-namespace Plugins.DataStore.SQLite
+namespace UseCasesLayer.DataStorePluginInterfaces
 {
     public interface IQualityPortionSQLRepository
     {

@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using EntitiesLayer.Models;
 using Microsoft.EntityFrameworkCore;
+using UseCasesLayer.DataStorePluginInterfaces;
 
 namespace Plugins.DataStore.SQLite
 {

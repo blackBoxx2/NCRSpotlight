@@ -1,10 +1,10 @@
 ﻿using EntitiesLayer.Models;
-using Plugins.DataStore.SQLite;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UseCasesLayer.DataStorePluginInterfaces;
 using UseCasesLayer.UseCaseInterfaces.RoleUseCaseInterfaces;
 
 namespace UseCasesLayer.UseCaseInterfaces.RoleUseCases

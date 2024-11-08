@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Plugins.DataStore.SQLite;
+using UseCasesLayer.DataStorePluginInterfaces;
 using UseCasesLayer.UseCaseInterfaces.QualityPortionUseCaseInterfaces;
 
 namespace UseCasesLayer.UseCaseInterfaces.QualityPortionUseCase

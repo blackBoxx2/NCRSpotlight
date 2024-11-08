@@ -1,4 +1,5 @@
 ﻿using EntitiesLayer.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -13,17 +14,23 @@ namespace Plugins.DataStore.SQLite
     public class RepresentativeSQLRepository : IRepresentativeRepository
     {
         private readonly NCRContext _context;
+        private readonly IdentityContext identityContext;
 
-        public RepresentativeSQLRepository(NCRContext context)
+        public RepresentativeSQLRepository(NCRContext context, IdentityContext identityContext)
         {
             _context = context;
+            this.identityContext = identityContext;
         }
 
         // List: Representatives
-        public async Task<IEnumerable<Representative>> GetRepresentativesAsync()
+        public async Task<IEnumerable<IdentityUser>> GetRepresentativesAsync()
         {
-            var representitives = await _context.Representatives
-                .Include(r => r.RoleReps)
+            //var representitives = await _context.Representatives
+            //    .Include(r => r.RoleReps)
+            //    .AsNoTracking()
+            //    .ToListAsync();
+
+            var representitives = await identityContext.Users
                 .AsNoTracking()
                 .ToListAsync();
 
@@ -85,5 +92,7 @@ namespace Plugins.DataStore.SQLite
                 await _context.SaveChangesAsync();
             }
         }
+
+
     }
 }

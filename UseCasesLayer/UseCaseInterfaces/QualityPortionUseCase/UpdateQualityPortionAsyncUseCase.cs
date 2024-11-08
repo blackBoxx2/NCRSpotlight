@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using EntitiesLayer.Models;
-using Plugins.DataStore.SQLite;
+using UseCasesLayer.DataStorePluginInterfaces;
 using UseCasesLayer.UseCaseInterfaces.QualityPortionUseCaseInterfaces;
 
 namespace UseCasesLayer.UseCaseInterfaces.QualityPortionUseCase
