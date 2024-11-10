@@ -1,4 +1,5 @@
 ﻿using EntitiesLayer.Models;
+using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,7 +19,7 @@ namespace UseCasesLayer.UseCaseInterfaces.RepresentitvesUseCase
             this._representativeRepository = representativeRepository;
         }
 
-        public async Task<Representative> Execute(int? id)
+        public async Task<IdentityUser> Execute(string id)
         {
             return await _representativeRepository.GetRepresentativesByIdAsync(id);
 

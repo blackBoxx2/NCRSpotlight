@@ -1,4 +1,5 @@
 ﻿using EntitiesLayer.Models;
+using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,6 @@ namespace UseCasesLayer.UseCaseInterfaces.RepresentitiveUseCaseInterfaces
 {
     public interface IAddRepresentativeAsyncUseCase
     {
-        Task Execute(Representative representative);
+        Task Execute(IdentityUser representative);
     }
 }

@@ -1,13 +1,14 @@
 ﻿using EntitiesLayer.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace UseCasesLayer.DataStorePluginInterfaces
 {
     public interface IRoleRepository
     {
-        Task AddRoleAsync(Role role);
-        Task DeleteRoleAsync(int id);
-        Task<Role> GetRoleByIDAsync(int? ID);
-        Task<IEnumerable<Role>> GetRolesAsync();
-        Task UpdateRoleAsync(int? id, Role role);
+        Task AddRoleAsync(IdentityRole role);
+        Task DeleteRoleAsync(string id);
+        Task<IdentityRole> GetRoleByIDAsync(string ID);
+        Task<IEnumerable<IdentityRole>> GetRolesAsync();
+        Task UpdateRoleAsync(string id, IdentityRole role);
     }
 }

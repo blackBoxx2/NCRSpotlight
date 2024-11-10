@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Identity;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -35,10 +36,7 @@ namespace EntitiesLayer.Models
         public string DefectDescription { get; set; }
 
         [Required]
-        public int RoleRepID { get; set; }
-        [Display(Name = "Quality Assurance Rep")]
-        public RoleRep? RoleRep { get; set; }
-
+        public String RepId { get; set; }
         public ICollection<QualityPicture> qualityPictures { get; set; } = new HashSet<QualityPicture>();  
     }
 }

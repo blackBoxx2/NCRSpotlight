@@ -7,10 +7,10 @@ namespace UseCasesLayer.DataStorePluginInterfaces
 {
     public interface IRepresentativeRepository
     {
-        Task AddRepresentativeAsync(Representative representative);
-        Task DeleteRepresentativeAsync(int id);
+        Task AddRepresentativeAsync(IdentityUser representative);
+        Task DeleteRepresentativeAsync(string id);
         Task<IEnumerable<IdentityUser>> GetRepresentativesAsync();
-        Task<Representative> GetRepresentativesByIdAsync(int? id);
-        Task UpdateRepresentativeAsync(int? id, Representative representative);
+        Task<IdentityUser> GetRepresentativesByIdAsync(string id);
+        Task UpdateRepresentativeAsync(string id, IdentityUser representative);
     }
 }

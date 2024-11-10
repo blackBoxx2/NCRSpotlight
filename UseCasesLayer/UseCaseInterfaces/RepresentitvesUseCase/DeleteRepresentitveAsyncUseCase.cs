@@ -17,7 +17,7 @@ namespace UseCasesLayer.UseCaseInterfaces.RepresentativesUseCase
         {
             this._representativeRepository = representativeRepository;
         }
-        public async Task Execute(int id)
+        public async Task Execute(string id)
         {
             await _representativeRepository.DeleteRepresentativeAsync(id);
         }

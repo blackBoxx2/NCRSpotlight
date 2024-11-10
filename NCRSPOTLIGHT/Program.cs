@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using NCRSPOTLIGHT.Areas.Identity.Data;
 using NCRSPOTLIGHT.Utilities;
 using Plugins.DataStore.SQLite;
+using Plugins.DataStore.SQLite.JoinsUseCase;
 using UseCasesLayer.DataStorePluginInterfaces;
 using UseCasesLayer.UseCaseInterfaces.NCRLogUseCase;
 using UseCasesLayer.UseCaseInterfaces.NCRLogUseCaseInterfaces;
@@ -24,12 +25,25 @@ var builder = WebApplication.CreateBuilder(args);
 var connectionStringNCRSpotlight = builder.Configuration.GetConnectionString("NCRContext") ?? throw new InvalidOperationException("Connection string 'IdentityContextConnection' not found.");
 
 var connectionStringIdentity = builder.Configuration.GetConnectionString("IdentityContextConnection") ?? throw new InvalidOperationException("Connection string 'IdentityContextConnection' not found.");
+#region Emailer Stuff
+builder.Configuration
+        .SetBasePath(Directory.GetCurrentDirectory())
+        .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+        .AddJsonFile("appsettings.Development.json", optional: true, reloadOnChange: true)
+        .AddJsonFile("Secrets/secrets.json", optional: true, reloadOnChange: true)
+        .AddEnvironmentVariables();
+
+var smtpUsername = builder.Configuration["Smtp:Username"];
+var smtpPassword = builder.Configuration["Smtp:Password"];
+var smtpHost = builder.Configuration["Smtp:Host"];
+var smtpPort = builder.Configuration["Smtp:Port"];
 builder.Services.Configure<SmtpSettings>(builder.Configuration.GetSection("Smtp"));
 
+builder.Services.AddTransient<IEmailSender, NCRSpotlightEmailer>();
+#endregion
 builder.Services.AddDbContext<IdentityContext>(options => options.UseSqlite(connectionStringIdentity));
 
 builder.Services.AddDbContext<NCRContext>(options => options.UseSqlite(connectionStringNCRSpotlight));
-builder.Services.AddTransient<IEmailSender, NCRSpotlightEmailer>();
 builder.Services.AddIdentity<IdentityUser, IdentityRole>(options => 
 {
     options.SignIn.RequireConfirmedAccount = false;
@@ -38,6 +52,7 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
 }).AddEntityFrameworkStores<IdentityContext>()
 .AddDefaultTokenProviders();
 
+builder.Services.AddScoped<QualityPortionService>();
 
 // Add services to the container.
 //Without the .AddRazorPages we cant use .cshtml pages
@@ -152,7 +167,7 @@ app.MapRazorPages();
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
-    await IdentityUsersInitializer.InitializeAsync(serviceProvider: services, DeleteDatabase: false,
+    await IdentityUsersInitializer.InitializeAsync(serviceProvider: services, DeleteDatabase: true,
         UseMigrations: true, SeedSampleData: true);
 }
 

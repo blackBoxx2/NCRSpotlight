@@ -20,6 +20,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="8.0.0" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.6" />
   </ItemGroup>
 
@@ -32,6 +33,7 @@
 
   <ItemGroup>
     <Folder Include="Areas\Identity\Data\Migrations\" />
+    <Folder Include="Secrets\" />
   </ItemGroup>
 
 </Project>

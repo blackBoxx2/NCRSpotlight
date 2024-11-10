@@ -1,4 +1,5 @@
 ﻿using EntitiesLayer.Models;
+using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,7 +18,7 @@ namespace UseCasesLayer.UseCaseInterfaces.RoleUseCases
         {
             this._roleRepository = roleRepository;
         }
-        public async Task Execute(int? id, Role role)
+        public async Task Execute(string id, IdentityRole role)
         {
            await _roleRepository.UpdateRoleAsync(id, role);
         }
