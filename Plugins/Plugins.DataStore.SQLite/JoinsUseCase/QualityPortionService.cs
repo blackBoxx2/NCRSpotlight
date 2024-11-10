@@ -40,12 +40,10 @@ namespace Plugins.DataStore.SQLite.JoinsUseCase
                                         .Select(x => x.Id)
                                         .ToListAsync();
             var qualityPortions = await nCRContext.QualityPortions
-                                .Include(qp => qp.Product)  // Ensure Product is included
+                                .Include(qp => qp.Product)  // Edit if need Be ******
                                 .Where(qp => representativesIds.Contains(qp.RepId))
                                 .ToListAsync();
-            //var qualityPortions = await nCRContext.QualityPortions
-            //                            .Where(qp => representativesIds.Contains(qp.RepId))
-            //                            .ToListAsync();
+
 
             var qpNcrJoinTable = from q in qualityPortions
                                  join r in representatives on q.RepId equals r.Id
