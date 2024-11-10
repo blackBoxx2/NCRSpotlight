@@ -1,4 +1,5 @@
 ﻿using EntitiesLayer.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -12,70 +13,64 @@ namespace Plugins.DataStore.SQLite
 {
     public class RoleRepSQLRepository : IRoleRepRepository
     {
-        private readonly NCRContext _context;
+        private readonly NCRContext ncrContext;
+        private readonly IdentityContext identityContext;
 
-        public RoleRepSQLRepository(NCRContext context)
+        public RoleRepSQLRepository(NCRContext ncrContext, IdentityContext identityContext)
         {
-            _context = context;
+            ncrContext = ncrContext;
+            this.identityContext = identityContext;
         }
 
         // list all roleRep
-        public async Task<IEnumerable<RoleRep>> GetRoleRepASync()
+        public async Task<IEnumerable<IdentityUserRole<string>>> GetRoleRepASync()
         {
-            var roleReps = await _context.RoleReps
-                .Include(r => r.Representative)
-                .Include(r => r.Role)
+            var roleReps = await identityContext.UserRoles
                 .ToListAsync();
             return roleReps;
         }
 
        
-        public async Task<RoleRep> GetRoleRepByIdAsync(int? id)
+        public async Task<IdentityUserRole<string>> GetRoleRepByIdAsync(string id)
         {
             if (id == null) return null;
 
-            var roleRep = await _context.RoleReps
-                .Include(r => r.Representative)
-                .Include(r => r.Role)
-                .FirstOrDefaultAsync(m => m.RoleRepID == id);
+            var roleRep = await identityContext.UserRoles
+                .FirstOrDefaultAsync(m => m.RoleId == id);
 
             return roleRep;
         }
 
         // add a roleRep
-        public async Task AddRoleRepAsync(RoleRep roleRep)
+        public async Task AddRoleRepAsync(IdentityUserRole<string> roleRep)
         {
-            _context.RoleReps.Add(roleRep);
-            await _context.SaveChangesAsync();
+            identityContext.UserRoles.Add(roleRep);
+            await identityContext.SaveChangesAsync();
         }
 
         // edit roleRep
-        public async Task UpdateRoleRepAsync(int? id, RoleRep roleRep)
+        public async Task UpdateRoleRepAsync(string id, IdentityUserRole<string> roleRep)
         {
-            if (id != roleRep.RoleRepID) return;
+            if (id != roleRep.RoleId) return;
 
-            var roleRepToUpdate = await _context.RoleReps
-                                        .Include(r => r.Representative)
-                                        .Include(r => r.Role)
-                                        .FirstOrDefaultAsync(r => r.RoleRepID == id);
+            var roleRepToUpdate = await identityContext.UserRoles
+                                        .FirstOrDefaultAsync(r => r.RoleId == id);
             if (roleRepToUpdate == null) return;
 
-            roleRepToUpdate.RoleID = roleRep.RoleID;
-            roleRepToUpdate.RepresentativeID = roleRep.RepresentativeID;
-            await _context.SaveChangesAsync();
+            roleRepToUpdate.RoleId = roleRep.RoleId;
+            roleRepToUpdate.UserId = roleRep.UserId;
+            await identityContext.SaveChangesAsync();
         }
 
         // delete roleRep
-        public async Task DeleteRoleRepAsync(int id)
+        public async Task DeleteRoleRepAsync(string id)
         {
-            var roleRep = await _context.RoleReps
-                                .Include(r => r.Representative)
-                                .Include(r => r.Role)
-                                .FirstOrDefaultAsync(r => r.RoleRepID == id);
+            var roleRep = await identityContext.UserRoles
+                                .FirstOrDefaultAsync(r => r.RoleId == id);
             if (roleRep != null)
             {
-                _context.RoleReps.Remove(roleRep);
-                await _context.SaveChangesAsync();
+                identityContext.UserRoles.Remove(roleRep);
+                await identityContext.SaveChangesAsync();
             }
         }
     }

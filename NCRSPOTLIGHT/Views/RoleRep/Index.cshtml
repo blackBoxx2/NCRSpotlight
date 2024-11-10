@@ -1,4 +1,5 @@
-﻿@model IEnumerable<EntitiesLayer.Models.RoleRep>
+﻿@using Microsoft.AspNetCore.Identity
+@model IEnumerable<IdentityUserRole<string>>
 
 @{
     ViewData["Title"] = "Index";
@@ -13,10 +14,10 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Role)
+                @Html.DisplayNameFor(model => model.RoleId)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Representative)
+                @Html.DisplayNameFor(model => model.UserId)
             </th>
             <th></th>
         </tr>
@@ -25,15 +26,15 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.Role.RoleName)
+                @Html.DisplayFor(modelItem => item.RoleId)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Representative.FirstName)
+                @Html.DisplayFor(modelItem => item.UserId)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.RoleRepID">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.RoleRepID">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.RoleRepID">Delete</a>
+                    <a asp-action="Edit" asp-route-userId="@item.UserId" asp-route-roleId="@item.RoleId">Edit</a> |
+                    <a asp-action="Details" asp-route-userId="@item.UserId" asp-route-roleId="@item.RoleId">Details</a> |
+                    <a asp-action="Delete" asp-route-userId="@item.UserId" asp-route-roleId="@item.RoleId">Delete</a>
             </td>
         </tr>
 }

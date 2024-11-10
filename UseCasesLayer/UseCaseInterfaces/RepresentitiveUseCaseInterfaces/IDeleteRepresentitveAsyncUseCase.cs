@@ -10,6 +10,6 @@ namespace UseCasesLayer.UseCaseInterfaces.RepresentitiveUseCaseInterfaces
 {
     public interface IDeleteRepresentativeAsyncUseCase
     {
-        Task Execute(int id);
+        Task Execute(string id);
     }
 }

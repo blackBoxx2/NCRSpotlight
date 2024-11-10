@@ -36,60 +36,55 @@ namespace Plugins.DataStore.SQLite
 
             return representitives;
         }
-        public async Task<Representative> GetRepresentativesByIdAsync(int? id)
+        public async Task<IdentityUser> GetRepresentativesByIdAsync(string id)
         {
             if (id == null) return null;
 
-            var representative = await _context.Representatives
-                .Include(r => r.RoleReps)
+            var representative = await identityContext.Users
                 .AsNoTracking()
-                .FirstOrDefaultAsync(m => m.ID == id);
+                .FirstOrDefaultAsync(m => m.Id == id);
 
             return representative;
         }
 
         // Add a representitive
-        public async Task AddRepresentativeAsync(Representative representative)
+        public async Task AddRepresentativeAsync(IdentityUser representative)
         {
-            _context.Representatives.Add(representative);
-            await _context.SaveChangesAsync();
+            identityContext.Users.Add(representative);
+            await identityContext.SaveChangesAsync();
         }
 
         //Edit a rep
-        public async Task UpdateRepresentativeAsync(int? id, Representative representative)
+        public async Task UpdateRepresentativeAsync(string id, IdentityUser representative)
         {
-            if (id != representative.ID) return;
+            if (id != representative.Id) return;
 
-            var repToUpdate = await _context.Representatives
-                .Include(r => r.RoleReps)
-                .FirstOrDefaultAsync(r => r.ID == id);
+            var repToUpdate = await identityContext.Users
+                .FirstOrDefaultAsync(r => r.Id == id);
             if (representative == null) return;
 
-            repToUpdate.FirstName = representative.FirstName;
-            if(representative.MiddleInitial != null)
-                repToUpdate.MiddleInitial = representative.MiddleInitial;
-            repToUpdate.LastName = representative.LastName;
-            await _context.SaveChangesAsync();
+            repToUpdate.UserName = representative.UserName;
+            repToUpdate.Email = representative.Email;
+            await identityContext.SaveChangesAsync();
 
         }
 
         // Delete a rep
 
-        public async Task DeleteRepresentativeAsync(int id)
+        public async Task DeleteRepresentativeAsync(string id)
         {
-            var representative = await _context.Representatives
-                .Include(r => r.RoleReps)
-                .FirstOrDefaultAsync(r => r.ID == id);
+            var representative = await identityContext.Users
+                .FirstOrDefaultAsync(r => r.Id == id);
 
             if (representative != null)
             {
-                if (representative.RoleReps.Count() > 0)
-                {
-                    throw new Exception("Error: You cannot delete this representative because it has attached roles.");
-                }
+                //if (representative.RoleReps.Count() > 0)
+                //{
+                //    throw new Exception("Error: You cannot delete this representative because it has attached roles.");
+                //}
 
-                _context.Representatives.Remove(representative);
-                await _context.SaveChangesAsync();
+                identityContext.Users.Remove(representative);
+                await identityContext.SaveChangesAsync();
             }
         }
 

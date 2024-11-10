@@ -1,4 +1,5 @@
 ﻿using EntitiesLayer.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -13,65 +14,63 @@ namespace Plugins.DataStore.SQLite
     public class RoleSQLRepository : IRoleRepository
     {
         private readonly NCRContext _context;
+        private readonly IdentityContext identityContext;
 
-        public RoleSQLRepository(NCRContext context)
+        public RoleSQLRepository(NCRContext context, IdentityContext identityContext)
         {
             _context = context;
+            this.identityContext = identityContext;
         }
 
         // List the roles
-        public async Task<IEnumerable<Role>> GetRolesAsync()
+        public async Task<IEnumerable<IdentityRole>> GetRolesAsync()
         {
-            var roles = await _context.Roles
-                .Include(g => g.RoleReps)
-                .AsNoTracking()
+            var roles = await identityContext.Roles
                 .ToListAsync();
             return roles;
         }
 
-        public async Task<Role> GetRoleByIDAsync(int? ID)
+        public async Task<IdentityRole> GetRoleByIDAsync(string Id)
         {
-            if (ID == null) { return null; }
-            var role = await _context.Roles
-                .Include(g => g.RoleReps)
-                .AsNoTracking()
-                .FirstOrDefaultAsync(g => g.ID == ID);
+            if (Id == null) { return null; }
+            var role = await identityContext.Roles
+                .FirstOrDefaultAsync(g => g.Id == Id);
             return role;
 
         }
         //Add the role
 
-        public async Task AddRoleAsync(Role role)
+        public async Task AddRoleAsync(IdentityRole role)
         {
-            _context.Roles.Add(role);
-            await _context.SaveChangesAsync();
+            identityContext.Roles.Add(role);
+            await identityContext.SaveChangesAsync();
         }
 
         //Edit a Role
-        public async Task UpdateRoleAsync(int? id, Role role)
+        public async Task UpdateRoleAsync(string id, IdentityRole role)
         {
-            if (id != role.ID) { return; }
-            var RoleToUpdate = await _context.Roles
-                .Include(g => g.RoleReps)
-                .FirstOrDefaultAsync(g => g.ID == id);
+            if (id != role.Id) { return; }
+            var RoleToUpdate = await identityContext.Roles
+                .FirstOrDefaultAsync(g => g.Id == id);
             if (role == null) { return; }
 
-            RoleToUpdate.RoleName = role.RoleName;
-            await _context.SaveChangesAsync();
+            RoleToUpdate.Name = role.Name;
+            await identityContext.SaveChangesAsync();
         }
         //Delete a role 
 
-        public async Task DeleteRoleAsync(int id)
+        public async Task DeleteRoleAsync(string id)
         {
-            var role = await _context.Roles
-                .FirstOrDefaultAsync(g => g.ID == id);
+            var role = await identityContext.Roles
+                .FirstOrDefaultAsync(g => g.Id == id);
             if (role != null)
             {
-                if (role.RoleReps.Count() > 0)
+                var userRole = await identityContext.UserRoles.FindAsync(id);
+                if ( userRole != null)
                 {
                     throw new InvalidOperationException("Impossible to delete a role that as a role rep in the system");
                 }
-                _context.Roles.Remove(role);
+                identityContext.Roles.Remove(role);
                 await _context.SaveChangesAsync();
             }
         }

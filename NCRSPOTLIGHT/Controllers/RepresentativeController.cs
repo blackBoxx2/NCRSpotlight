@@ -9,6 +9,7 @@ using EntitiesLayer.Models;
 using Plugins.DataStore.SQLite;
 using UseCasesLayer.UseCaseInterfaces.RepresentitiveUseCaseInterfaces;
 using SQLitePCL;
+using Microsoft.AspNetCore.Identity;
 
 namespace NCRSPOTLIGHT.Controllers
 {
@@ -41,7 +42,7 @@ namespace NCRSPOTLIGHT.Controllers
         }
 
         // GET: Representative/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(string id)
         {
             if (id == null)
             {
@@ -68,7 +69,7 @@ namespace NCRSPOTLIGHT.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ID,FirstName,MiddleInitial,LastName")] Representative representative)
+        public async Task<IActionResult> Create(IdentityUser representative)
         {
             if (ModelState.IsValid)
             {
@@ -79,7 +80,7 @@ namespace NCRSPOTLIGHT.Controllers
         }
 
         // GET: Representative/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> Edit(string id)
         {
             if (id == null)
             {
@@ -99,9 +100,9 @@ namespace NCRSPOTLIGHT.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ID,FirstName,MiddleInitial,LastName")] Representative representative)
+        public async Task<IActionResult> Edit(string id,  IdentityUser representative)
         {
-            if (id != representative.ID)
+            if (id != representative.Id)
             {
                 return NotFound();
             }
@@ -114,7 +115,7 @@ namespace NCRSPOTLIGHT.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (! await RepresentativeExists(representative.ID))
+                    if (! await RepresentativeExists(representative.Id))
                     {
                         return NotFound();
                     }
@@ -129,7 +130,7 @@ namespace NCRSPOTLIGHT.Controllers
         }
 
         // GET: Representative/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> Delete(string id)
         {
             if (id == null)
             {
@@ -148,17 +149,17 @@ namespace NCRSPOTLIGHT.Controllers
         // POST: Representative/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(string id)
         {
             var representative = await _getRepresentativesByIdAsyncUseCase.Execute(id);
             if (representative != null)
             {
-                await _deleteRepresentativeAsyncUseCase.Execute(representative.ID);
+                await _deleteRepresentativeAsyncUseCase.Execute(representative.Id);
             }
             return RedirectToAction(nameof(Index));
         }
 
-        private async Task<bool> RepresentativeExists(int id)
+        private async Task<bool> RepresentativeExists(string id)
         {
             var representative = await _getRepresentativesByIdAsyncUseCase.Execute(id);
             return representative != null;

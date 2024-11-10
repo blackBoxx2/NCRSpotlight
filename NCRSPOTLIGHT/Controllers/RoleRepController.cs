@@ -10,6 +10,7 @@ using Plugins.DataStore.SQLite;
 using UseCasesLayer.UseCaseInterfaces.SuppliersUseCaseInterfaces;
 using UseCasesLayer.UseCaseInterfaces.RoleRepUseCaseInterfaces;
 using UseCasesLayer.UseCaseInterfaces.SuppliersUseCases;
+using Microsoft.AspNetCore.Identity;
 
 namespace NCRSPOTLIGHT.Controllers
 {
@@ -44,7 +45,7 @@ namespace NCRSPOTLIGHT.Controllers
         }
 
         // GET: RoleRep/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(string id)
         {
             if (id == null)
             {
@@ -71,7 +72,7 @@ namespace NCRSPOTLIGHT.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("RoleRepID,RoleID,RepresentativeID")] RoleRep roleRep)
+        public async Task<IActionResult> Create( IdentityUserRole<string> roleRep)
         {
             if (ModelState.IsValid)
             {
@@ -82,7 +83,7 @@ namespace NCRSPOTLIGHT.Controllers
         }
 
         // GET: RoleRep/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> Edit(string id)
         {
             if (id == null)
             {
@@ -102,9 +103,9 @@ namespace NCRSPOTLIGHT.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("RoleRepID,RoleID,RepresentativeID")] RoleRep roleRep)
+        public async Task<IActionResult> Edit(string id, IdentityUserRole<string> roleRep)
         {
-            if (id != roleRep.RoleID)
+            if (id != roleRep.RoleId)
             {
                 return NotFound();
             }
@@ -117,7 +118,7 @@ namespace NCRSPOTLIGHT.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!await RoleRepExists(roleRep.RoleID))
+                    if (!await RoleRepExists(roleRep.RoleId))
                     {
                         return NotFound();
                     }
@@ -132,7 +133,7 @@ namespace NCRSPOTLIGHT.Controllers
         }
 
             // GET: RoleRep/Delete/5
-            public async Task<IActionResult> Delete(int? id)
+            public async Task<IActionResult> Delete(string id)
         {
             if (id == null)
             {
@@ -151,17 +152,17 @@ namespace NCRSPOTLIGHT.Controllers
         // POST: RoleRep/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(string id)
         {
             var roleRep = await _getRoleRepByIDAsyncUseCase.Execute(id);
             if (roleRep != null)
             {
-                await _deleteRoleRepAsyncUseCase.Execute(roleRep.RoleID);
+                await _deleteRoleRepAsyncUseCase.Execute(roleRep.RoleId);
             }
             return RedirectToAction(nameof(Index));
         }
 
-        private async Task<bool> RoleRepExists(int id)
+        private async Task<bool> RoleRepExists(string id)
         {
             var roleRep = await _getRoleRepByIDAsyncUseCase.Execute(id);
 

@@ -1,4 +1,5 @@
-﻿@model IEnumerable<EntitiesLayer.Models.QualityPortion>
+﻿@using EntitiesLayer.ViewModels
+@model IEnumerable<QualityPortionsWithRepViewModel>
 
 @{
     ViewData["Title"] = "Index";
@@ -13,19 +14,19 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Product)
+                @Html.DisplayNameFor(model => model.QualityPortion.Product)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Quantity)
+                @Html.DisplayNameFor(model => model.QualityPortion.Quantity)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.QuantityDefective)
+                @Html.DisplayNameFor(model => model.QualityPortion.QuantityDefective)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.OrderNumber)
+                @Html.DisplayNameFor(model => model.QualityPortion.OrderNumber)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.RoleRep)
+                @Html.DisplayNameFor(model => model.Representative.Id)
             </th>
             <th></th>
         </tr>
@@ -34,24 +35,24 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.Product.Description)
+                @Html.DisplayFor(modelItem => item.QualityPortion.Product.Description)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Quantity)
+                @Html.DisplayFor(modelItem => item.QualityPortion.Quantity)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.QuantityDefective)
+                @Html.DisplayFor(modelItem => item.QualityPortion.QuantityDefective)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.OrderNumber)
+                @Html.DisplayFor(modelItem => item.QualityPortion.OrderNumber)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.RoleRep.RoleRepID)
+                @Html.DisplayFor(modelItem => item.Representative.Id)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.ID">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.ID">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.ID">Delete</a>
+                <a asp-action="Edit" asp-route-id="@item.QualityPortion.ID">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.QualityPortion.ID">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.QualityPortion.ID">Delete</a>
             </td>
         </tr>
 }

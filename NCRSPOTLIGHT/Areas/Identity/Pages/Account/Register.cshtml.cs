@@ -20,10 +20,12 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using MimeKit;
 using NCRSPOTLIGHT.Areas.Identity.Data;
 using NCRSPOTLIGHT.Utilities;
 using Plugins.DataStore.SQLite;
+using System.IO;
 
 namespace NCRSPOTLIGHT.Areas.Identity.Pages.Account
 {
@@ -36,13 +38,16 @@ namespace NCRSPOTLIGHT.Areas.Identity.Pages.Account
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
         private readonly RoleManager<IdentityRole> roleManager;
+        private readonly SmtpSettings smtpSettings;
+
         public RegisterModel(
             UserManager<IdentityUser> userManager,
             IUserStore<IdentityUser> userStore,
             SignInManager<IdentityUser> signInManager,
             ILogger<RegisterModel> logger,
             IEmailSender emailSender,
-            RoleManager<IdentityRole> roleManager)
+            RoleManager<IdentityRole> roleManager,
+            IOptions<SmtpSettings> smtpSettings)
         {
             _userManager = userManager;
             _userStore = userStore;
@@ -51,6 +56,7 @@ namespace NCRSPOTLIGHT.Areas.Identity.Pages.Account
             _logger = logger;
             _emailSender = emailSender;
             this.roleManager = roleManager;
+            this.smtpSettings = smtpSettings.Value;
         }
 
         /// <summary>
@@ -156,8 +162,13 @@ namespace NCRSPOTLIGHT.Areas.Identity.Pages.Account
                             protocol: Request.Scheme);
 
                         var emailBody = $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.";
-                        //await _emailSender.SendEmailAsync(Input.Email, "Confirm your email", emailBody);                       
-                        if (_userManager.Options.SignIn.RequireConfirmedAccount)
+                        var secretsFilePath = Path.Combine(Directory.GetCurrentDirectory(), "Secrets", "secrets.json");
+                        if (System.IO.File.Exists(secretsFilePath))
+
+                        {
+                            await _emailSender.SendEmailAsync(Input.Email, "Confirm your email", emailBody);
+                        }
+                    if (_userManager.Options.SignIn.RequireConfirmedAccount)
                         {
                             return RedirectToPage("RegisterConfirmation", new { email = Input.Email, returnUrl = returnUrl });
                         }

@@ -17,7 +17,7 @@ namespace UseCasesLayer.UseCaseInterfaces.RoleUseCases
         {
             this._roleRepository = roleRepository;
         }
-        public async Task Execute(int id)
+        public async Task Execute(string id)
         {
            await _roleRepository.DeleteRoleAsync(id);
         }

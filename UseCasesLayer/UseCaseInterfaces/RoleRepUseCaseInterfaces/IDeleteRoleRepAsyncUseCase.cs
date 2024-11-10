@@ -8,6 +8,6 @@ namespace UseCasesLayer.UseCaseInterfaces.RoleRepUseCaseInterfaces
 {
     public interface IDeleteRoleRepAsyncUseCase
     {
-        Task Execute(int id);
+        Task Execute(string id);
     }
 }

@@ -1,4 +1,5 @@
 ﻿using EntitiesLayer.Models;
+using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,7 +19,7 @@ namespace UseCasesLayer.UseCaseInterfaces.RoleRepUseCases
             this._roleRepRepository = roleRepRepository;
         }
 
-        public async Task<RoleRep> Execute(int? id)
+        public async Task<IdentityUserRole<string>> Execute(string id)
         {
             return await _roleRepRepository.GetRoleRepByIdAsync(id);
 
