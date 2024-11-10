@@ -11,6 +11,7 @@ using UseCasesLayer.UseCaseInterfaces.NCRLogUseCaseInterfaces;
 using UseCasesLayer.UseCaseInterfaces.QualityPortionUseCaseInterfaces;
 using UseCasesLayer.UseCaseInterfaces.QualityPortionUseCase;
 using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace NCRSPOTLIGHT.Controllers
 {
@@ -66,9 +67,15 @@ namespace NCRSPOTLIGHT.Controllers
         }
 
         // GET: NCRLog/Create
-        [Authorize(Policy = "Admin")]
+        //[Authorize(Policy = "Admin")]
         public async Task<IActionResult> Create()
         {
+            var user = HttpContext.User;
+            var userRoles = GetUserRoles(user);
+
+            ViewBag.QASection = userRoles.Contains("QualityAssurance") ? "enabled" : "disabled";
+            ViewBag.EngineerSection = userRoles.Contains("Engineer") ? "enabled" : "disabled";
+
             ViewData["QualityPortionID"] = new SelectList(await _getQualityPortionsAsyncUseCase.Execute(), "ID", "DefectDescription");
             return View();
         }
@@ -103,6 +110,13 @@ namespace NCRSPOTLIGHT.Controllers
             {
                 return NotFound();
             }
+
+            var user = HttpContext.User;
+            var userRoles = GetUserRoles(user);
+
+            ViewBag.QASection = userRoles.Contains("QualityAssurance") ? "enabled" : "disabled";
+            ViewBag.EngineerSection = userRoles.Contains("Engineer") ? "enabled" : "disabled";
+
             ViewData["QualityPortionID"] = new SelectList(await _getQualityPortionsAsyncUseCase.Execute(), "ID", "DefectDescription", nCRLog.QualityPortionID);
             return View(nCRLog);
         }
@@ -177,6 +191,14 @@ namespace NCRSPOTLIGHT.Controllers
         {
             var log = _getNCRLogByIDAsyncUseCase.Execute(id);
             return log != null;
-        }     
+        }
+
+        private List<string> GetUserRoles(ClaimsPrincipal user)
+        {
+            return User.Claims
+                       .Where(c => c.Type == ClaimTypes.Role)
+                       .Select(c => c.Value)
+                       .ToList();
+        }
     }
 }
