@@ -66,7 +66,6 @@ namespace NCRSPOTLIGHT.Controllers
         }
 
         // GET: NCRLog/Create
-        [Authorize(Policy = "Admin")]
         public async Task<IActionResult> Create()
         {
             ViewData["QualityPortionID"] = new SelectList(await _getQualityPortionsAsyncUseCase.Execute(), "ID", "DefectDescription");
