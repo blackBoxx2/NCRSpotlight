@@ -13,6 +13,7 @@ using UseCasesLayer.UseCaseInterfaces.QualityPortionUseCase;
 using Microsoft.AspNetCore.Authorization;
 using UseCasesLayer.UseCaseInterfaces.ProductUseCaseInterfaces;
 using UseCasesLayer.UseCaseInterfaces.EngUseCaseInterfaces;
+using System.Security.Claims;
 
 namespace NCRSPOTLIGHT.Controllers
 {
@@ -102,8 +103,7 @@ namespace NCRSPOTLIGHT.Controllers
         {
 
             await _addQualityPortionAsyncUseCase.Execute(qualityPortion);
-            
-            nCRLog.QualityPortionID = _getQualityPortionsAsyncUseCase.Execute().Result.First().ID;
+            nCRLog.QualityPortionID = _getQualityPortionsAsyncUseCase.Execute().Result.Last().ID;
             nCRLog.EngPortionID = 1; 
 
             try

@@ -22,7 +22,7 @@ var connectionStringIdentity = builder.Configuration.GetConnectionString("Identi
 builder.Services.Configure<SmtpSettings>(builder.Configuration.GetSection("Smtp"));
 
 builder.Services.AddTransient<IEmailSender, NCRSpotlightEmailer>();
-#endregion
+
 builder.Services.AddDbContext<IdentityContext>(options => options.UseSqlite(connectionStringIdentity));
 
 builder.Services.AddDbContext<NCRContext>(options => options.UseSqlite(connectionStringNCRSpotlight));

@@ -432,7 +432,7 @@ namespace Plugins.DataStore.SQLite
                                     DefectDescription = defect,
                                     Quantity = (int)Math.Round((78.0 * (ordNum * 0.6)) / 1.5),
                                     QuantityDefective = ordNum * 2,
-                                    RepId = identityContext.UserRoles.Where(
+                                    RepID = identityContext.UserRoles.Where(
                                         p => p.RoleId == identityContext.Roles
                                         .FirstOrDefault(p => p.Name == "QualityAssurance")!
                                         .Id
