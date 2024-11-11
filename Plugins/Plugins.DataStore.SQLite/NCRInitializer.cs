@@ -326,6 +326,80 @@ namespace Plugins.DataStore.SQLite
                             }
                         }
 
+
+                        // QualityPortion seed data
+                        if (!context.QualityPortions.Any())
+                        {
+
+                            string[] defect_descs = {
+                                "crack on bottom",
+                                "sustained damage during shipping",
+                                "lcd damaged",
+                                "plastic is malformed",
+                                "injection mould was not properly filled",
+                                "poor threading",
+                                "loose connection fit",
+                                "frayed wires",
+                                "paint is chipped",
+                                "varnish is scratched",
+                                "deep gouge in left side",
+                                "bulb glass came crushed"
+                            };
+
+                            int ordNum = 1;
+
+                            List<string> imgPaths = new List<string>()
+                                {
+                                    @"Assets\ProductImages\keyboard.jpg",
+                                    @"Assets\ProductImages\ram.jpg",
+                                    @"Assets\ProductImages\ryzen.jpg",
+                                    @"Assets\ProductImages\intel.jpg",
+                                    @"Assets\ProductImages\nvidia.jpg",
+                                    @"Assets\ProductImages\ssd.jpg",
+                                    @"Assets\ProductImages\rog-motherboard.jpg",
+                                    @"Assets\ProductImages\towercase.jpg",
+                                    @"Assets\ProductImages\powersupply.jpg",
+                                    @"Assets\ProductImages\pccooler.jpg",
+                                    @"Assets\ProductImages\mouse.jpg",
+                                    @"Assets\ProductImages\headset.jpg",
+                                    @"Assets\ProductImages\kingstonssd.jpg",
+                                    @"Assets\ProductImages\router.jpg",
+                                    @"Assets\ProductImages\hdd.jpg",
+                                    @"Assets\ProductImages\monitor.jpg",
+                                    @"Assets\ProductImages\printer.jpg",
+                                    @"Assets\ProductImages\NAS.jpg",
+                                    @"Assets\ProductImages\steamdeck.jpg",
+                                    @"Assets\ProductImages\portablecharger.jpg"
+                            };
+
+                            foreach (string defect in defect_descs)
+                            {
+                                var qp = new QualityPortion
+                                {
+                                    ProductID = ordNum,
+                                    OrderNumber = $"0001-{ordNum:D4}",
+                                    DefectDescription = defect,
+                                    Quantity = (int)Math.Round((78.0 * (ordNum * 0.6)) / 1.5),
+                                    QuantityDefective = ordNum * 2,
+                                    RepId = identityContext.UserRoles.Where(
+                                        p => p.RoleId == identityContext.Roles
+                                        .FirstOrDefault(p => p.Name == "QualityAssurance")!
+                                        .Id
+                                        )
+                                    .FirstOrDefault()!
+                                    .UserId
+                                };
+
+                                
+
+                                await WebImagestoByArrayStatic.SeedQualityPictures(imgPaths[ordNum-1], qp);
+
+                                context.QualityPortions.Add(qp);
+                                ordNum++;
+                            }
+                            
+                        }
+
                         await context.SaveChangesAsync();
                     }
                 }
