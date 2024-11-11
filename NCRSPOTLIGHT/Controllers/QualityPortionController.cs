@@ -56,9 +56,21 @@ namespace NCRSPOTLIGHT.Controllers
         }
 
         // GET: QualityPortion
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int? ProductID, string? RepId)
         {
+            LoadSelectList();
+
+
             var qualityPortions = await qualityPortionService.GetQualityPortionsWithRepresentativeAsync();
+
+            if (ProductID.HasValue)
+            {
+                qualityPortions = qualityPortions.Where(p => p.QualityPortion.ProductID == ProductID);
+            }
+            if (RepId != String.Empty && RepId != null)
+            {
+                qualityPortions = qualityPortions.Where(p => p.Representative.Id == RepId);
+            } 
             return View(qualityPortions);
         }
 
@@ -225,6 +237,26 @@ namespace NCRSPOTLIGHT.Controllers
                 throw new Exception("Rep List is Empty");
             }
             else if(ViewBag.ProductId == null)
+            {
+                throw new Exception(" List is Empty");
+
+            }
+        }
+
+        public async void LoadSelectList()
+        {
+            var qa_id = identityContext.Roles.FirstOrDefault(p => p.Name == "QualityAssurance")!.Id;
+            var qa_user_ids = identityContext.UserRoles.Where(p => p.RoleId == qa_id).Select(p => p.UserId);
+            var qa_reps = identityContext.Users.Where(p => qa_user_ids.Contains(p.Id));
+            ViewBag.RepId = new SelectList(qa_reps, "Id", "UserName", 1);
+
+
+            ViewBag.ProductID = new SelectList(await _getProductsAsyncUseCase.Execute(), "ID", "Description");
+            if (ViewBag.RepID == null)
+            {
+                throw new Exception("Rep List is Empty");
+            }
+            else if (ViewBag.ProductId == null)
             {
                 throw new Exception(" List is Empty");
 
