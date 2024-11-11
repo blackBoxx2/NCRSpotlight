@@ -70,7 +70,7 @@ namespace NCRSPOTLIGHT.Controllers
         // GET: QualityPortion/Create
         public async Task<IActionResult> Create()
         {
-            var qualityPortion = new QualityPortion();
+            var qualityPortion = new QualityPortion();            
             ViewData["User"] = HttpContext.User.Identity.Name;
             LoadSelectList(qualityPortion);
             return View(qualityPortion);

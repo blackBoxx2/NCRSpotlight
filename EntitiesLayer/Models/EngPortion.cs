@@ -22,7 +22,7 @@ namespace EntitiesLayer.Models
         public int RevNumber { get; set; } = 0;
 
         public DateTime RevDate { get; set; } = DateTime.Today;       
-        public string RepID { get; set; }
+        public string RepID { get; set; } = string.Empty;
 
 
     }

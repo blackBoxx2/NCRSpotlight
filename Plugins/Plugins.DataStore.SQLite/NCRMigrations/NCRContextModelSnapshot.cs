@@ -153,20 +153,18 @@ namespace Plugins.DataStore.SQLite.NCRMigrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("DefectDescription")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("OrderNumber")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<int>("ProductID")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("Quantity")
+                    b.Property<int?>("Quantity")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("QuantityDefective")
+                    b.Property<int?>("QuantityDefective")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("RepID")

@@ -3,6 +3,7 @@
 
 @{
     ViewData["Title"] = "Create";
+    string? user = ViewData["User"] as string;
 }
 
 <h1>Create</h1>
@@ -11,7 +12,7 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Create">
+        <form form asp-action="Create" method="post" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="accordion" id="qualityAccordion">
 
@@ -21,17 +22,59 @@
                         <h3 class="Accordion-Header" id="qualityHeading">Quality Assurance</h3>
                     </button>
 
-                </div>
+                </div>              
 
                 <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#qualityAccordion">
                     <div class="accordion-body">
-                        <p>broooooo</p>
+                        
+                        
+                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>                                  
+                            <div class="form-group">
+                                <label asp-for="QualityPortion.ProductID" class="control-label"></label>
+                                <select asp-for="QualityPortion.ProductID" class="form-control" asp-items="ViewBag.ProductID"></select>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="QualityPortion.Quantity" class="control-label"></label>
+                                <input asp-for="QualityPortion.Quantity" class="form-control" />
+                                <span asp-validation-for="QualityPortion.Quantity" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="QualityPortion.QuantityDefective" class="control-label"></label>
+                                <input asp-for="QualityPortion.QuantityDefective" class="form-control" />
+                                <span asp-validation-for="QualityPortion.QuantityDefective" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="QualityPortion.OrderNumber" class="control-label"></label>
+                                <input asp-for="QualityPortion.OrderNumber" class="form-control" />
+                                <span asp-validation-for="QualityPortion.OrderNumber" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="QualityPortion.DefectDescription" class="control-label"></label>
+                                <textarea asp-for="QualityPortion.DefectDescription" class="form-control" rows="4" cols="50"></textarea>
+                                <span asp-validation-for="QualityPortion.DefectDescription" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="QualityPortion.RepID" class="control-label"></label>
+                                <input asp-for="QualityPortion.RepID" class="form-control" value="@user" readonly="readonly" />
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label custom-file-label">Upload Pictures: </label>
+                                <div>
+                                    <input type="file" class="form-control" name="theFiles" multiple="multiple"
+                                           onchange="document.getElementById('ImagePreview').src = window.URL.createObjectURL(this.files[0])" />
+                                </div>
+                                <img id="ImagePreview" src="" />
+                            </div>
+                            <div class="form-group">
+                                <input type="submit" value="Create" class="btn btn-primary" />
+                            </div>                
+                        
                     </div>
                 </div>
             </div>
             <div class="form-group">
                 <label asp-for="DateCreated" class="control-label"></label>
-                <input asp-for="DateCreated" class="form-control" value=""/>
+                <input asp-for="DateCreated" class="form-control" value="" />
                 <span asp-validation-for="DateCreated" class="text-danger"></span>
             </div>
             <div class="form-group">

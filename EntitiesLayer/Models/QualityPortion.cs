@@ -14,26 +14,26 @@ namespace EntitiesLayer.Models
         [Key]
         public int ID { get; set; }
 
-        
-        public int ProductID { get; set; }
+
+        public int ProductID { get; set; } = 1;
 
         public Product? Product { get; set; }
 
         
         [Display(Name = "Quantity Ordered")]
-        public int Quantity { get; set; }
+        public int? Quantity { get; set; }
 
         
         [Display(Name = "Quantity Defective")]
-        public int QuantityDefective { get; set; }
+        public int? QuantityDefective { get; set; }
 
         
         [Display(Name = "Order Number")]
-        public string OrderNumber { get; set; }
+        public string? OrderNumber { get; set; } = " ";
 
         
         [Display(Name = "Defect Description")]
-        public string DefectDescription { get; set; }
+        public string? DefectDescription { get; set; } = " ";
 
         [Display(Name = "Created By")]
         public string RepID { get; set; }

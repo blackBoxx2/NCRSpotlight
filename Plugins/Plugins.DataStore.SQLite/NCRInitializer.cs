@@ -137,6 +137,9 @@ namespace Plugins.DataStore.SQLite
 
                     #endregion
 
+
+
+
                         //Suppliers
                     if (!context.Suppliers.Any() || context.Suppliers.Count() < 20)
                     {
@@ -366,6 +369,12 @@ namespace Plugins.DataStore.SQLite
                                 imgCounter++;
                                 id++;
                             }
+                        }
+
+                        if (!context.EngPortions.Any())
+                        {
+                            EngPortion a = new EngPortion();
+                            context.EngPortions.Add(a);
                         }
 
                         await context.SaveChangesAsync();

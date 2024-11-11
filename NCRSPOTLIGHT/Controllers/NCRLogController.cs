@@ -11,6 +11,8 @@ using UseCasesLayer.UseCaseInterfaces.NCRLogUseCaseInterfaces;
 using UseCasesLayer.UseCaseInterfaces.QualityPortionUseCaseInterfaces;
 using UseCasesLayer.UseCaseInterfaces.QualityPortionUseCase;
 using Microsoft.AspNetCore.Authorization;
+using UseCasesLayer.UseCaseInterfaces.ProductUseCaseInterfaces;
+using UseCasesLayer.UseCaseInterfaces.EngUseCaseInterfaces;
 
 namespace NCRSPOTLIGHT.Controllers
 {
@@ -24,13 +26,19 @@ namespace NCRSPOTLIGHT.Controllers
         private readonly IGetNCRLogsAsyncUseCase _getNCRLogsAsyncUseCase;
         private readonly IUpdateNCRLogAsyncUseCase _updateNCRLogAsyncUseCase;
         private readonly IGetQualityPortionsAsyncUseCase _getQualityPortionsAsyncUseCase;
+        private readonly IAddQualityPortionAsyncUseCase _addQualityPortionAsyncUseCase;
+        private readonly IGetProductsAsyncUseCase _getProductsAsyncUseCase;
+        private readonly IUpdateQualityPortionAsyncUseCase _UpdateQualityPortionAsyncUseCase;
 
         public NCRLogController(IAddNCRLogAsyncUseCase addNCRLogAsyncUseCase,
                                 IDeleteNCRLogAsyncUseCase deleteNCRLogAsyncUseCase,
                                 IGetNCRLogByIDAsyncUseCase getNCRLogByIDAsyncUseCase,
                                 IGetNCRLogsAsyncUseCase getNCRLogsAsyncUseCase,
                                 IUpdateNCRLogAsyncUseCase updateNCRLogAsyncUseCase,
-                                IGetQualityPortionsAsyncUseCase getQualityPortionsAsyncUseCase
+                                IGetQualityPortionsAsyncUseCase getQualityPortionsAsyncUseCase,
+                                IAddQualityPortionAsyncUseCase addQualityPortionAsyncUseCase,
+                                IGetProductsAsyncUseCase getProductsAsyncUseCase,
+                                IUpdateQualityPortionAsyncUseCase updateQualityPortionAsyncUseCase
                                 )
         {
             _addNCRLogAsyncUseCase = addNCRLogAsyncUseCase;
@@ -39,6 +47,10 @@ namespace NCRSPOTLIGHT.Controllers
             _getNCRLogsAsyncUseCase = getNCRLogsAsyncUseCase;
             _updateNCRLogAsyncUseCase = updateNCRLogAsyncUseCase;
             _getQualityPortionsAsyncUseCase = getQualityPortionsAsyncUseCase;
+            _addQualityPortionAsyncUseCase = addQualityPortionAsyncUseCase;
+            _getProductsAsyncUseCase = getProductsAsyncUseCase;
+            _UpdateQualityPortionAsyncUseCase = updateQualityPortionAsyncUseCase;
+            
         }
 
         // GET: NCRLog
@@ -67,8 +79,9 @@ namespace NCRSPOTLIGHT.Controllers
 
         // GET: NCRLog/Create
         public async Task<IActionResult> Create()
-        {
-            ViewData["QualityPortionID"] = new SelectList(await _getQualityPortionsAsyncUseCase.Execute(), "ID", "DefectDescription");
+        {            
+            ViewData["User"] = HttpContext.User.Identity.Name;
+            LoadSelectList(new NCRLog());
             return View();
         }
 
@@ -77,13 +90,27 @@ namespace NCRSPOTLIGHT.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ID,QualityPortionID,DateCreated,Status")] NCRLog nCRLog)
+        public async Task<IActionResult> Create([Bind("ID,DateCreated,Status")] NCRLog nCRLog, [Bind("ProductID,Quantity,QuantityDefective,OrderNumber,DefectDescription,RepID")] QualityPortion qualityPortion)
         {
-            if (ModelState.IsValid)
+
+            await _addQualityPortionAsyncUseCase.Execute(qualityPortion);
+            
+            nCRLog.QualityPortionID = _getQualityPortionsAsyncUseCase.Execute().Result.First().ID;
+            nCRLog.EngPortionID = 1; 
+
+            try
             {
-                await _addNCRLogAsyncUseCase.Execute(nCRLog);
-                
-                return RedirectToAction(nameof(Index));
+                if (ModelState.IsValid)
+                {
+                    await _addNCRLogAsyncUseCase.Execute(nCRLog);
+                    return RedirectToAction(nameof(Index));
+                }
+            }
+            catch (Exception ex)
+            {
+
+                ModelState.AddModelError("DateCreated", ex.GetBaseException().ToString());
+            
             }
             ViewData["QualityPortionID"] = new SelectList(await _getQualityPortionsAsyncUseCase.Execute(), "ID", "DefectDescription", nCRLog.QualityPortionID);
             return View(nCRLog);
@@ -172,6 +199,11 @@ namespace NCRSPOTLIGHT.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        public async void LoadSelectList(NCRLog log)
+        {
+
+            ViewBag.ProductID = new SelectList(await _getProductsAsyncUseCase.Execute(), "ID", "Description");
+        }
         private bool NCRLogExists(int id)
         {
             var log = _getNCRLogByIDAsyncUseCase.Execute(id);
