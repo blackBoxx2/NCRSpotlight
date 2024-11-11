@@ -60,7 +60,7 @@ namespace Plugins.DataStore.SQLite
                 .FirstOrDefaultAsync(p => p.ID == id);
             if (logToUpdate == null) return;
 
-            logToUpdate.QualityPortionID = log.ID;
+            logToUpdate.QualityPortionID = log.QualityPortionID;
             logToUpdate.Status = log.Status;
 
             await _context.SaveChangesAsync();

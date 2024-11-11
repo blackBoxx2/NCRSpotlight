@@ -30,6 +30,7 @@ namespace NCRSPOTLIGHT.Controllers
         private readonly IAddQualityPortionAsyncUseCase _addQualityPortionAsyncUseCase;
         private readonly IGetProductsAsyncUseCase _getProductsAsyncUseCase;
         private readonly IUpdateQualityPortionAsyncUseCase _UpdateQualityPortionAsyncUseCase;
+        private readonly IGetQualityPortionByIDAsyncUseCase _getQualityPortionByIDAsyncUseCase;
 
         public NCRLogController(IAddNCRLogAsyncUseCase addNCRLogAsyncUseCase,
                                 IDeleteNCRLogAsyncUseCase deleteNCRLogAsyncUseCase,
@@ -39,7 +40,8 @@ namespace NCRSPOTLIGHT.Controllers
                                 IGetQualityPortionsAsyncUseCase getQualityPortionsAsyncUseCase,
                                 IAddQualityPortionAsyncUseCase addQualityPortionAsyncUseCase,
                                 IGetProductsAsyncUseCase getProductsAsyncUseCase,
-                                IUpdateQualityPortionAsyncUseCase updateQualityPortionAsyncUseCase
+                                IUpdateQualityPortionAsyncUseCase updateQualityPortionAsyncUseCase,
+                                IGetQualityPortionByIDAsyncUseCase getQualityPortionByIDAsyncUseCase
                                 )
         {
             _addNCRLogAsyncUseCase = addNCRLogAsyncUseCase;
@@ -51,7 +53,9 @@ namespace NCRSPOTLIGHT.Controllers
             _addQualityPortionAsyncUseCase = addQualityPortionAsyncUseCase;
             _getProductsAsyncUseCase = getProductsAsyncUseCase;
             _UpdateQualityPortionAsyncUseCase = updateQualityPortionAsyncUseCase;
-            
+            _getQualityPortionByIDAsyncUseCase = getQualityPortionByIDAsyncUseCase;
+
+
         }
 
         // GET: NCRLog
@@ -89,8 +93,7 @@ namespace NCRSPOTLIGHT.Controllers
 
             ViewBag.QASection = userRoles.Contains("QualityAssurance") ? "enabled" : "disabled";
             ViewBag.EngineerSection = userRoles.Contains("Engineer") ? "enabled" : "disabled";
-
-            ViewData["QualityPortionID"] = new SelectList(await _getQualityPortionsAsyncUseCase.Execute(), "ID", "DefectDescription");
+            
             return View();
         }
 
@@ -144,7 +147,7 @@ namespace NCRSPOTLIGHT.Controllers
             ViewBag.QASection = userRoles.Contains("QualityAssurance") ? "enabled" : "disabled";
             ViewBag.EngineerSection = userRoles.Contains("Engineer") ? "enabled" : "disabled";
 
-            ViewData["QualityPortionID"] = new SelectList(await _getQualityPortionsAsyncUseCase.Execute(), "ID", "DefectDescription", nCRLog.QualityPortionID);
+            LoadSelectList(nCRLog);
             return View(nCRLog);
         }
 
@@ -153,18 +156,19 @@ namespace NCRSPOTLIGHT.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ID,QualityPortionID,DateCreated,Status")] NCRLog nCRLog)
+        public async Task<IActionResult> Edit(int ID, int QualityPortionID, [Bind("ID,QualityPortionID,DateCreated,Status")] NCRLog nCRLog, [Bind("ID,ProductID,Quantity,QuantityDefective,OrderNumber,DefectDescription,RepID")] QualityPortion qualityPortion)
         {
-            if (id != nCRLog.ID)
+            if (ID != nCRLog.ID)
             {
                 return NotFound();
-            }
+            }        
 
             if (ModelState.IsValid)
             {
                 try
                 {
-                    await _updateNCRLogAsyncUseCase.Execute(id, nCRLog);                    
+                    await _UpdateQualityPortionAsyncUseCase.Execute(QualityPortionID, qualityPortion);
+                    await _updateNCRLogAsyncUseCase.Execute(ID, nCRLog);                    
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -179,7 +183,7 @@ namespace NCRSPOTLIGHT.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["QualityPortionID"] = new SelectList(await _getQualityPortionsAsyncUseCase.Execute(), "ID", "DefectDescription", nCRLog.QualityPortionID);
+            LoadSelectList(nCRLog);
             return View(nCRLog);
         }
 

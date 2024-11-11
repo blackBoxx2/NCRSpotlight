@@ -1,4 +1,5 @@
-﻿@model EntitiesLayer.Models.NCRLog
+﻿@using EntitiesLayer.Models
+@model EntitiesLayer.Models.NCRLog
 
 @{
     ViewData["Title"] = "Edit";
@@ -13,18 +14,60 @@
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="ID" />
+            <input type="hidden" asp-for="QualityPortionID" />
 
-            <div class="form-group">
-                <label asp-for="QualityPortionID" class="control-label"></label>
-                @if (ViewBag.QASection == "enabled")
-                {
-                    <select asp-for="QualityPortionID" class="form-control" asp-items="ViewBag.QualityPortionID"></select>
-                }
-                else
-                {
-                    <select asp-for="QualityPortionID" class="form-control" asp-items="ViewBag.QualityPortionID" disabled="disabled"></select>
-                }
-                <span asp-validation-for="QualityPortionID" class="text-danger"></span>
+            <div class="accordion" id="qualityAccordion">
+
+                <div class="accordion-Item">
+
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                        <h3 class="Accordion-Header" id="qualityHeading">Quality Assurance</h3>
+                    </button>
+
+                </div>              
+
+                <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#qualityAccordion">
+                    <div class="accordion-body">
+                            <input type="hidden" asp-for="QualityPortion.ID" />
+                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>                                  
+                            <div class="form-group">
+                                <label asp-for="QualityPortion.ProductID" class="control-label"></label>
+                                <select asp-for="QualityPortion.ProductID" class="form-control" asp-items="ViewBag.ProductID"></select>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="QualityPortion.Quantity" class="control-label"></label>
+                                <input asp-for="QualityPortion.Quantity" class="form-control" />
+                                <span asp-validation-for="QualityPortion.Quantity" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="QualityPortion.QuantityDefective" class="control-label"></label>
+                                <input asp-for="QualityPortion.QuantityDefective" class="form-control" />
+                                <span asp-validation-for="QualityPortion.QuantityDefective" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="QualityPortion.OrderNumber" class="control-label"></label>
+                                <input asp-for="QualityPortion.OrderNumber" class="form-control" />
+                                <span asp-validation-for="QualityPortion.OrderNumber" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="QualityPortion.DefectDescription" class="control-label"></label>
+                                <textarea asp-for="QualityPortion.DefectDescription" class="form-control" rows="4" cols="50"></textarea>
+                                <span asp-validation-for="QualityPortion.DefectDescription" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="QualityPortion.RepID" class="control-label"></label>
+                                <input asp-for="QualityPortion.RepID" class="form-control" readonly="readonly" />
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label custom-file-label">Upload Pictures: </label>
+                                <div>
+                                    <input type="file" class="form-control" name="theFiles" multiple="multiple"
+                                           onchange="document.getElementById('ImagePreview').src = window.URL.createObjectURL(this.files[0])" />
+                                </div>
+                                <img id="ImagePreview" src="" />
+                            </div>                                          
+                    </div>
+                </div>
             </div>
 
             <div class="form-group">
@@ -35,7 +78,7 @@
 
             <div class="form-group">
                 <label asp-for="Status" class="control-label"></label>
-                <select asp-for="Status" class="form-control"></select>
+                <select asp-for="Status" asp-items="@Html.GetEnumSelectList<NCRStatus>()" class="form-control"></select>
                 <span asp-validation-for="Status" class="text-danger"></span>
             </div>
 
