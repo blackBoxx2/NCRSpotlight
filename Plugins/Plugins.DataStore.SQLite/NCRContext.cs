@@ -1,15 +1,14 @@
 ﻿using EntitiesLayer.Models;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace Plugins.DataStore.SQLite
 {
     public class NCRContext:DbContext
     {
-
         public NCRContext(DbContextOptions<NCRContext> options)
             :base(options)
         {
+            
         }
 
 
@@ -20,7 +19,8 @@ namespace Plugins.DataStore.SQLite
         public DbSet<NCRLog> NCRLog { get; set; }
         public DbSet<NCRLogHistory> NCRLogHistory { get; set; }
         public DbSet<ProductPicture> ProductPictures{ get; set; }
-        public DbSet<QualityPicture> QualityPictures { get; set; }    
+        public DbSet<QualityPicture> QualityPictures { get; set; }
+        public DbSet<EngPortion> EngPortions{ get; set; }
 
         #endregion
 
@@ -58,10 +58,11 @@ namespace Plugins.DataStore.SQLite
             modelBuilder.Entity<Product>()
                 .HasIndex(p => p.ProductNumber)
                 .IsUnique();
+          
 
-
-            //Representative Should be aanble to delete a rep without an issue no? Also if a rep is deleted, we wanna set the id to null
-
+            //Rolerep
+            //modelBuilder.Entity<RoleRep>()
+            //    .HasKey(rp => new { rp.RoleID, rp.RepresentativeID });
 
 
             //NCRLog likely sdhould be able to delete an NCR as an admin with no issues, this should also delete the history
@@ -71,12 +72,7 @@ namespace Plugins.DataStore.SQLite
                 .HasForeignKey(nh => nh.NCRLogID)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            //modelBuilder.Entity<QualityPortion>()
-            //    .HasOne<IdentityContext>()
-            //    .WithMany()
-            //    .HasForeignKey(n => n.RepId);
-
-
+            
 
         }
         #endregion

@@ -1,4 +1,5 @@
-﻿using EntitiesLayer.Models;
+﻿
+using EntitiesLayer.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Http;
@@ -10,6 +11,9 @@ namespace Plugins.DataStore.SQLite
 {
     public class NCRInitializer
     {
+
+        
+
         public static async void Initialize(IServiceProvider serviceProvider,
             bool DeleteDatabase = false, bool UseMigrations = true,
             bool SeedSampleData = true)
@@ -18,10 +22,12 @@ namespace Plugins.DataStore.SQLite
             {
                 using var identityContext = new IdentityContext(serviceProvider.GetRequiredService<DbContextOptions<IdentityContext>>());
 
-                #region Prepare the Database
+                
 
-                try
-                {
+
+                    #region Prepare the Database
+                    try
+                    {
                     if (DeleteDatabase || !context.Database.CanConnect())
                     {
                         context.Database.EnsureDeleted();
@@ -42,17 +48,17 @@ namespace Plugins.DataStore.SQLite
                         {
                             context.Database.Migrate();
                         }
+
                     }
+
                 }
                 catch (Exception ex)
                 {
                     Debug.WriteLine(ex.GetBaseException().Message);
                 }
-
-                #endregion Prepare the Database
+                #endregion
 
                 #region Start seeding data
-
                 try
                 {
                     var identityRoles = await identityContext.Roles.Select(r => r.Name).ToListAsync();
@@ -80,9 +86,7 @@ namespace Plugins.DataStore.SQLite
                         "Titan Manufacturing Group",
                         "United Wholesale Solutions"
                     };
-
                     #region Product Seed Data Lists
-
                     List<string> productDescriptions = new List<string>
                     {
                         "SteelSeries Apex Pro Mechanical Keyboard",
@@ -131,21 +135,22 @@ namespace Plugins.DataStore.SQLite
                         "A0-0020"
                     };
 
-                    #endregion Product Seed Data Lists
+                    #endregion
 
-                    //Suppliers
+                        //Suppliers
                     if (!context.Suppliers.Any() || context.Suppliers.Count() < 20)
                     {
                         int id = context.Suppliers.Any() ? context.Suppliers.Max(s => s.ID) + 1 : 1;
                         foreach (string supplierName in supplierNames)
                         {
-                            if (!context.Suppliers.Any(s => s.SupplierName == supplierName))
+                            if(!context.Suppliers.Any(s => s.SupplierName == supplierName))
                             {
                                 context.Suppliers.Add(
                                 new Supplier
                                 {
                                     ID = id,
                                     SupplierName = supplierName,
+                                    
                                 }
                                 );
                                 id++;
@@ -157,8 +162,35 @@ namespace Plugins.DataStore.SQLite
                         }
                         context.SaveChanges();
                     }
+                    //Roles seed data
+                    //string[] roles = ["Admin", "QA"];
 
-                    //if (!context.Representatives.Any())
+
+                    //int rolesCount = identityRoles.Count;
+                    //if(!context.Roles.Any())
+                    //{
+                    //    foreach (string role in identityRoles)
+                    //    {
+
+                    //        Role role1 = new Role()
+                    //        {
+
+                    //            RoleName = role
+                    //        };
+
+                    //        try
+                    //        {
+                    //            context.Roles.Add(role1);
+                    //            context.SaveChanges();
+                    //        }
+                    //        catch (Exception ex)
+                    //        {
+                    //            context.Roles.Remove(role1);
+                    //        }
+                    //    }
+                    //}
+                        
+                    //if(!context.Representatives.Any())
                     //{
                     //    //Representatives seed data
                     //    string[] firstNames = [
@@ -229,6 +261,7 @@ namespace Plugins.DataStore.SQLite
                     //        {
                     //            context.Representatives.Add(representative);
                     //            context.SaveChanges();
+
                     //        }
                     //        catch (Exception ex)
                     //        {
@@ -237,11 +270,14 @@ namespace Plugins.DataStore.SQLite
                     //    }
                     //}
 
-                    ////RoleReps Seed Data
-                    //if (!context.RoleReps.Any())
+
+
+                    //RoleReps Seed Data                   
+                    //if (!context.RoleReps.Any()) 
                     //{
                     //    foreach (var ID in context.Representatives.Select(r => r.ID))
                     //    {
+
                     //        HashSet<int> nums = new HashSet<int>();
                     //        for (int i = 0; i <= random.Next(0, 3); i++)
                     //        {
@@ -249,6 +285,7 @@ namespace Plugins.DataStore.SQLite
                     //        }
                     //        foreach (int i in nums)
                     //        {
+
                     //            context.RoleReps.AddRange(
 
                     //                new RoleRep()
@@ -258,13 +295,17 @@ namespace Plugins.DataStore.SQLite
                     //                }
 
                     //            );
+
                     //        }
+
                     //    }
-
-                    //    await context.SaveChangesAsync();
+ 
+                    //        await context.SaveChangesAsync();
                     //}
-
-                    //Product Initializer
+                    
+                        
+                    
+                    //Product Initializer               
 
                     if (!context.Products.Any() || context.Products.Count() < 20)
                     {
@@ -281,8 +322,9 @@ namespace Plugins.DataStore.SQLite
 
                             if (!context.Products.Any(p => p.Description == prodDescription))
                             {
+
                                 var suppliers = context.Suppliers.ToList();
-                                int randIndex = rnd.Next(suppliers.Count);
+                                int randIndex = rnd.Next( suppliers.Count );
                                 int supplierID = suppliers[randIndex].ID;
 
                                 Product product = new Product
@@ -327,15 +369,24 @@ namespace Plugins.DataStore.SQLite
                         }
 
                         await context.SaveChangesAsync();
+
                     }
                 }
-                catch (Exception ex)
+                
+
+                catch(Exception ex)
                 {
                     Debug.WriteLine($"Error here: {ex.Message}");
                 }
 
-                #endregion Start seeding data
+                
+                #endregion
             }
+            
         }
+    
+        
     }
+
+    
 }

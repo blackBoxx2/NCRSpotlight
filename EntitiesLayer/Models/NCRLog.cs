@@ -15,6 +15,9 @@ namespace EntitiesLayer.Models
         public int QualityPortionID { get; set; }
         public QualityPortion? QualityPortion { get; set; }
 
+        public int EngPortionID { get; set; }
+        public EngPortion? EngPortion { get; set; }
+
         [Display(Name = "Date Created")]
         public DateTime DateCreated { get; set; } = DateTime.Now;
 
