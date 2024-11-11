@@ -156,8 +156,14 @@ namespace NCRSPOTLIGHT.Areas.Identity.Pages.Account
                             protocol: Request.Scheme);
 
                         var emailBody = $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.";
-                        //await _emailSender.SendEmailAsync(Input.Email, "Confirm your email", emailBody);                       
-                        if (_userManager.Options.SignIn.RequireConfirmedAccount)
+                        var secretsFilePath = Path.Combine(Directory.GetCurrentDirectory(), "Secrets", "secrets.json");
+                        if (System.IO.File.Exists(secretsFilePath))
+
+                        {
+                            await _emailSender.SendEmailAsync(Input.Email, "Confirm your email", emailBody);
+                        }
+
+                    if (_userManager.Options.SignIn.RequireConfirmedAccount)
                         {
                             return RedirectToPage("RegisterConfirmation", new { email = Input.Email, returnUrl = returnUrl });
                         }
