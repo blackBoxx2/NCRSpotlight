@@ -22,8 +22,7 @@ namespace Plugins.DataStore.SQLite
         public async Task<IEnumerable<QualityPortion>> GetQualityPortionsAsync()
         {
             var NCRContext = await _context.QualityPortions
-                .Include(q => q.Product)
-                //.Include(q => q.Representative)
+                .Include(q => q.Product)                
                 .Include(q => q.qualityPictures)
                 .AsNoTracking()
                 .ToListAsync();
@@ -62,7 +61,6 @@ namespace Plugins.DataStore.SQLite
 
             var qualityPortionToUpdate = await _context.QualityPortions
                 .Include(q => q.Product)
-                .Include(q => q.RepId)
                 .Include(q => q.qualityPictures).ThenInclude(q => q.FileContent)
                 .FirstOrDefaultAsync(m => m.ID == id);
 
@@ -73,7 +71,7 @@ namespace Plugins.DataStore.SQLite
             qualityPortionToUpdate.QuantityDefective = qualityPortion.QuantityDefective;
             qualityPortionToUpdate.OrderNumber = qualityPortion.OrderNumber;
             qualityPortionToUpdate.DefectDescription = qualityPortion.DefectDescription;
-            qualityPortionToUpdate.RepId = qualityPortion.RepId;
+            qualityPortionToUpdate.RepID = qualityPortion.RepID;
             qualityPortionToUpdate.qualityPictures = qualityPortion.qualityPictures;
             await _context.SaveChangesAsync();
 
@@ -83,7 +81,6 @@ namespace Plugins.DataStore.SQLite
         {
             var qualityPortion = await _context.QualityPortions
                 .Include(q => q.Product)
-                .Include(q => q.RepId)
                 .Include(q => q.qualityPictures).ThenInclude(q => q.FileContent)
                 .FirstOrDefaultAsync(m => m.ID == id);
             if (qualityPortion != null)

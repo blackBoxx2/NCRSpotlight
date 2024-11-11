@@ -14,6 +14,7 @@ using System.Numerics;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Humanizer.Bytes;
+using Microsoft.AspNetCore.Authorization;
 
 namespace NCRSPOTLIGHT.Controllers
 {

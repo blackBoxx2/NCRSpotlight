@@ -39,9 +39,8 @@
                 <span asp-validation-for="DefectDescription" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="RepId" class="control-label"></label>
-                <select asp-for="RepId" class="form-control" asp-items="ViewBag.RepId"></select>
-                <span asp-validation-for="RepId" class="text-danger"></span>
+                <label asp-for="RepID" class="control-label"></label>
+                <input asp-for="RepID" class="form-control" readonly="readonly" />
             </div>
             <div class="form-group">
                 <label class="control-label custom-file-label">Upload Additional Pictures: </label>
@@ -80,9 +79,9 @@
                         }
                     </div>
                 </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
+                <div class="form-group">
+                    <input type="submit" value="Save" class="btn btn-primary" />
+                </div>
         </form>
     </div>
 </div>
@@ -92,5 +91,7 @@
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }
