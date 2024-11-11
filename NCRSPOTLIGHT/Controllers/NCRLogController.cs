@@ -181,7 +181,7 @@ namespace NCRSPOTLIGHT.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Details", new { nCRLog.ID });
             }
             LoadSelectList(nCRLog);
             return View(nCRLog);
@@ -220,7 +220,10 @@ namespace NCRSPOTLIGHT.Controllers
 
         public async void LoadSelectList(NCRLog log)
         {
-
+            if(log.QualityPortion != null)
+            {
+                ViewBag.ProductID = new SelectList(await _getProductsAsyncUseCase.Execute(), "ID", "Description", log.QualityPortion.ProductID);
+            }
             ViewBag.ProductID = new SelectList(await _getProductsAsyncUseCase.Execute(), "ID", "Description");
         }
         private bool NCRLogExists(int id)

@@ -66,7 +66,7 @@ namespace Plugins.DataStore.SQLite
 
             if (qualityPortionToUpdate == null) return;
 
-            qualityPortionToUpdate.ProductID = qualityPortion.ID;
+            qualityPortionToUpdate.ProductID = qualityPortion.ProductID;
             qualityPortionToUpdate.Quantity = qualityPortion.Quantity;
             qualityPortionToUpdate.QuantityDefective = qualityPortion.QuantityDefective;
             qualityPortionToUpdate.OrderNumber = qualityPortion.OrderNumber;
