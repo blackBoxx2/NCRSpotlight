@@ -4,6 +4,27 @@
 
 <div class="text-center">
     <h1 class="display-4">Welcome</h1>
-    <input type="button" value="Notification Test" onclick="location.href='@Url.Action("Index", "NCRLog", new {AutoFilterDate="2000-02-01"})'" />
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <div onclick="location.href='@Url.Action("Index", "NCRLog", new {AutoFilterDate="2000-02-01"})'" id="divNotifications">
+        <img id="btnNotif" alt="View new NCRs" src="https://static-00.iconduck.com/assets.00/bell-ringing-icon-468x512-drbxxdeb.png" />
+        <label for="btnNotif">There are X new NCRs to view</label>
+    </div>
 </div>
+
+<style>
+    img {
+        width: 2em;
+    }
+    
+    div[onclick] {
+        width: fit-content;
+        margin: 0 auto;
+    }
+
+    label:hover {
+        cursor: pointer;
+    }
+
+    div[onclick]:hover {
+        cursor: pointer;
+    }
+</style>
