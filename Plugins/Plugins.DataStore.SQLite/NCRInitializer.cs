@@ -452,6 +452,25 @@ namespace Plugins.DataStore.SQLite
                         }
 
                         await context.SaveChangesAsync();
+                        if (!context.NCRLog.Any())
+                        {
+                            var date = new DateTime(2000, 01, 01);
+                            for(int i = 1; i < 9; i++)
+                            {
+                                var ncrl = new NCRLog
+                                {
+                                    EngPortionID = 1,
+                                    QualityPortionID = i,
+                                    DateCreated = date,
+                                    Status = NCRStatus.Active
+
+                                };
+                                date = date.AddDays(7);
+                                context.NCRLog.Add(ncrl);
+                            }
+                        }
+
+                        await context.SaveChangesAsync();
 
                     }
                 }
