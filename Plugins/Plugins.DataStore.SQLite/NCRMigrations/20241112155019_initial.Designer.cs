@@ -11,8 +11,8 @@ using Plugins.DataStore.SQLite;
 namespace Plugins.DataStore.SQLite.NCRMigrations
 {
     [DbContext(typeof(NCRContext))]
-    [Migration("20241109180629_Add EngPortion")]
-    partial class AddEngPortion
+    [Migration("20241112155019_initial")]
+    partial class initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -27,7 +27,6 @@ namespace Plugins.DataStore.SQLite.NCRMigrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Disposition")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<int>("EngReview")
@@ -36,13 +35,13 @@ namespace Plugins.DataStore.SQLite.NCRMigrations
                     b.Property<bool>("Notif")
                         .HasColumnType("INTEGER");
 
-                    b.Property<DateTime>("RevDate")
+                    b.Property<string>("RepID")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("RevNumber")
-                        .HasColumnType("INTEGER");
+                    b.Property<DateTime?>("RevDate")
+                        .HasColumnType("TEXT");
 
-                    b.Property<int>("RoleRepID")
+                    b.Property<int?>("RevNumber")
                         .HasColumnType("INTEGER");
 
                     b.Property<bool>("Update")
@@ -50,9 +49,7 @@ namespace Plugins.DataStore.SQLite.NCRMigrations
 
                     b.HasKey("ID");
 
-                    b.HasIndex("RoleRepID");
-
-                    b.ToTable("EngPortion");
+                    b.ToTable("EngPortions");
                 });
 
             modelBuilder.Entity("EntitiesLayer.Models.FileContent", b =>
@@ -157,97 +154,29 @@ namespace Plugins.DataStore.SQLite.NCRMigrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("DefectDescription")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("OrderNumber")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<int>("ProductID")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("Quantity")
+                    b.Property<int?>("Quantity")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("QuantityDefective")
+                    b.Property<int?>("QuantityDefective")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("RoleRepID")
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("RepID")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
                     b.HasKey("ID");
 
                     b.HasIndex("ProductID");
 
-                    b.HasIndex("RoleRepID");
-
                     b.ToTable("QualityPortions");
-                });
-
-            modelBuilder.Entity("EntitiesLayer.Models.Representative", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("FirstName")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("LastName")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("MiddleInitial")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("ID");
-
-                    b.HasIndex("FirstName", "MiddleInitial", "LastName")
-                        .IsUnique();
-
-                    b.ToTable("Representatives");
-                });
-
-            modelBuilder.Entity("EntitiesLayer.Models.Role", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("RoleName")
-                        .IsRequired()
-                        .HasMaxLength(30)
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("ID");
-
-                    b.HasIndex("RoleName")
-                        .IsUnique();
-
-                    b.ToTable("Roles");
-                });
-
-            modelBuilder.Entity("EntitiesLayer.Models.RoleRep", b =>
-                {
-                    b.Property<int>("RoleRepID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("RepresentativeID")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("RoleID")
-                        .HasColumnType("INTEGER");
-
-                    b.HasKey("RoleRepID");
-
-                    b.HasIndex("RepresentativeID");
-
-                    b.HasIndex("RoleID");
-
-                    b.ToTable("RoleReps");
                 });
 
             modelBuilder.Entity("EntitiesLayer.Models.Supplier", b =>
@@ -320,17 +249,6 @@ namespace Plugins.DataStore.SQLite.NCRMigrations
                     b.HasDiscriminator().HasValue("QualityPicture");
                 });
 
-            modelBuilder.Entity("EntitiesLayer.Models.EngPortion", b =>
-                {
-                    b.HasOne("EntitiesLayer.Models.RoleRep", "RoleRep")
-                        .WithMany()
-                        .HasForeignKey("RoleRepID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("RoleRep");
-                });
-
             modelBuilder.Entity("EntitiesLayer.Models.FileContent", b =>
                 {
                     b.HasOne("EntitiesLayer.Models.UploadedFile", "UploadedFile")
@@ -391,34 +309,7 @@ namespace Plugins.DataStore.SQLite.NCRMigrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("EntitiesLayer.Models.RoleRep", "RoleRep")
-                        .WithMany("QualityPortions")
-                        .HasForeignKey("RoleRepID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("Product");
-
-                    b.Navigation("RoleRep");
-                });
-
-            modelBuilder.Entity("EntitiesLayer.Models.RoleRep", b =>
-                {
-                    b.HasOne("EntitiesLayer.Models.Representative", "Representative")
-                        .WithMany("RoleReps")
-                        .HasForeignKey("RepresentativeID")
-                        .OnDelete(DeleteBehavior.SetNull)
-                        .IsRequired();
-
-                    b.HasOne("EntitiesLayer.Models.Role", "Role")
-                        .WithMany("RoleReps")
-                        .HasForeignKey("RoleID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Representative");
-
-                    b.Navigation("Role");
                 });
 
             modelBuilder.Entity("EntitiesLayer.Models.ProductPicture", b =>
@@ -458,21 +349,6 @@ namespace Plugins.DataStore.SQLite.NCRMigrations
             modelBuilder.Entity("EntitiesLayer.Models.QualityPortion", b =>
                 {
                     b.Navigation("qualityPictures");
-                });
-
-            modelBuilder.Entity("EntitiesLayer.Models.Representative", b =>
-                {
-                    b.Navigation("RoleReps");
-                });
-
-            modelBuilder.Entity("EntitiesLayer.Models.Role", b =>
-                {
-                    b.Navigation("RoleReps");
-                });
-
-            modelBuilder.Entity("EntitiesLayer.Models.RoleRep", b =>
-                {
-                    b.Navigation("QualityPortions");
                 });
 
             modelBuilder.Entity("EntitiesLayer.Models.Supplier", b =>

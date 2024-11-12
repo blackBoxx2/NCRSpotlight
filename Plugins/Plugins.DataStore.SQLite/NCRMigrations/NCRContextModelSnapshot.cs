@@ -29,7 +29,7 @@ namespace Plugins.DataStore.SQLite.NCRMigrations
                     b.Property<int>("EngReview")
                         .HasColumnType("INTEGER");
 
-                    b.Property<bool?>("Notif")
+                    b.Property<bool>("Notif")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("RepID")
@@ -41,7 +41,7 @@ namespace Plugins.DataStore.SQLite.NCRMigrations
                     b.Property<int?>("RevNumber")
                         .HasColumnType("INTEGER");
 
-                    b.Property<bool?>("Update")
+                    b.Property<bool>("Update")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("ID");

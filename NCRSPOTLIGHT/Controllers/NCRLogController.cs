@@ -33,6 +33,7 @@ namespace NCRSPOTLIGHT.Controllers
         private readonly IGetQualityPortionByIDAsyncUseCase _getQualityPortionByIDAsyncUseCase;
         private readonly IAddEngPortionAsyncUseCase _addEngPortionAsyncUseCase;
         private readonly IGetEngPortionsAsyncUseCase _getEngPortionsAsyncUseCase;
+        private readonly IUpdateEngPortionAsyncUseCase _updateEngPortionAsyncUseCase;
 
         public NCRLogController(IAddNCRLogAsyncUseCase addNCRLogAsyncUseCase,
                                 IDeleteNCRLogAsyncUseCase deleteNCRLogAsyncUseCase,
@@ -45,7 +46,8 @@ namespace NCRSPOTLIGHT.Controllers
                                 IUpdateQualityPortionAsyncUseCase updateQualityPortionAsyncUseCase,
                                 IGetQualityPortionByIDAsyncUseCase getQualityPortionByIDAsyncUseCase,
                                 IAddEngPortionAsyncUseCase addEngPortionAsyncUseCase,
-                                IGetEngPortionsAsyncUseCase getEngPortionsAsyncUseCase
+                                IGetEngPortionsAsyncUseCase getEngPortionsAsyncUseCase,
+                                IUpdateEngPortionAsyncUseCase updateEngPortionAsyncUseCase
                                 )
         {
             _addNCRLogAsyncUseCase = addNCRLogAsyncUseCase;
@@ -60,6 +62,7 @@ namespace NCRSPOTLIGHT.Controllers
             _getQualityPortionByIDAsyncUseCase = getQualityPortionByIDAsyncUseCase;
             _addEngPortionAsyncUseCase = addEngPortionAsyncUseCase;
             _getEngPortionsAsyncUseCase = getEngPortionsAsyncUseCase;
+            _updateEngPortionAsyncUseCase = updateEngPortionAsyncUseCase;
 
         }
 
@@ -190,7 +193,7 @@ namespace NCRSPOTLIGHT.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int ID, int QualityPortionID, [Bind("ID,QualityPortionID,DateCreated,Status")] NCRLog nCRLog, [Bind("ID,ProductID,Quantity,QuantityDefective,OrderNumber,DefectDescription,RepID")] QualityPortion qualityPortion)
+        public async Task<IActionResult> Edit(int ID, int QualityPortionID, int EngPortionID, [Bind("ID,QualityPortionID,DateCreated,Status")] NCRLog nCRLog, [Bind("ID,ProductID,Quantity,QuantityDefective,OrderNumber,DefectDescription,RepID")] QualityPortion qualityPortion, [Bind("EngReview,Disposition,Update,Notif,RevNumber,RevDate,RepID")] EngPortion engPortion)
         {
             if (ID != nCRLog.ID)
             {
@@ -201,6 +204,7 @@ namespace NCRSPOTLIGHT.Controllers
             {
                 try
                 {
+                    await _updateEngPortionAsyncUseCase.Execute(EngPortionID, engPortion);
                     await _UpdateQualityPortionAsyncUseCase.Execute(QualityPortionID, qualityPortion);
                     await _updateNCRLogAsyncUseCase.Execute(ID, nCRLog);                    
                 }
