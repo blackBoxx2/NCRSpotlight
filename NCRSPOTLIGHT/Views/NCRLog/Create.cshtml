@@ -4,6 +4,9 @@
 @{
     ViewData["Title"] = "Create";
     string? user = ViewData["User"] as string;
+    bool isQualityAssurance = ViewBag.QASection == "enabled";
+    bool isEngineer = ViewBag.EngineerSection == "enabled";
+    bool isAdmin = ViewBag.IsAdmin;
 }
 
 <h1>Create</h1>
@@ -25,44 +28,87 @@
                 </div>              
 
                 <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#qualityAccordion">
-                    <div class="accordion-body">                                                                               
-                            <div class="form-group">
-                                <label asp-for="QualityPortion.ProductID" class="control-label"></label>
+                    <div class="accordion-body">
+
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <div class="form-group">
+                            <label asp-for="QualityPortion.ProductID" class="control-label"></label>
+                            @if (isQualityAssurance || isAdmin)
+                            {
                                 <select asp-for="QualityPortion.ProductID" class="form-control" asp-items="ViewBag.ProductID"></select>
-                            </div>
-                            <div class="form-group">
-                                <label asp-for="QualityPortion.Quantity" class="control-label"></label>
+                            }
+                            else
+                            {
+                                <select asp-for="QualityPortion.ProductID" class="form-control" asp-items="ViewBag.ProductID" disabled="disabled"></select>
+                            }
+                            <span asp-validation-for="QualityPortion.ProductID" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="QualityPortion.Quantity" class="control-label"></label>
+                            @if (isQualityAssurance || isAdmin)
+                            {
                                 <input asp-for="QualityPortion.Quantity" class="form-control" />
-                                <span asp-validation-for="QualityPortion.Quantity" class="text-danger"></span>
-                            </div>
-                            <div class="form-group">
-                                <label asp-for="QualityPortion.QuantityDefective" class="control-label"></label>
+                            }
+                            else
+                            {
+                                <input asp-for="QualityPortion.Quantity" class="form-control" readonly="readonly" />
+                            }
+                            <span asp-validation-for="QualityPortion.Quantity" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="QualityPortion.QuantityDefective" class="control-label"></label>
+                            @if (isQualityAssurance || isAdmin)
+                            {
                                 <input asp-for="QualityPortion.QuantityDefective" class="form-control" />
-                                <span asp-validation-for="QualityPortion.QuantityDefective" class="text-danger"></span>
-                            </div>
-                            <div class="form-group">
-                                <label asp-for="QualityPortion.OrderNumber" class="control-label"></label>
+                            }
+                            else
+                            {
+                                <input asp-for="QualityPortion.QuantityDefective" class="form-control" readonly="readonly" />
+                            }
+                            <span asp-validation-for="QualityPortion.QuantityDefective" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="QualityPortion.OrderNumber" class="control-label"></label>
+                            @if (isQualityAssurance || isAdmin)
+                            {
                                 <input asp-for="QualityPortion.OrderNumber" class="form-control" />
-                                <span asp-validation-for="QualityPortion.OrderNumber" class="text-danger"></span>
-                            </div>
-                            <div class="form-group">
-                                <label asp-for="QualityPortion.DefectDescription" class="control-label"></label>
+                            }
+                            else
+                            {
+                                <input asp-for="QualityPortion.OrderNumber" class="form-control" readonly="readonly" />
+                            }
+                            <span asp-validation-for="QualityPortion.OrderNumber" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="QualityPortion.DefectDescription" class="control-label"></label>
+                            @if (isQualityAssurance || isAdmin)
+                            {
                                 <textarea asp-for="QualityPortion.DefectDescription" class="form-control" rows="4" cols="50"></textarea>
-                                <span asp-validation-for="QualityPortion.DefectDescription" class="text-danger"></span>
-                            </div>
-                            <div class="form-group">
-                                <label asp-for="QualityPortion.RepID" class="control-label"></label>
-                                <input asp-for="QualityPortion.RepID" class="form-control" value="@user" readonly="readonly" />
-                            </div>
-                            <div class="form-group">
-                                <label class="control-label custom-file-label">Upload Pictures: </label>
-                                <div>
-                                    <input type="file" class="form-control" name="theFiles" multiple="multiple"
-                                           onchange="document.getElementById('ImagePreview').src = window.URL.createObjectURL(this.files[0])" />
-                                </div>
-                                <img id="ImagePreview" src="" />
-                            </div>                                         
-                        
+                            }
+                            else
+                            {
+                                <textarea asp-for="QualityPortion.DefectDescription" class="form-control" rows="4" cols="50" readonly="readonly"></textarea>
+                            }
+                            <span asp-validation-for="QualityPortion.DefectDescription" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="QualityPortion.RepID" class="control-label"></label>
+                            <input asp-for="QualityPortion.RepID" class="form-control" value="@user" readonly="readonly" />
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label custom-file-label">Upload Pictures: </label>
+                            @if (isQualityAssurance || isAdmin)
+                            {
+                                <input type="file" class="form-control" name="theFiles" multiple="multiple"
+                                       onchange="document.getElementById('ImagePreview').src = window.URL.createObjectURL(this.files[0])" />
+                            }
+                            else
+                            {
+                                <input type="file" class="form-control" name="theFiles" multiple="multiple"
+                                       onchange="document.getElementById('ImagePreview').src = window.URL.createObjectURL(this.files[0])" disabled="disabled" />
+                            }
+                            <img id="ImagePreview" src="" />
+                        </div>
                     </div>
                 </div>
             </div>
