@@ -58,9 +58,36 @@ namespace NCRSPOTLIGHT.Controllers
         }
 
         // GET: NCRLog
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(DateTime StartDate, DateTime EndDate, string? AutoFilterDate = null)
         {
+
             var nCRContext = await _getNCRLogsAsyncUseCase.Execute();
+
+            // first time startup
+            if (EndDate == DateTime.MinValue)
+            {
+                StartDate = nCRContext.Min(p => p.DateCreated).Date;
+                EndDate = nCRContext.Max(p => p.DateCreated).Date;
+            }
+            // edge case protection
+            if (EndDate < StartDate)
+            {
+                DateTime temp = EndDate;
+                EndDate = StartDate;
+                StartDate = temp;
+            }
+
+            if (AutoFilterDate != null)
+            {
+                StartDate = DateTime.Parse(AutoFilterDate);
+            }
+
+
+            // set boxes
+            ViewData["StartDate"] = StartDate.ToString("yyyy-MM-dd");
+            ViewData["EndDate"] = EndDate.ToString("yyyy-MM-dd");
+
+            nCRContext = nCRContext.Where(p=> p.DateCreated >= StartDate && p.DateCreated <= EndDate.AddDays(1));
             return View(nCRContext);
         }
 
