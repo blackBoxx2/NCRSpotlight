@@ -468,19 +468,7 @@ namespace Plugins.DataStore.SQLite
                                 date = date.AddDays(7);
                                 context.NCRLog.Add(ncrl);
                             }
-                        }
-
-                        await context.SaveChangesAsync();
-
-                        var b = new NCRLog
-                        {
-                            DateCreated = DateTime.Now,
-                            QualityPortionID = 1,
-                            Status = NCRStatus.Active,
-                            EngPortionID = 1,
-                        };
-
-                        context.NCRLog.Add(b);
+                        }                        
 
                         await context.SaveChangesAsync();
 
