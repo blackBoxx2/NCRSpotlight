@@ -6,37 +6,28 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Plugins.DataStore.SQLite.NCRMigrations
 {
     /// <inheritdoc />
-    public partial class AddEngPortion : Migration
+    public partial class initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Representatives",
+                name: "EngPortions",
                 columns: table => new
                 {
                     ID = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    FirstName = table.Column<string>(type: "TEXT", nullable: false),
-                    MiddleInitial = table.Column<string>(type: "TEXT", nullable: true),
-                    LastName = table.Column<string>(type: "TEXT", nullable: false)
+                    EngReview = table.Column<int>(type: "INTEGER", nullable: false),
+                    Notif = table.Column<bool>(type: "INTEGER", nullable: false),
+                    Disposition = table.Column<string>(type: "TEXT", nullable: true),
+                    Update = table.Column<bool>(type: "INTEGER", nullable: false),
+                    RevNumber = table.Column<int>(type: "INTEGER", nullable: true),
+                    RevDate = table.Column<DateTime>(type: "TEXT", nullable: true),
+                    RepID = table.Column<string>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Representatives", x => x.ID);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Roles",
-                columns: table => new
-                {
-                    ID = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    RoleName = table.Column<string>(type: "TEXT", maxLength: 30, nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Roles", x => x.ID);
+                    table.PrimaryKey("PK_EngPortions", x => x.ID);
                 });
 
             migrationBuilder.CreateTable(
@@ -50,32 +41,6 @@ namespace Plugins.DataStore.SQLite.NCRMigrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Suppliers", x => x.ID);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "RoleReps",
-                columns: table => new
-                {
-                    RoleRepID = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    RoleID = table.Column<int>(type: "INTEGER", nullable: false),
-                    RepresentativeID = table.Column<int>(type: "INTEGER", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_RoleReps", x => x.RoleRepID);
-                    table.ForeignKey(
-                        name: "FK_RoleReps_Representatives_RepresentativeID",
-                        column: x => x.RepresentativeID,
-                        principalTable: "Representatives",
-                        principalColumn: "ID",
-                        onDelete: ReferentialAction.SetNull);
-                    table.ForeignKey(
-                        name: "FK_RoleReps_Roles_RoleID",
-                        column: x => x.RoleID,
-                        principalTable: "Roles",
-                        principalColumn: "ID",
-                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -100,42 +65,17 @@ namespace Plugins.DataStore.SQLite.NCRMigrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "EngPortion",
-                columns: table => new
-                {
-                    ID = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    EngReview = table.Column<int>(type: "INTEGER", nullable: false),
-                    Notif = table.Column<bool>(type: "INTEGER", nullable: false),
-                    Disposition = table.Column<string>(type: "TEXT", nullable: false),
-                    Update = table.Column<bool>(type: "INTEGER", nullable: false),
-                    RevNumber = table.Column<int>(type: "INTEGER", nullable: false),
-                    RevDate = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    RoleRepID = table.Column<int>(type: "INTEGER", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_EngPortion", x => x.ID);
-                    table.ForeignKey(
-                        name: "FK_EngPortion_RoleReps_RoleRepID",
-                        column: x => x.RoleRepID,
-                        principalTable: "RoleReps",
-                        principalColumn: "RoleRepID",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "QualityPortions",
                 columns: table => new
                 {
                     ID = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     ProductID = table.Column<int>(type: "INTEGER", nullable: false),
-                    Quantity = table.Column<int>(type: "INTEGER", nullable: false),
-                    QuantityDefective = table.Column<int>(type: "INTEGER", nullable: false),
-                    OrderNumber = table.Column<string>(type: "TEXT", nullable: false),
-                    DefectDescription = table.Column<string>(type: "TEXT", nullable: false),
-                    RoleRepID = table.Column<int>(type: "INTEGER", nullable: false)
+                    Quantity = table.Column<int>(type: "INTEGER", nullable: true),
+                    QuantityDefective = table.Column<int>(type: "INTEGER", nullable: true),
+                    OrderNumber = table.Column<string>(type: "TEXT", nullable: true),
+                    DefectDescription = table.Column<string>(type: "TEXT", nullable: true),
+                    RepID = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -145,12 +85,6 @@ namespace Plugins.DataStore.SQLite.NCRMigrations
                         column: x => x.ProductID,
                         principalTable: "Products",
                         principalColumn: "ID",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_QualityPortions_RoleReps_RoleRepID",
-                        column: x => x.RoleRepID,
-                        principalTable: "RoleReps",
-                        principalColumn: "RoleRepID",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -169,9 +103,9 @@ namespace Plugins.DataStore.SQLite.NCRMigrations
                 {
                     table.PrimaryKey("PK_NCRLog", x => x.ID);
                     table.ForeignKey(
-                        name: "FK_NCRLog_EngPortion_EngPortionID",
+                        name: "FK_NCRLog_EngPortions_EngPortionID",
                         column: x => x.EngPortionID,
-                        principalTable: "EngPortion",
+                        principalTable: "EngPortions",
                         principalColumn: "ID",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
@@ -252,11 +186,6 @@ namespace Plugins.DataStore.SQLite.NCRMigrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_EngPortion_RoleRepID",
-                table: "EngPortion",
-                column: "RoleRepID");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_NCRLog_EngPortionID",
                 table: "NCRLog",
                 column: "EngPortionID");
@@ -287,33 +216,6 @@ namespace Plugins.DataStore.SQLite.NCRMigrations
                 name: "IX_QualityPortions_ProductID",
                 table: "QualityPortions",
                 column: "ProductID");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_QualityPortions_RoleRepID",
-                table: "QualityPortions",
-                column: "RoleRepID");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Representatives_FirstName_MiddleInitial_LastName",
-                table: "Representatives",
-                columns: new[] { "FirstName", "MiddleInitial", "LastName" },
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_RoleReps_RepresentativeID",
-                table: "RoleReps",
-                column: "RepresentativeID");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_RoleReps_RoleID",
-                table: "RoleReps",
-                column: "RoleID");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Roles_RoleName",
-                table: "Roles",
-                column: "RoleName",
-                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Suppliers_SupplierName",
@@ -348,7 +250,7 @@ namespace Plugins.DataStore.SQLite.NCRMigrations
                 name: "NCRLog");
 
             migrationBuilder.DropTable(
-                name: "EngPortion");
+                name: "EngPortions");
 
             migrationBuilder.DropTable(
                 name: "QualityPortions");
@@ -357,16 +259,7 @@ namespace Plugins.DataStore.SQLite.NCRMigrations
                 name: "Products");
 
             migrationBuilder.DropTable(
-                name: "RoleReps");
-
-            migrationBuilder.DropTable(
                 name: "Suppliers");
-
-            migrationBuilder.DropTable(
-                name: "Representatives");
-
-            migrationBuilder.DropTable(
-                name: "Roles");
         }
     }
 }

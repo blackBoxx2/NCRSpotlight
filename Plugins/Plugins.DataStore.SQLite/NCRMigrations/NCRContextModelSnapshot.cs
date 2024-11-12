@@ -24,7 +24,6 @@ namespace Plugins.DataStore.SQLite.NCRMigrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Disposition")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<int>("EngReview")
@@ -34,13 +33,12 @@ namespace Plugins.DataStore.SQLite.NCRMigrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("RepID")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime>("RevDate")
+                    b.Property<DateTime?>("RevDate")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("RevNumber")
+                    b.Property<int?>("RevNumber")
                         .HasColumnType("INTEGER");
 
                     b.Property<bool>("Update")

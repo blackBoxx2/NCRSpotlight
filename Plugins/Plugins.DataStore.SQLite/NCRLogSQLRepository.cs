@@ -25,6 +25,7 @@ namespace Plugins.DataStore.SQLite
         {
             var NCRContext = await _context.NCRLog
                 .Include(p => p.QualityPortion)
+                .Include(p => p.EngPortion)
                 .AsNoTracking()
                 .ToListAsync();
 
@@ -37,6 +38,7 @@ namespace Plugins.DataStore.SQLite
 
             var log = await _context.NCRLog
                 .Include(p => p.QualityPortion).ThenInclude(q => q.Product)
+                .Include(p => p.EngPortion)
                 .AsNoTracking()
                 .FirstOrDefaultAsync(m => m.ID == id);
 

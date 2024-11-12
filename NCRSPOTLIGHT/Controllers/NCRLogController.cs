@@ -13,6 +13,7 @@ using UseCasesLayer.UseCaseInterfaces.QualityPortionUseCase;
 using Microsoft.AspNetCore.Authorization;
 using UseCasesLayer.UseCaseInterfaces.ProductUseCaseInterfaces;
 using System.Security.Claims;
+using UseCasesLayer.UseCaseInterfaces.EngUseCaseInterface;
 
 namespace NCRSPOTLIGHT.Controllers
 {
@@ -30,6 +31,9 @@ namespace NCRSPOTLIGHT.Controllers
         private readonly IGetProductsAsyncUseCase _getProductsAsyncUseCase;
         private readonly IUpdateQualityPortionAsyncUseCase _UpdateQualityPortionAsyncUseCase;
         private readonly IGetQualityPortionByIDAsyncUseCase _getQualityPortionByIDAsyncUseCase;
+        private readonly IAddEngPortionAsyncUseCase _addEngPortionAsyncUseCase;
+        private readonly IGetEngPortionsAsyncUseCase _getEngPortionsAsyncUseCase;
+        private readonly IUpdateEngPortionAsyncUseCase _updateEngPortionAsyncUseCase;
 
         public NCRLogController(IAddNCRLogAsyncUseCase addNCRLogAsyncUseCase,
                                 IDeleteNCRLogAsyncUseCase deleteNCRLogAsyncUseCase,
@@ -40,7 +44,10 @@ namespace NCRSPOTLIGHT.Controllers
                                 IAddQualityPortionAsyncUseCase addQualityPortionAsyncUseCase,
                                 IGetProductsAsyncUseCase getProductsAsyncUseCase,
                                 IUpdateQualityPortionAsyncUseCase updateQualityPortionAsyncUseCase,
-                                IGetQualityPortionByIDAsyncUseCase getQualityPortionByIDAsyncUseCase
+                                IGetQualityPortionByIDAsyncUseCase getQualityPortionByIDAsyncUseCase,
+                                IAddEngPortionAsyncUseCase addEngPortionAsyncUseCase,
+                                IGetEngPortionsAsyncUseCase getEngPortionsAsyncUseCase,
+                                IUpdateEngPortionAsyncUseCase updateEngPortionAsyncUseCase
                                 )
         {
             _addNCRLogAsyncUseCase = addNCRLogAsyncUseCase;
@@ -53,7 +60,9 @@ namespace NCRSPOTLIGHT.Controllers
             _getProductsAsyncUseCase = getProductsAsyncUseCase;
             _UpdateQualityPortionAsyncUseCase = updateQualityPortionAsyncUseCase;
             _getQualityPortionByIDAsyncUseCase = getQualityPortionByIDAsyncUseCase;
-
+            _addEngPortionAsyncUseCase = addEngPortionAsyncUseCase;
+            _getEngPortionsAsyncUseCase = getEngPortionsAsyncUseCase;
+            _updateEngPortionAsyncUseCase = updateEngPortionAsyncUseCase;
 
         }
 
@@ -119,7 +128,8 @@ namespace NCRSPOTLIGHT.Controllers
 
             ViewBag.QASection = userRoles.Contains("QualityAssurance") ? "enabled" : "disabled";
             ViewBag.EngineerSection = userRoles.Contains("Engineer") ? "enabled" : "disabled";
-            
+            ViewBag.IsAdmin = userRoles.Contains("Admin");
+
             return View();
         }
 
@@ -128,12 +138,14 @@ namespace NCRSPOTLIGHT.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ID,DateCreated,Status")] NCRLog nCRLog, [Bind("ProductID,Quantity,QuantityDefective,OrderNumber,DefectDescription,RepID")] QualityPortion qualityPortion)
+        public async Task<IActionResult> Create([Bind("ID,DateCreated,Status")] NCRLog nCRLog, [Bind("ProductID,Quantity,QuantityDefective,OrderNumber,DefectDescription,RepID")] QualityPortion qualityPortion, [Bind("EngReview,Disposition,Update,Notif,RevNumber,RevDate,RepID")] EngPortion engPortion)
         {
-
+            
             await _addQualityPortionAsyncUseCase.Execute(qualityPortion);
+            await _addEngPortionAsyncUseCase.Execute(engPortion);
             nCRLog.QualityPortionID = _getQualityPortionsAsyncUseCase.Execute().Result.Last().ID;
-            nCRLog.EngPortionID = 1; 
+            nCRLog.EngPortionID = _getEngPortionsAsyncUseCase.Execute().Result.Last().ID; 
+
 
             try
             {
@@ -172,6 +184,7 @@ namespace NCRSPOTLIGHT.Controllers
 
             ViewBag.QASection = userRoles.Contains("QualityAssurance") ? "enabled" : "disabled";
             ViewBag.EngineerSection = userRoles.Contains("Engineer") ? "enabled" : "disabled";
+            ViewBag.IsAdmin = userRoles.Contains("Admin");
 
             LoadSelectList(nCRLog);
             return View(nCRLog);
@@ -182,7 +195,7 @@ namespace NCRSPOTLIGHT.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int ID, int QualityPortionID, [Bind("ID,QualityPortionID,DateCreated,Status")] NCRLog nCRLog, [Bind("ID,ProductID,Quantity,QuantityDefective,OrderNumber,DefectDescription,RepID")] QualityPortion qualityPortion)
+        public async Task<IActionResult> Edit(int ID, int QualityPortionID, int EngPortionID, [Bind("ID,QualityPortionID,DateCreated,Status")] NCRLog nCRLog, [Bind("ID,ProductID,Quantity,QuantityDefective,OrderNumber,DefectDescription,RepID")] QualityPortion qualityPortion, [Bind("EngReview,Disposition,Update,Notif,RevNumber,RevDate,RepID")] EngPortion engPortion)
         {
             if (ID != nCRLog.ID)
             {
@@ -193,6 +206,7 @@ namespace NCRSPOTLIGHT.Controllers
             {
                 try
                 {
+                    await _updateEngPortionAsyncUseCase.Execute(EngPortionID, engPortion);
                     await _UpdateQualityPortionAsyncUseCase.Execute(QualityPortionID, qualityPortion);
                     await _updateNCRLogAsyncUseCase.Execute(ID, nCRLog);                    
                 }
