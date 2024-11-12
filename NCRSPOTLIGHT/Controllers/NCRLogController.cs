@@ -59,8 +59,9 @@ namespace NCRSPOTLIGHT.Controllers
         }
 
         // GET: NCRLog
-        public async Task<IActionResult> Index(DateTime StartDate, DateTime EndDate)
+        public async Task<IActionResult> Index(DateTime StartDate, DateTime EndDate, string? AutoFilterDate = null)
         {
+
             var nCRContext = await _getNCRLogsAsyncUseCase.Execute();
 
             // first time startup
@@ -76,6 +77,13 @@ namespace NCRSPOTLIGHT.Controllers
                 EndDate = StartDate;
                 StartDate = temp;
             }
+
+            if (AutoFilterDate != null)
+            {
+                StartDate = DateTime.Parse(AutoFilterDate);
+            }
+
+
             // set boxes
             ViewData["StartDate"] = StartDate.ToString("yyyy-MM-dd");
             ViewData["EndDate"] = EndDate.ToString("yyyy-MM-dd");
