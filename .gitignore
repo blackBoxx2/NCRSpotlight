@@ -377,7 +377,6 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
-
 # VS Code files for those working on multiple tools
 .vscode/*
 !.vscode/settings.json
@@ -398,3 +397,8 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+
+# Database files
+NCRDatabase.db
+NCRDatabase.db-shm
+NCRDatabase.db-wal
