@@ -1,13 +1,20 @@
-﻿using EntitiesLayer.Models;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using EntitiesLayer.Models;
 
-namespace Plugins.DataStore.SQLite
+namespace UseCasesLayer.DataStorePluginInterfaces
 {
     public interface IEngPortionRepository
     {
-        Task AddQualityPortionAsync(EngPortion engPortion);
+
+        Task AddEngPortionAsync(EngPortion eng);
         Task DeleteEngPortionAsync(int? id);
         Task<EngPortion> GetEngPortionByIDAsync(int? id);
         Task<IEnumerable<EngPortion>> GetEngPortionsAsync();
-        Task UpdateQualityPortionAsync(int? id, EngPortion engPortion);
+        Task UpdateEngPortionAsync(int? id, EngPortion engPortion);
+
     }
 }

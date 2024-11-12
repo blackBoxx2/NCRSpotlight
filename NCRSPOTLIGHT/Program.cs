@@ -6,7 +6,7 @@ using NCRSPOTLIGHT.Utilities;
 using Plugins.DataStore.SQLite;
 using UseCasesLayer.DataStorePluginInterfaces;
 using UseCasesLayer.UseCaseInterfaces.EngUseCase;
-using UseCasesLayer.UseCaseInterfaces.EngUseCaseInterfaces;
+using UseCasesLayer.UseCaseInterfaces.EngUseCaseInterface;
 using UseCasesLayer.UseCaseInterfaces.NCRLogUseCase;
 using UseCasesLayer.UseCaseInterfaces.NCRLogUseCaseInterfaces;
 using UseCasesLayer.UseCaseInterfaces.ProductUseCaseInterfaces;
@@ -46,6 +46,7 @@ builder.Services.AddTransient<ISupplierRepository, SupplierSQLRepository>();
 builder.Services.AddTransient<IProductRepository, ProductSQLRepository>();
 builder.Services.AddTransient<IQualityPortionSQLRepository, QualityPortionSQLRepository>();
 builder.Services.AddTransient<INCRLogRepository, NCRLogSQLRepository>();
+builder.Services.AddTransient<IEngPortionRepository, EngineerPortionSQLRepository>();
 
 
 
@@ -71,13 +72,20 @@ builder.Services.AddTransient<IUpdateQualityPortionAsyncUseCase, UpdateQualityPo
 builder.Services.AddTransient<IGetQualityPortionByIDAsyncUseCase, GetQualityPortionByIDAsyncUseCase>();
 builder.Services.AddTransient<IGetQualityPortionsAsyncUseCase, GetQualityPortionsAsyncUseCase>();
 
+//EngPortion
+
+builder.Services.AddTransient<IAddEngPortionAsyncUseCase, AddEngPortionAsyncUseCase>();
+builder.Services.AddTransient<IDeleteEngPortionAsyncUseCase, DeleteEngPortionAsyncUseCase>();
+builder.Services.AddTransient<IUpdateEngPortionAsyncUseCase, UpdateEngPortionAsyncUseCase>();
+builder.Services.AddTransient<IGetEngPortionsAsyncUseCase, GetEngPortionsAsyncUseCase>();
+builder.Services.AddTransient<IGetEngPortionsByIDAsyncUseCase, GetEngPortionByIDAsyncUseCase>();
+
 //NCRLog
 builder.Services.AddTransient<IAddNCRLogAsyncUseCase, AddNCRLogAsyncUseCase>();
 builder.Services.AddTransient<IDeleteNCRLogAsyncUseCase, DeleteNCRLogAsyncUseCase>();
 builder.Services.AddTransient<IUpdateNCRLogAsyncUseCase, UpdateNCRLogAsyncUseCase>();
 builder.Services.AddTransient<IGetNCRLogByIDAsyncUseCase, GetNCRLogByIDAsyncUseCase>();
 builder.Services.AddTransient<IGetNCRLogsAsyncUseCase, GetNCRLogsAsyncUseCase>();
-
 
 #endregion
 
