@@ -56,6 +56,64 @@
 
             </div>
         </div>
+
+        <div class="accordion" id="engAccordion">
+
+            <div class="accordion-Item">
+
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="true" aria-controls="collapseOne">
+                    <h3 class="Accordion-Header" id="qualityHeading">Engineering</h3>
+                </button>
+
+            </div>
+
+            <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#engAccordion">
+
+
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.EngPortion.EngReview)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.EngPortion.EngReview)
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.EngPortion.Notif)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.EngPortion.Notif)
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.EngPortion.Update)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.EngPortion.Update)
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.EngPortion.RevNumber)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.EngPortion.RevNumber)
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.EngPortion.RevDate)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.EngPortion.RevDate)
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.EngPortion.RepID)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.EngPortion.RepID)
+                </dd>
+
+
+            </div>
+        </div>
+
+
+
+
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.DateCreated)
         </dt>
