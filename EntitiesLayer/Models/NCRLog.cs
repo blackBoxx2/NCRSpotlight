@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,6 +21,15 @@ namespace EntitiesLayer.Models
 
         [Display(Name = "Date Created")]
         public DateTime DateCreated { get; set; } = DateTime.Now;
+
+        [NotMapped]
+        public string DateSummary
+        {
+            get
+            {
+                return this.DateCreated.ToShortDateString();
+            }
+        }
 
         public NCRStatus Status { get; set; }
 
