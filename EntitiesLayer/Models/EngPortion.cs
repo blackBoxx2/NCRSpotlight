@@ -12,17 +12,25 @@ namespace EntitiesLayer.Models
 
         [Key]
         public int ID { get; set; }
+
+        [Display(Name = "Engineer Review")]
         public EngReview EngReview { get; set; } = EngReview.UseAsIs;
+
+        [Display(Name = "Does Customer Require Notifications?")]
         public bool Notif { get; set; } = false;
+        public string? Disposition { get; set; } = "";
 
-        public string Disposition { get; set; } = "";
-
+        [Display(Name = "Does Drawing Require Update?")]
         public bool Update { get; set; } = false;
 
-        public int RevNumber { get; set; } = 0;
+        [Display(Name = "Revision Number")]
+        public int? RevNumber { get; set; } = 0;
 
-        public DateTime RevDate { get; set; } = DateTime.Today;       
-        public string RepID { get; set; } = string.Empty;
+        [Display(Name = "Revision Date")]
+        public DateTime? RevDate { get; set; } = DateTime.Today;
+
+        [Display(Name = "Engineering Representative")]
+        public string? RepID { get; set; } = string.Empty;
 
 
     }
