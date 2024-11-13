@@ -378,7 +378,8 @@ namespace Plugins.DataStore.SQLite
                         }
 
 
-                        // QualityPortion seed data
+
+                        //QualityPortion seed data
                         if (!context.QualityPortions.Any())
                         {
 
@@ -441,21 +442,21 @@ namespace Plugins.DataStore.SQLite
                                     .UserId
                                 };
 
-                                
 
-                                await WebImagestoByArrayStatic.SeedQualityPictures(imgPaths[ordNum-1], qp);
+
+                                await WebImagestoByArrayStatic.SeedQualityPictures(imgPaths[ordNum - 1], qp);
 
                                 context.QualityPortions.Add(qp);
                                 ordNum++;
                             }
-                            
+
                         }
 
                         await context.SaveChangesAsync();
                         if (!context.NCRLog.Any())
                         {
                             var date = new DateTime(2000, 01, 01);
-                            for(int i = 1; i < 9; i++)
+                            for (int i = 1; i < 9; i++)
                             {
                                 var ncrl = new NCRLog
                                 {
@@ -468,7 +469,7 @@ namespace Plugins.DataStore.SQLite
                                 date = date.AddDays(7);
                                 context.NCRLog.Add(ncrl);
                             }
-                        }                        
+                        }
 
                         await context.SaveChangesAsync();
 

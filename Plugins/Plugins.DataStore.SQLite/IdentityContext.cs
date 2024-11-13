@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using EntitiesLayer.Models.ViewModels;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
@@ -6,7 +7,7 @@ using System.Data.Common;
 
 namespace Plugins.DataStore.SQLite;
 
-public class IdentityContext : IdentityDbContext<IdentityUser, IdentityRole, string>
+public class IdentityContext : IdentityDbContext<ApplicationUser, IdentityRole, string>
 {
     public IdentityContext(DbContextOptions<IdentityContext> options)
         : base(options)
@@ -21,6 +22,7 @@ public class IdentityContext : IdentityDbContext<IdentityUser, IdentityRole, str
             optionsBuilder.AddInterceptors(new EnableForeignKeysInterceptor());
     }
 
+    public DbSet<ApplicationUser> ApplicationUsers { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
