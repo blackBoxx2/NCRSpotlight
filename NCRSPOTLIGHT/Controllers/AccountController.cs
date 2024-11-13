@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
-using NCRSPOTLIGHT.Models.ViewModels;
+using EntitiesLayer.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 using System.Runtime.CompilerServices;

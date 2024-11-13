@@ -1,4 +1,4 @@
-﻿namespace NCRSPOTLIGHT.Models.ViewModels
+﻿namespace EntitiesLayer.Models.ViewModels
 {
     public class TwoFactorAuthenticationVIewModel
     {

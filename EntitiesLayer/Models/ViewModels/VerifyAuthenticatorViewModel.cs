@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace NCRSPOTLIGHT.Models.ViewModels
+namespace EntitiesLayer.Models.ViewModels
 {
     public class VerifyAuthenticatorViewModel
     {
