@@ -8,8 +8,10 @@
 
 <div>
     <h4>NCRLog</h4>
+    <button id="print" class="btn btn-primary">Print</button>
     <hr />
-    <dl class="row">
+    <section id="printarea">
+    <dl class="row" >
         <div class="accordion" id="qualityAccordion">
 
             <div class="accordion-Item">
@@ -127,8 +129,20 @@
             @Html.DisplayFor(model => model.Status)
         </dd>
     </dl>
+    </section>
+
 </div>
 <div>
     <a asp-action="Edit" asp-route-id="@Model?.ID">Edit</a> |
     <a onclick="window.close()" style="cursor:pointer" class="btn-link">Back to List</a>
 </div>
+@section Scripts{
+    <script>
+    $(function () {
+        //Handle Print
+        $("#print").on("click", function () {
+            window.print();
+        });
+    })
+</script>
+}
