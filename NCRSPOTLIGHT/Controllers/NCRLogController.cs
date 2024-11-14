@@ -14,6 +14,8 @@ using Microsoft.AspNetCore.Authorization;
 using UseCasesLayer.UseCaseInterfaces.ProductUseCaseInterfaces;
 using System.Security.Claims;
 using UseCasesLayer.UseCaseInterfaces.EngUseCaseInterface;
+using EntitiesLayer.Models.ViewModels;
+using UseCasesLayer.UseCaseInterfaces.SuppliersUseCaseInterfaces;
 
 namespace NCRSPOTLIGHT.Controllers
 {
@@ -33,7 +35,10 @@ namespace NCRSPOTLIGHT.Controllers
         private readonly IGetQualityPortionByIDAsyncUseCase _getQualityPortionByIDAsyncUseCase;
         private readonly IAddEngPortionAsyncUseCase _addEngPortionAsyncUseCase;
         private readonly IGetEngPortionsAsyncUseCase _getEngPortionsAsyncUseCase;
-        private readonly IUpdateEngPortionAsyncUseCase _updateEngPortionAsyncUseCase;
+		private readonly IGetSupplierByIDAsyncUseCase getSupplierByIDAsyncUseCase;
+        private readonly IGetSuppliersAsyncUseCase getSuppliersAsyncUseCase;
+        private readonly IGetProductByIDAsyncUseCase getProductByIDAsyncUseCase;
+		private readonly IUpdateEngPortionAsyncUseCase _updateEngPortionAsyncUseCase;
 
         public NCRLogController(IAddNCRLogAsyncUseCase addNCRLogAsyncUseCase,
                                 IDeleteNCRLogAsyncUseCase deleteNCRLogAsyncUseCase,
@@ -47,7 +52,10 @@ namespace NCRSPOTLIGHT.Controllers
                                 IGetQualityPortionByIDAsyncUseCase getQualityPortionByIDAsyncUseCase,
                                 IAddEngPortionAsyncUseCase addEngPortionAsyncUseCase,
                                 IGetEngPortionsAsyncUseCase getEngPortionsAsyncUseCase,
-                                IUpdateEngPortionAsyncUseCase updateEngPortionAsyncUseCase
+                                IUpdateEngPortionAsyncUseCase updateEngPortionAsyncUseCase,
+                                IGetSupplierByIDAsyncUseCase getSupplierByIDAsyncUseCase,
+                                IGetSuppliersAsyncUseCase getSuppliersAsyncUseCase,
+                                IGetProductByIDAsyncUseCase getProductByIDAsyncUseCase
                                 )
         {
             _addNCRLogAsyncUseCase = addNCRLogAsyncUseCase;
@@ -62,7 +70,10 @@ namespace NCRSPOTLIGHT.Controllers
             _getQualityPortionByIDAsyncUseCase = getQualityPortionByIDAsyncUseCase;
             _addEngPortionAsyncUseCase = addEngPortionAsyncUseCase;
             _getEngPortionsAsyncUseCase = getEngPortionsAsyncUseCase;
-            _updateEngPortionAsyncUseCase = updateEngPortionAsyncUseCase;
+			this.getSupplierByIDAsyncUseCase = getSupplierByIDAsyncUseCase;
+            this.getSuppliersAsyncUseCase = getSuppliersAsyncUseCase;
+            this.getProductByIDAsyncUseCase = getProductByIDAsyncUseCase;
+			_updateEngPortionAsyncUseCase = updateEngPortionAsyncUseCase;
 
         }
 
@@ -172,9 +183,14 @@ namespace NCRSPOTLIGHT.Controllers
             {
                 return NotFound();
             }
+            var model = new NCRLogViewModel
+            {
+                NCR = await _getNCRLogByIDAsyncUseCase.Execute(id)
+			};
 
-            var nCRLog = await _getNCRLogByIDAsyncUseCase.Execute(id);
-            if (nCRLog == null)
+            model.Supplier = await getSupplierByIDAsyncUseCase.Execute(model.NCR.QualityPortion.Product.SupplierID);
+            //var nCRLog = await _getNCRLogByIDAsyncUseCase.Execute(id);
+            if (model.NCR == null)
             {
                 return NotFound();
             }
@@ -185,9 +201,8 @@ namespace NCRSPOTLIGHT.Controllers
             ViewBag.QASection = userRoles.Contains("QualityAssurance") ? "enabled" : "disabled";
             ViewBag.EngineerSection = userRoles.Contains("Engineer") ? "enabled" : "disabled";
             ViewBag.IsAdmin = userRoles.Contains("Admin");
-
-            LoadSelectList(nCRLog);
-            return View(nCRLog);
+            LoadSelectList(model.NCR);
+            return View(model);
         }
 
         // POST: NCRLog/Edit/5
@@ -279,5 +294,7 @@ namespace NCRSPOTLIGHT.Controllers
                        .Select(c => c.Value)
                        .ToList();
         }
-    }
+
+
+	}
 }

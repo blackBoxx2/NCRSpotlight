@@ -1,6 +1,6 @@
 ﻿@using EntitiesLayer.Models
-@model EntitiesLayer.Models.NCRLog
-
+@using Plugins.DataStore.SQLite
+@model EntitiesLayer.Models.ViewModels.NCRLogViewModel
 @{
     ViewData["Title"] = "Edit";
     string? user = ViewData["User"] as string;
@@ -17,9 +17,9 @@
     <div class="col-md-4">
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="ID" />
-            <input type="hidden" asp-for="QualityPortionID" />
-            <input type="hidden" asp-for="EngPortionID" />
+            <input type="hidden" asp-for="NCR.ID" />
+            <input type="hidden" asp-for="NCR.QualityPortionID" />
+            <input type="hidden" asp-for="NCR.EngPortionID" />
 
             <div class="accordion" id="qualityAccordion">
 
@@ -36,68 +36,69 @@
 
                         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                         <div class="form-group">
-                            <label asp-for="QualityPortion.ProductID" class="control-label"></label>
+
+                            <label asp-for="NCR.QualityPortion.ProductID" class="control-label"></label>
                             @if (isQualityAssurance || isAdmin)
                             {
-                                <select asp-for="QualityPortion.ProductID" class="form-control" asp-items="ViewBag.ProductID"></select>
+                                <select asp-for="NCR.QualityPortion.ProductID" class="form-control" asp-items="ViewBag.ProductID" onchange="fool(this.value)"></select>
                             }
                             else
                             {
-                                <select asp-for="QualityPortion.ProductID" class="form-control" asp-items="ViewBag.ProductID" disabled="disabled"></select>
+                                <select asp-for="NCR.QualityPortion.ProductID" class="form-control" asp-items="ViewBag.ProductID" disabled="disabled"></select>
                             }
-                            <span asp-validation-for="QualityPortion.ProductID" class="text-danger"></span>
+                            <span asp-validation-for="NCR.QualityPortion.ProductID" class="text-danger"></span>
                         </div>
                         <div class="form-group">
-                            <label asp-for="QualityPortion.Quantity" class="control-label"></label>
+                            <label asp-for="NCR.QualityPortion.Quantity" class="control-label"></label>
                             @if (isQualityAssurance || isAdmin)
                             {
-                                <input asp-for="QualityPortion.Quantity" class="form-control" />
+                                <input asp-for="NCR.QualityPortion.Quantity" class="form-control" />
                             }
                             else
                             {
-                                <input asp-for="QualityPortion.Quantity" class="form-control" readonly="readonly" />
+                                <input asp-for="NCR.QualityPortion.Quantity" class="form-control" readonly="readonly" />
                             }
-                            <span asp-validation-for="QualityPortion.Quantity" class="text-danger"></span>
+                            <span asp-validation-for="NCR.QualityPortion.Quantity" class="text-danger"></span>
                         </div>
                         <div class="form-group">
-                            <label asp-for="QualityPortion.QuantityDefective" class="control-label"></label>
+                            <label asp-for="NCR.QualityPortion.QuantityDefective" class="control-label"></label>
                             @if (isQualityAssurance || isAdmin)
                             {
-                                <input asp-for="QualityPortion.QuantityDefective" class="form-control" />
+                                <input asp-for="NCR.QualityPortion.QuantityDefective" class="form-control" />
                             }
                             else
                             {
-                                <input asp-for="QualityPortion.QuantityDefective" class="form-control" readonly="readonly" />
+                                <input asp-for="NCR.QualityPortion.QuantityDefective" class="form-control" readonly="readonly" />
                             }
-                            <span asp-validation-for="QualityPortion.QuantityDefective" class="text-danger"></span>
+                            <span asp-validation-for="NCR.QualityPortion.QuantityDefective" class="text-danger"></span>
                         </div>
                         <div class="form-group">
-                            <label asp-for="QualityPortion.OrderNumber" class="control-label"></label>
+                            <label asp-for="NCR.QualityPortion.OrderNumber" class="control-label"></label>
                             @if (isQualityAssurance || isAdmin)
                             {
-                                <input asp-for="QualityPortion.OrderNumber" class="form-control" />
+                                <input asp-for="NCR.QualityPortion.OrderNumber" class="form-control" />
                             }
                             else
                             {
-                                <input asp-for="QualityPortion.OrderNumber" class="form-control" readonly="readonly" />
+                                <input asp-for="NCR.QualityPortion.OrderNumber" class="form-control" readonly="readonly" />
                             }
-                            <span asp-validation-for="QualityPortion.OrderNumber" class="text-danger"></span>
+                            <span asp-validation-for="NCR.QualityPortion.OrderNumber" class="text-danger"></span>
                         </div>
                         <div class="form-group">
-                            <label asp-for="QualityPortion.DefectDescription" class="control-label"></label>
+                            <label asp-for="NCR.QualityPortion.DefectDescription" class="control-label"></label>
                             @if (isQualityAssurance || isAdmin)
                             {
-                                <textarea asp-for="QualityPortion.DefectDescription" class="form-control" rows="4" cols="50"></textarea>
+                                <textarea asp-for="NCR.QualityPortion.DefectDescription" class="form-control" rows="4" cols="50"></textarea>
                             }
                             else
                             {
-                                <textarea asp-for="QualityPortion.DefectDescription" class="form-control" rows="4" cols="50" readonly="readonly"></textarea>
+                                <textarea asp-for="NCR.QualityPortion.DefectDescription" class="form-control" rows="4" cols="50" readonly="readonly"></textarea>
                             }
-                            <span asp-validation-for="QualityPortion.DefectDescription" class="text-danger"></span>
+                            <span asp-validation-for="NCR.QualityPortion.DefectDescription" class="text-danger"></span>
                         </div>
                         <div class="form-group">
-                            <label asp-for="QualityPortion.RepID" class="control-label"></label>
-                            <input asp-for="QualityPortion.RepID" class="form-control" readonly="readonly" />
+                            <label asp-for="NCR.QualityPortion.RepID" class="control-label"></label>
+                            <input asp-for="NCR.QualityPortion.RepID" class="form-control" readonly="readonly" />
                         </div>
                         <div class="form-group">
                             <label class="control-label custom-file-label">Upload Pictures: </label>
@@ -130,39 +131,39 @@
                 <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#engineerAccordion">
                     <div class="accordion-body">
                         <div class="form-group">
-                            <label asp-for="EngPortion.EngReview" class="control-label"></label>
-                            <select asp-for="EngPortion.EngReview" class="form-control" asp-items="@Html.GetEnumSelectList<EngReview>()"></select>
-                            <span asp-validation-for="EngPortion.EngReview" class="text-danger"></span>
+                            <label asp-for="NCR.EngPortion.EngReview" class="control-label"></label>
+                            <select asp-for="NCR.EngPortion.EngReview" class="form-control" asp-items="@Html.GetEnumSelectList<EngReview>()"></select>
+                            <span asp-validation-for="NCR.EngPortion.EngReview" class="text-danger"></span>
                         </div>
                         <div class="form-group">
-                            <label asp-for="EngPortion.Disposition" class="form-label"></label>
-                            <textarea asp-for="EngPortion.Disposition" class="form-control" rows="4" cols="50" class="form-control"></textarea>
-                            <span asp-validation-for="EngPortion.Disposition" class="text-danger"></span>
+                            <label asp-for="NCR.EngPortion.Disposition" class="form-label"></label>
+                            <textarea asp-for="NCR.EngPortion.Disposition" class="form-control" rows="4" cols="50" class="form-control"></textarea>
+                            <span asp-validation-for="NCR.EngPortion.Disposition" class="text-danger"></span>
                         </div>
                         <div class="form-group">
-                            <label asp-for="EngPortion.Update" class="form-check-label"></label>
-                            <input asp-for="EngPortion.Update" class="form-check-input" type="checkbox" />
-                            <span asp-validation-for="EngPortion.Update" class="text-danger"></span>
+                            <label asp-for="NCR.EngPortion.Update" class="form-check-label"></label>
+                            <input asp-for="NCR.EngPortion.Update" class="form-check-input" type="checkbox" />
+                            <span asp-validation-for="NCR.EngPortion.Update" class="text-danger"></span>
                         </div>
                         <div class="form-group">
-                            <label asp-for="EngPortion.Notif" class="form-check-label"></label>
-                            <input asp-for="EngPortion.Notif" class="form-check-input" type="checkbox" />
-                            <span asp-validation-for="EngPortion.Notif" class="text-danger"></span>
+                            <label asp-for="NCR.EngPortion.Notif" class="form-check-label"></label>
+                            <input asp-for="NCR.EngPortion.Notif" class="form-check-input" type="checkbox" />
+                            <span asp-validation-for="NCR.EngPortion.Notif" class="text-danger"></span>
                         </div>
                         <div class="form-group">
-                            <label asp-for="EngPortion.RevNumber" class="control-label"></label>
-                            <input type="number" asp-for="EngPortion.RevNumber" class="form-control" />
-                            <span asp-validation-for="EngPortion.RevNumber" class="text-danger"></span>
+                            <label asp-for="NCR.EngPortion.RevNumber" class="control-label"></label>
+                            <input type="number" asp-for="NCR.EngPortion.RevNumber" class="form-control" />
+                            <span asp-validation-for="NCR.EngPortion.RevNumber" class="text-danger"></span>
                         </div>
                         <div class="form-group">
-                            <label asp-for="EngPortion.RevDate" class="control-label"></label>
-                            <input asp-for="EngPortion.RevDate" class="form-control" value="" />
-                            <span asp-validation-for="EngPortion.RevDate" class="text-danger"></span>
+                            <label asp-for="NCR.EngPortion.RevDate" class="control-label"></label>
+                            <input asp-for="NCR.EngPortion.RevDate" class="form-control" value="" />
+                            <span asp-validation-for="NCR.EngPortion.RevDate" class="text-danger"></span>
                         </div>
                         <div class="form-group">
-                            <label asp-for="EngPortion.RepID" class="control-label"></label>
-                            <input asp-for="EngPortion.RepID" class="form-control"/>
-                            <span asp-validation-for="EngPortion.RepID" class="text-danger"></span>
+                            <label asp-for="NCR.EngPortion.RepID" class="control-label"></label>
+                            <input asp-for="NCR.EngPortion.RepID" class="form-control" />
+                            <span asp-validation-for="NCR.EngPortion.RepID" class="text-danger"></span>
                         </div>
 
 
@@ -172,15 +173,15 @@
 
 
             <div class="form-group">
-                <label asp-for="DateCreated" class="control-label"></label>
-                <input asp-for="DateCreated" class="form-control" />
-                <span asp-validation-for="DateCreated" class="text-danger"></span>
+                <label asp-for="NCR.DateCreated" class="control-label"></label>
+                <input asp-for="NCR.DateCreated" class="form-control" />
+                <span asp-validation-for="NCR.DateCreated" class="text-danger"></span>
             </div>
 
             <div class="form-group">
-                <label asp-for="Status" class="control-label"></label>
-                <select asp-for="Status" asp-items="@Html.GetEnumSelectList<NCRStatus>()" class="form-control"></select>
-                <span asp-validation-for="Status" class="text-danger"></span>
+                <label asp-for="NCR.Status" class="control-label"></label>
+                <select asp-for="NCR.Status" asp-items="@Html.GetEnumSelectList<NCRStatus>()" class="form-control"></select>
+                <span asp-validation-for="NCR.Status" class="text-danger"></span>
             </div>
 
             <div class="form-group">
@@ -192,4 +193,5 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
 }
