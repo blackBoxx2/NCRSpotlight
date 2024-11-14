@@ -1,19 +1,29 @@
 ﻿@using EntitiesLayer.Models
+@using Plugins.DataStore.SQLite
 @model EntitiesLayer.Models.NCRLog
+@inject NCRContext _context
 
 @{
     ViewData["Title"] = "Edit";
+    string supName = "";
+    int a = 1;
 }
 
 <h1>Edit</h1>
 
 <h4>NCRLog</h4>
 <hr />
+
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="ID" />
+
+            <div class="form-group mb-2">
+                <label asp-for="ID" class="control-label">NCR Number</label>
+                <input asp-for="ID" class="form-control" readonly/>
+            </div>
+
             <input type="hidden" asp-for="QualityPortionID" />
             <input type="hidden" asp-for="EngPortionID" />
 
@@ -21,9 +31,9 @@
 
                 <div class="accordion-Item">
 
-                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
                         <h3 class="Accordion-Header" id="qualityHeading">Quality Assurance</h3>
-                    </button>
+                     </button>
 
                 </div>              
 
@@ -33,7 +43,11 @@
                             <div asp-validation-summary="ModelOnly" class="text-danger"></div>                                  
                             <div class="form-group">
                                 <label asp-for="QualityPortion.ProductID" class="control-label"></label>
-                                <select asp-for="QualityPortion.ProductID" class="form-control" asp-items="ViewBag.ProductID"></select>
+                                <select asp-for="QualityPortion.ProductID" id="productDDL" onchange="DisplaySup(this.options[this.options.selectedIndex].value)" class="form-control" asp-items="ViewBag.ProductID"></select>
+                            </div>
+                            <div id="supplierOutput" class="form-group">
+                                <label asp-for="QualityPortion.Product.Supplier.SupplierName" class="control-label"></label>
+                                <select id="mySelect" asp-items="ViewBag.SupplierID" class="form-control" disabled></select>
                             </div>
                             <div class="form-group">
                                 <label asp-for="QualityPortion.Quantity" class="control-label"></label>
@@ -75,7 +89,7 @@
 
                 <div class="accordion-Item">
 
-                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="true" aria-controls="collapseOne">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseOne">
                         <h3 class="Accordion-Header" id="engineerHeading">Engineering</h3>
                     </button>
 
@@ -145,5 +159,15 @@
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}           
+
+    <script>
+
+        function DisplaySup(supIndex){      
+            document.getElementById('mySelect').selectedIndex = supIndex - 1;
+        }
+
+
+    </script>
+
 }

@@ -12,8 +12,10 @@ namespace EntitiesLayer.Models
     {
 
         [Key]
+        [Display(Name = "NCR Number")]
         public int ID { get; set; }
 
+        //public bool ProcessApplicable { get; set; } = false;
 
         public int ProductID { get; set; } = 1;
 

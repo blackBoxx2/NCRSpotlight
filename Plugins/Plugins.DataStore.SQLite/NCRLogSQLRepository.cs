@@ -37,7 +37,7 @@ namespace Plugins.DataStore.SQLite
             if (id == null) return null;
 
             var log = await _context.NCRLog
-                .Include(p => p.QualityPortion).ThenInclude(q => q.Product)
+                .Include(p => p.QualityPortion).ThenInclude(q => q.Product).ThenInclude(p => p.Supplier)
                 .Include(p => p.EngPortion)
                 .AsNoTracking()
                 .FirstOrDefaultAsync(m => m.ID == id);

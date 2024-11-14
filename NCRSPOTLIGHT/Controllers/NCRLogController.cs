@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -14,6 +15,7 @@ using Microsoft.AspNetCore.Authorization;
 using UseCasesLayer.UseCaseInterfaces.ProductUseCaseInterfaces;
 using System.Security.Claims;
 using UseCasesLayer.UseCaseInterfaces.EngUseCaseInterface;
+using UseCasesLayer.UseCaseInterfaces.SuppliersUseCaseInterfaces;
 
 namespace NCRSPOTLIGHT.Controllers
 {
@@ -34,6 +36,8 @@ namespace NCRSPOTLIGHT.Controllers
         private readonly IAddEngPortionAsyncUseCase _addEngPortionAsyncUseCase;
         private readonly IGetEngPortionsAsyncUseCase _getEngPortionsAsyncUseCase;
         private readonly IUpdateEngPortionAsyncUseCase _updateEngPortionAsyncUseCase;
+        private readonly IGetSuppliersAsyncUseCase _getSuppliersAsyncUseCase;
+        private readonly IGetSupplierByIDAsyncUseCase _getSupplierByIDAsyncUseCase;
 
         public NCRLogController(IAddNCRLogAsyncUseCase addNCRLogAsyncUseCase,
                                 IDeleteNCRLogAsyncUseCase deleteNCRLogAsyncUseCase,
@@ -47,7 +51,9 @@ namespace NCRSPOTLIGHT.Controllers
                                 IGetQualityPortionByIDAsyncUseCase getQualityPortionByIDAsyncUseCase,
                                 IAddEngPortionAsyncUseCase addEngPortionAsyncUseCase,
                                 IGetEngPortionsAsyncUseCase getEngPortionsAsyncUseCase,
-                                IUpdateEngPortionAsyncUseCase updateEngPortionAsyncUseCase
+                                IUpdateEngPortionAsyncUseCase updateEngPortionAsyncUseCase,
+                                IGetSuppliersAsyncUseCase getSuppliersAsyncUseCase,
+                                IGetSupplierByIDAsyncUseCase getSupplierByIDAsyncUseCase
                                 )
         {
             _addNCRLogAsyncUseCase = addNCRLogAsyncUseCase;
@@ -63,6 +69,8 @@ namespace NCRSPOTLIGHT.Controllers
             _addEngPortionAsyncUseCase = addEngPortionAsyncUseCase;
             _getEngPortionsAsyncUseCase = getEngPortionsAsyncUseCase;
             _updateEngPortionAsyncUseCase = updateEngPortionAsyncUseCase;
+            _getSuppliersAsyncUseCase = getSuppliersAsyncUseCase;
+            _getSupplierByIDAsyncUseCase = getSupplierByIDAsyncUseCase;
 
         }
 
@@ -171,7 +179,7 @@ namespace NCRSPOTLIGHT.Controllers
             {
                 return NotFound();
             }
-
+            
             var nCRLog = await _getNCRLogByIDAsyncUseCase.Execute(id);
             if (nCRLog == null)
             {
@@ -261,6 +269,8 @@ namespace NCRSPOTLIGHT.Controllers
             if(log.QualityPortion != null)
             {
                 ViewBag.ProductID = new SelectList(await _getProductsAsyncUseCase.Execute(), "ID", "Description", log.QualityPortion.ProductID);
+                ViewBag.SupplierID = new SelectList(await _getProductsAsyncUseCase.Execute(), "ID", "Supplier.SupplierName", log.QualityPortion.ProductID);
+                int x;
             }
             ViewBag.ProductID = new SelectList(await _getProductsAsyncUseCase.Execute(), "ID", "Description");
         }
