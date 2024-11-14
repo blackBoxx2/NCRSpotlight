@@ -11,8 +11,8 @@ using Plugins.DataStore.SQLite;
 namespace Plugins.DataStore.SQLite.IdentityMigrations
 {
     [DbContext(typeof(IdentityContext))]
-    [Migration("20241113054131_Add New Application User Nullable Names")]
-    partial class AddNewApplicationUserNullableNames
+    [Migration("20241114043648_initial")]
+    partial class initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace Plugins.DataStore.SQLite.NCRMigrations
+namespace Plugins.DataStore.SQLite.ncrcontext
 {
     /// <inheritdoc />
     public partial class initial : Migration

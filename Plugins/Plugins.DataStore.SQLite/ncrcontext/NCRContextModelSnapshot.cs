@@ -2,20 +2,17 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Plugins.DataStore.SQLite;
 
 #nullable disable
 
-namespace Plugins.DataStore.SQLite.NCRMigrations
+namespace Plugins.DataStore.SQLite.ncrcontext
 {
     [DbContext(typeof(NCRContext))]
-    [Migration("20241112155019_initial")]
-    partial class initial
+    partial class NCRContextModelSnapshot : ModelSnapshot
     {
-        /// <inheritdoc />
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.10");

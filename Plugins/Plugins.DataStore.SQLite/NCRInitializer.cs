@@ -192,7 +192,7 @@ namespace Plugins.DataStore.SQLite
                     //        }
                     //    }
                     //}
-                        
+
                     //if(!context.Representatives.Any())
                     //{
                     //    //Representatives seed data
@@ -302,12 +302,12 @@ namespace Plugins.DataStore.SQLite
                     //        }
 
                     //    }
- 
+
                     //        await context.SaveChangesAsync();
                     //}
-                    
-                        
-                    
+
+
+
                     //Product Initializer               
 
                     if (!context.Products.Any() || context.Products.Count() < 20)
@@ -327,7 +327,7 @@ namespace Plugins.DataStore.SQLite
                             {
 
                                 var suppliers = context.Suppliers.ToList();
-                                int randIndex = rnd.Next( suppliers.Count );
+                                int randIndex = rnd.Next(suppliers.Count);
                                 int supplierID = suppliers[randIndex].ID;
 
                                 Product product = new Product
