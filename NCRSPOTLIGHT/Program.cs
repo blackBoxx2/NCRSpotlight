@@ -1,7 +1,12 @@
+using EntitiesLayer.Models.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
-using NCRSPOTLIGHT.Areas.Identity.Data;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
+using NCRSPOTLIGHT;
+using NCRSPOTLIGHT.Authorize;
 using NCRSPOTLIGHT.Utilities;
 using Plugins.DataStore.SQLite;
 using UseCasesLayer.DataStorePluginInterfaces;
@@ -19,21 +24,31 @@ var builder = WebApplication.CreateBuilder(args);
 var connectionStringNCRSpotlight = builder.Configuration.GetConnectionString("NCRContext") ?? throw new InvalidOperationException("Connection string 'IdentityContextConnection' not found.");
 
 var connectionStringIdentity = builder.Configuration.GetConnectionString("IdentityContextConnection") ?? throw new InvalidOperationException("Connection string 'IdentityContextConnection' not found.");
+#region Emailer Stuff
+builder.Configuration
+        .SetBasePath(Directory.GetCurrentDirectory())
+        .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+        .AddJsonFile("appsettings.Development.json", optional: true, reloadOnChange: true)
+        .AddJsonFile("Secrets/secrets.json", optional: true, reloadOnChange: true)
+        .AddEnvironmentVariables();
+
+var smtpUsername = builder.Configuration["Smtp:Username"];
+var smtpPassword = builder.Configuration["Smtp:Password"];
+var smtpHost = builder.Configuration["Smtp:Host"];
+var smtpPort = builder.Configuration["Smtp:Port"];
+var microsoftClientID = builder.Configuration["Microsoft:ClientId"];
+var microsoftClientSecret = builder.Configuration["Microsoft:ClientSecret"];
 builder.Services.Configure<SmtpSettings>(builder.Configuration.GetSection("Smtp"));
 
 builder.Services.AddTransient<IEmailSender, NCRSpotlightEmailer>();
+#endregion
+
 
 builder.Services.AddDbContext<IdentityContext>(options => options.UseSqlite(connectionStringIdentity));
 
 builder.Services.AddDbContext<NCRContext>(options => options.UseSqlite(connectionStringNCRSpotlight));
 builder.Services.AddTransient<IEmailSender, NCRSpotlightEmailer>();
-builder.Services.AddIdentity<IdentityUser, IdentityRole>(options => 
-{
-    options.SignIn.RequireConfirmedAccount = false;
-    options.User.RequireUniqueEmail = true;
-    options.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
-}).AddEntityFrameworkStores<IdentityContext>()
-.AddDefaultTokenProviders();
+
 
 
 // Add services to the container.
@@ -91,19 +106,70 @@ builder.Services.AddTransient<IGetNCRLogsAsyncUseCase, GetNCRLogsAsyncUseCase>()
 
 
 //Implement Policy Based Authorization (Used for specific roles)
-builder.Services.AddAuthorization(options =>
+builder.Services.AddIdentity<ApplicationUser, IdentityRole>(
+    options =>
+    {
+        options.SignIn.RequireConfirmedAccount = false;
+        options.User.RequireUniqueEmail = true;
+        options.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
+        }
+    
+        )
+    .AddEntityFrameworkStores<IdentityContext>().AddDefaultTokenProviders();
+builder.Services.ConfigureApplicationCookie(opt =>
 {
-    options.AddPolicy("BasicUser", p => p.RequireRole("BasicUser"));
+    opt.AccessDeniedPath = new PathString("/Account/NoAccess");
+}
+);
 
-
-    options.AddPolicy("Engineer", p => p.RequireRole("Engineer"));
-    //    options.AddPolicy("ENRep", p => p.RequireClaim("Role", "ENRep"));
-
-    options.AddPolicy("Admin", p => p.RequireRole("Admin"));
-    options.AddPolicy("QualityAssurance", p => p.RequireRole("QualityAssurance"));
+builder.Services.Configure<IdentityOptions>(opt =>
+{
+    opt.Password.RequireDigit = false;
+    opt.Password.RequireLowercase = false;
+    opt.Password.RequireUppercase = false;
+    opt.Password.RequireNonAlphanumeric = false;
+    opt.Lockout.MaxFailedAccessAttempts = 3;
+    opt.SignIn.RequireConfirmedEmail = false;
 });
 
+//builder.Services.AddAuthorization(options =>
+//{
+//    options.AddPolicy("BasicUser", p => p.RequireRole("BasicUser"));
 
+
+//    options.AddPolicy("Engineer", p => p.RequireRole("Engineer"));
+//    //    options.AddPolicy("ENRep", p => p.RequireClaim("Role", "ENRep"));
+
+//    options.AddPolicy("QualityAssurance", p => p.RequireRole("QualityAssurance"));
+//});
+
+builder.Services.AddAuthorization(opt =>
+{
+
+    opt.AddPolicy("Engineer", p => p.RequireRole("Engineer"));
+    //    options.AddPolicy("ENRep", p => p.RequireClaim("Role", "ENRep"));
+
+    opt.AddPolicy("QualityAssurance", p => p.RequireRole(SD.QualityAssurance));
+    opt.AddPolicy("Admin", policy => policy.RequireRole(SD.Admin));
+    opt.AddPolicy("AdminAndUser", policy => policy.RequireRole(SD.Admin).RequireRole(SD.User));
+    opt.AddPolicy("AdminRole-CreateClaim", policy => policy.RequireRole(SD.Admin).RequireClaim("create", "True"));
+    opt.AddPolicy("AdminRole-CreateEditDeleteClaim", policy => policy
+    .RequireRole(SD.Admin)
+    .RequireClaim("create", "True")
+    .RequireClaim("edit", "True")
+    .RequireClaim("delete", "True"));
+
+    opt.AddPolicy("Admin_Create_Edit_DeleteAccess_OR_SuperAdminRole", policy => policy.RequireAssertion(context =>
+    AdminRole_CreateEditDeleteClaim_ORSuperAdminRole(context)
+    ));
+    opt.AddPolicy("OnlySuperAdminChecker", p => p.Requirements.Add(new OnlySuperAdminChecker()));
+});
+
+builder.Services.AddAuthentication().AddMicrosoftAccount(opt =>
+{
+    opt.ClientId = microsoftClientID;
+    opt.ClientSecret = microsoftClientSecret;
+});
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -153,3 +219,13 @@ using (var scope = app.Services.CreateScope())
 
 
 app.Run();
+
+bool AdminRole_CreateEditDeleteClaim_ORSuperAdminRole(AuthorizationHandlerContext context)
+{
+    return (
+    context.User.IsInRole(SD.Admin) && context.User.HasClaim(c => c.Type == "Create" && c.Value == "True")
+    && context.User.HasClaim(c => c.Type == "Edit" && c.Value == "True")
+    && context.User.HasClaim(c => c.Type == "Delete" && c.Value == "True")
+     )
+     || context.User.IsInRole(SD.SuperAdmin);
+}

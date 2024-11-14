@@ -8,7 +8,32 @@
         <img id="btnNotif" alt="View new NCRs" src="https://static-00.iconduck.com/assets.00/bell-ringing-icon-468x512-drbxxdeb.png" />
         <label for="btnNotif">There are X new NCRs to view</label>
     </div>
+
+    @if (User.Identity.IsAuthenticated)
+    {
+        var twofactor = ViewData["TwoFactorEnabled"];
+        if (twofactor != null && twofactor.ToString().ToLower() == "true")
+        {
+            <a asp-action="RemoveAuthenticator" asp-controller="Account" class="btn btn-warning"> Reset & Remove Two Factor Authentication</a>
+        }
+        else
+        {
+            <a class="mb-3" asp-controller="Account" asp-action="EnableAuthentication">Setup Two Factor Authentication</a>
+
+        }
+        var roles = User.Claims
+        .Where(c => c.Type == System.Security.Claims.ClaimTypes.Role)
+        .Select(c => c.Value)
+        .ToList();
+        <h2 class="text-success">Your Role(s): @string.Join(", ", roles)</h2>
+    }
+
+  
+
+
+
 </div>
+
 
 <style>
     img {
