@@ -131,12 +131,7 @@ namespace NCRSPOTLIGHT.Controllers
             ViewData["User"] = HttpContext.User.Identity.Name;
             LoadSelectList(new NCRLog());
         
-            var user = HttpContext.User;
-            var userRoles = GetUserRoles(user);
-
-            ViewBag.QASection = userRoles.Contains("QualityAssurance") ? "enabled" : "disabled";
-            ViewBag.EngineerSection = userRoles.Contains("Engineer") ? "enabled" : "disabled";
-            ViewBag.IsAdmin = userRoles.Contains("Admin");
+            var user = HttpContext.User;                      
 
             return View();
         }
@@ -181,21 +176,17 @@ namespace NCRSPOTLIGHT.Controllers
                 return NotFound();
             }
             
-            model.Supplier = await getSupplierByIDAsyncUseCase.Execute(model.NCR.QualityPortion.Product.SupplierID);
-            //var nCRLog = await _getNCRLogByIDAsyncUseCase.Execute(id);
-            if (model.NCR == null)
+            
+            var nCRLog = await _getNCRLogByIDAsyncUseCase.Execute(id);
+            if (nCRLog == null)
             {
                 return NotFound();
             }
 
             var user = HttpContext.User;
-            var userRoles = GetUserRoles(user);
 
-            ViewBag.QASection = userRoles.Contains("QualityAssurance") ? "enabled" : "disabled";
-            ViewBag.EngineerSection = userRoles.Contains("Engineer") ? "enabled" : "disabled";
-            ViewBag.IsAdmin = userRoles.Contains("Admin");
-            LoadSelectList(model.NCR);
-            return View(model);
+            LoadSelectList(nCRLog);
+            return View(nCRLog);
         }
 
         // POST: NCRLog/Edit/5
@@ -271,8 +262,7 @@ namespace NCRSPOTLIGHT.Controllers
             if(log.QualityPortion != null)
             {
                 ViewBag.ProductID = new SelectList(await _getProductsAsyncUseCase.Execute(), "ID", "Description", log.QualityPortion.ProductID);
-                ViewBag.SupplierID = new SelectList(await _getProductsAsyncUseCase.Execute(), "ID", "Supplier.SupplierName", log.QualityPortion.ProductID);
-                int x;
+                ViewBag.SupplierID = new SelectList(await _getProductsAsyncUseCase.Execute(), "ID", "Supplier.SupplierName", log.QualityPortion.ProductID);               
             }
             ViewBag.ProductID = new SelectList(await _getProductsAsyncUseCase.Execute(), "ID", "Description");
         }
@@ -280,16 +270,7 @@ namespace NCRSPOTLIGHT.Controllers
         {
             var log = _getNCRLogByIDAsyncUseCase.Execute(id);
             return log != null;
-        }
-
-        private List<string> GetUserRoles(ClaimsPrincipal user)
-        {
-            return User.Claims
-                       .Where(c => c.Type == ClaimTypes.Role)
-                       .Select(c => c.Value)
-                       .ToList();
-        }
-
+        }       
 
 	}
 }
