@@ -32,7 +32,7 @@
                             <a class="nav-link text-dark" asp-area="" asp-controller="NCRLog" asp-action="Index">NCRLog</a>
                         </li>
                         @{
-                            if(User.Identity.IsAuthenticated)
+                            if(User.IsInRole("SuperAdmin"))
                             {
                                 
                                 <li class="nav-item dropdown">

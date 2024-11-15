@@ -49,9 +49,26 @@
                     </div>
                 </div>
             </div>
+                             
+
 
         </div>
     </form>
+    <div class="container ">
+        <form class="row" method="post" asp-action="Login">
+            <input type="hidden" name="returnUrl" value="@ViewData["ReturnUrl"]" />
+            <div class="btn-group mx-auto col-10">
+            <button class="btn btn-success" type="submit" name="email" value="admin@email.com">Admin Login</button>
+            <button class="btn btn-dark" type="submit" name="email" value="qa@email.com">QualityAssurance Login</button>
+            <button class="btn btn-info" type="submit" name="email" value="basic@email.com">Basic Login</button>
+            <button class="btn btn-outline-secondary" type="submit" name="email" value="engineer@email.com">Engineer Login</button>
+            <button class="btn btn-danger" type="submit" name="email" value="superAdmin@email.com">SuperAdmin Login</button>
+            </div>
+        </form>
+
+
+
+    </div>
     @{
         var schemes = await signInManager.GetExternalAuthenticationSchemesAsync();
         var loginProviders = schemes.ToList();
