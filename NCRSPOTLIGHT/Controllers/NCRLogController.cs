@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -14,7 +15,6 @@ using Microsoft.AspNetCore.Authorization;
 using UseCasesLayer.UseCaseInterfaces.ProductUseCaseInterfaces;
 using System.Security.Claims;
 using UseCasesLayer.UseCaseInterfaces.EngUseCaseInterface;
-using EntitiesLayer.Models.ViewModels;
 using UseCasesLayer.UseCaseInterfaces.SuppliersUseCaseInterfaces;
 
 namespace NCRSPOTLIGHT.Controllers
@@ -35,10 +35,9 @@ namespace NCRSPOTLIGHT.Controllers
         private readonly IGetQualityPortionByIDAsyncUseCase _getQualityPortionByIDAsyncUseCase;
         private readonly IAddEngPortionAsyncUseCase _addEngPortionAsyncUseCase;
         private readonly IGetEngPortionsAsyncUseCase _getEngPortionsAsyncUseCase;
-		private readonly IGetSupplierByIDAsyncUseCase getSupplierByIDAsyncUseCase;
-        private readonly IGetSuppliersAsyncUseCase getSuppliersAsyncUseCase;
-        private readonly IGetProductByIDAsyncUseCase getProductByIDAsyncUseCase;
-		private readonly IUpdateEngPortionAsyncUseCase _updateEngPortionAsyncUseCase;
+        private readonly IUpdateEngPortionAsyncUseCase _updateEngPortionAsyncUseCase;
+        private readonly IGetSuppliersAsyncUseCase _getSuppliersAsyncUseCase;
+        private readonly IGetSupplierByIDAsyncUseCase _getSupplierByIDAsyncUseCase;
 
         public NCRLogController(IAddNCRLogAsyncUseCase addNCRLogAsyncUseCase,
                                 IDeleteNCRLogAsyncUseCase deleteNCRLogAsyncUseCase,
@@ -53,9 +52,8 @@ namespace NCRSPOTLIGHT.Controllers
                                 IAddEngPortionAsyncUseCase addEngPortionAsyncUseCase,
                                 IGetEngPortionsAsyncUseCase getEngPortionsAsyncUseCase,
                                 IUpdateEngPortionAsyncUseCase updateEngPortionAsyncUseCase,
-                                IGetSupplierByIDAsyncUseCase getSupplierByIDAsyncUseCase,
                                 IGetSuppliersAsyncUseCase getSuppliersAsyncUseCase,
-                                IGetProductByIDAsyncUseCase getProductByIDAsyncUseCase
+                                IGetSupplierByIDAsyncUseCase getSupplierByIDAsyncUseCase
                                 )
         {
             _addNCRLogAsyncUseCase = addNCRLogAsyncUseCase;
@@ -70,10 +68,9 @@ namespace NCRSPOTLIGHT.Controllers
             _getQualityPortionByIDAsyncUseCase = getQualityPortionByIDAsyncUseCase;
             _addEngPortionAsyncUseCase = addEngPortionAsyncUseCase;
             _getEngPortionsAsyncUseCase = getEngPortionsAsyncUseCase;
-			this.getSupplierByIDAsyncUseCase = getSupplierByIDAsyncUseCase;
-            this.getSuppliersAsyncUseCase = getSuppliersAsyncUseCase;
-            this.getProductByIDAsyncUseCase = getProductByIDAsyncUseCase;
-			_updateEngPortionAsyncUseCase = updateEngPortionAsyncUseCase;
+            _updateEngPortionAsyncUseCase = updateEngPortionAsyncUseCase;
+            _getSuppliersAsyncUseCase = getSuppliersAsyncUseCase;
+            _getSupplierByIDAsyncUseCase = getSupplierByIDAsyncUseCase;
 
         }
 
@@ -134,12 +131,7 @@ namespace NCRSPOTLIGHT.Controllers
             ViewData["User"] = HttpContext.User.Identity.Name;
             LoadSelectList(new NCRLog());
         
-            var user = HttpContext.User;
-            var userRoles = GetUserRoles(user);
-
-            ViewBag.QASection = userRoles.Contains("QualityAssurance") ? "enabled" : "disabled";
-            ViewBag.EngineerSection = userRoles.Contains("Engineer") ? "enabled" : "disabled";
-            ViewBag.IsAdmin = userRoles.Contains("Admin");
+            var user = HttpContext.User;                      
 
             return View();
         }
@@ -183,26 +175,18 @@ namespace NCRSPOTLIGHT.Controllers
             {
                 return NotFound();
             }
-            var model = new NCRLogViewModel
-            {
-                NCR = await _getNCRLogByIDAsyncUseCase.Execute(id)
-			};
-
-            model.Supplier = await getSupplierByIDAsyncUseCase.Execute(model.NCR.QualityPortion.Product.SupplierID);
-            //var nCRLog = await _getNCRLogByIDAsyncUseCase.Execute(id);
-            if (model.NCR == null)
+            
+            
+            var nCRLog = await _getNCRLogByIDAsyncUseCase.Execute(id);
+            if (nCRLog == null)
             {
                 return NotFound();
             }
 
             var user = HttpContext.User;
-            var userRoles = GetUserRoles(user);
 
-            ViewBag.QASection = userRoles.Contains("QualityAssurance") ? "enabled" : "disabled";
-            ViewBag.EngineerSection = userRoles.Contains("Engineer") ? "enabled" : "disabled";
-            ViewBag.IsAdmin = userRoles.Contains("Admin");
-            LoadSelectList(model.NCR);
-            return View(model);
+            LoadSelectList(nCRLog);
+            return View(nCRLog);
         }
 
         // POST: NCRLog/Edit/5
@@ -278,6 +262,7 @@ namespace NCRSPOTLIGHT.Controllers
             if(log.QualityPortion != null)
             {
                 ViewBag.ProductID = new SelectList(await _getProductsAsyncUseCase.Execute(), "ID", "Description", log.QualityPortion.ProductID);
+                ViewBag.SupplierID = new SelectList(await _getProductsAsyncUseCase.Execute(), "ID", "Supplier.SupplierName", log.QualityPortion.ProductID);               
             }
             ViewBag.ProductID = new SelectList(await _getProductsAsyncUseCase.Execute(), "ID", "Description");
         }
@@ -285,16 +270,7 @@ namespace NCRSPOTLIGHT.Controllers
         {
             var log = _getNCRLogByIDAsyncUseCase.Execute(id);
             return log != null;
-        }
-
-        private List<string> GetUserRoles(ClaimsPrincipal user)
-        {
-            return User.Claims
-                       .Where(c => c.Type == ClaimTypes.Role)
-                       .Select(c => c.Value)
-                       .ToList();
-        }
-
+        }       
 
 	}
 }

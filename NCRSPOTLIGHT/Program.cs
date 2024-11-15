@@ -201,7 +201,7 @@ app.MapRazorPages();
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
-    await IdentityUsersInitializer.InitializeAsync(serviceProvider: services, DeleteDatabase: false,
+    await IdentityUsersInitializer.InitializeAsync(serviceProvider: services, DeleteDatabase:true,
         UseMigrations: true, SeedSampleData: true);
 }
 

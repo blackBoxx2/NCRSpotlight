@@ -22,9 +22,21 @@
 
             </div>
 
-            <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#qualityAccordion">
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.ID);
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.ID)
+                </dd>
+
+                <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#qualityAccordion">
                 
-                
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.QualityPortion.Product.Supplier.SupplierName)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.QualityPortion.Product.Supplier.SupplierName)
+                </dd>               
                 <dt class="col-sm-2">
                     @Html.DisplayNameFor(model => model.QualityPortion.Product.Description)
                 </dt>

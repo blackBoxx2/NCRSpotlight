@@ -22,7 +22,7 @@ namespace Plugins.DataStore.SQLite
         public async Task<IEnumerable<QualityPortion>> GetQualityPortionsAsync()
         {
             var NCRContext = await _context.QualityPortions
-                .Include(q => q.Product)                
+                .Include(q => q.Product)         
                 .Include(q => q.qualityPictures)
                 .AsNoTracking()
                 .ToListAsync();
