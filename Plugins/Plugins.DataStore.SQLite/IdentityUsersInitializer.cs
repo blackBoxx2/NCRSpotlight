@@ -51,17 +51,15 @@ namespace Plugins.DataStore.SQLite
                 string qaRoleId = Guid.NewGuid().ToString();
                 string engineerRoleId = Guid.NewGuid().ToString();
                 string basicUserRoleId = Guid.NewGuid().ToString();
+                string superAdminRoleId = Guid.NewGuid().ToString();
 
                 string adminUserId = Guid.NewGuid().ToString();
                 string qaUserId = Guid.NewGuid().ToString();
                 string engineerUserId = Guid.NewGuid().ToString();
                 string basicUserId = Guid.NewGuid().ToString();
+                string superAdminId = Guid.NewGuid().ToString();
                 PasswordHasher<ApplicationUser> passwordHasher = new PasswordHasher<ApplicationUser>();
-                var pw = passwordHasher.HashPassword(null, "Adminpassword1");
-                if (passwordHasher.VerifyHashedPassword(null, pw, "Adminpassword1") != PasswordVerificationResult.Success)
-                {
-                    throw new Exception("Password hashing failed");
-                }
+
                 if (!context.Roles.Any())
                 {
                     context.Roles
@@ -69,7 +67,8 @@ namespace Plugins.DataStore.SQLite
                         new IdentityRole { Id = adminRoleId, Name = "Admin", NormalizedName = "ADMIN" },
                         new IdentityRole { Id = qaRoleId, Name = "QualityAssurance", NormalizedName = "QUALITYASSURANCE" },
                         new IdentityRole { Id = engineerRoleId, Name = "Engineer", NormalizedName = "ENGINEER" },
-                        new IdentityRole { Id = basicUserRoleId, Name = "BasicUser", NormalizedName = "BASICUSER" }
+                        new IdentityRole { Id = basicUserRoleId, Name = "BasicUser", NormalizedName = "BASICUSER" }, 
+                        new IdentityRole { Id = superAdminRoleId, Name = "SuperAdmin", NormalizedName = "SUPERADMIN" }
                         );
                     context.SaveChanges();
                 }
@@ -87,7 +86,7 @@ namespace Plugins.DataStore.SQLite
                         Email = "admin@email.com",
                         NormalizedEmail = "ADMIN@EMAIL.COM",
                         EmailConfirmed = true,
-                        PasswordHash = passwordHasher.HashPassword(null, "Adminpassword1."),
+                        PasswordHash = passwordHasher.HashPassword(null, "password"),
                         RoleId = adminRoleId,
                     },
                     new ApplicationUser
@@ -98,7 +97,7 @@ namespace Plugins.DataStore.SQLite
                         Email = "qa@email.com",
                         NormalizedEmail = "QA@EMAIL.COM",
                         EmailConfirmed = true,
-                        PasswordHash = passwordHasher.HashPassword(null, "Qapassword1."),
+                        PasswordHash = passwordHasher.HashPassword(null, "password"),
                         RoleId = qaRoleId
                     },
                     new ApplicationUser
@@ -109,7 +108,7 @@ namespace Plugins.DataStore.SQLite
                         Email = "engineer@email.com",
                         NormalizedEmail = "ENGINEER@EMAIL.COM",
                         EmailConfirmed = true,
-                        PasswordHash = passwordHasher.HashPassword(null, "Engineerpassword1."),
+                        PasswordHash = passwordHasher.HashPassword(null, "password"),
                         RoleId = engineerRoleId
                     },
                     new ApplicationUser
@@ -120,8 +119,19 @@ namespace Plugins.DataStore.SQLite
                         Email = "basic@email.com",
                         NormalizedEmail = "BASIC@EMAIL.COM",
                         EmailConfirmed = true,
-                        PasswordHash = passwordHasher.HashPassword(null, "Basicpassword1."),
+                        PasswordHash = passwordHasher.HashPassword(null, "password"),
                         RoleId = basicUserRoleId
+                    },                  
+                    new ApplicationUser
+                    {
+                        Id = superAdminId,
+                        UserName = "superadmin@email.com",
+                        NormalizedUserName = "SUPERADMIN@EMAIL.COM",
+                        Email = "superadmin@email.com",
+                        NormalizedEmail = "SUPERADMIN@EMAIL.COM",
+                        EmailConfirmed = true,
+                        PasswordHash = passwordHasher.HashPassword(null, "password"),
+                        RoleId = superAdminRoleId
                     }
 
 

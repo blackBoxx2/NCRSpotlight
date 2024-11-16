@@ -275,7 +275,7 @@ namespace NCRSPOTLIGHT.Controllers
                     {
                         _userManager.AddToRoleAsync(user, "Engineer");
                     }
-                    else if (user.Email == "superAdmin@email.com" && user.Role != "SuperAdmin")
+                    else if (user.Email == "superadmin@email.com" && user.Role != "SuperAdmin")
                     {
                         _userManager.AddToRoleAsync(user, "SuperAdmin");
                     }
