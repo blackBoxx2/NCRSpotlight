@@ -425,6 +425,8 @@ namespace Plugins.DataStore.SQLite
                                     @"Assets\ProductImages\portablecharger.jpg"
                             };
 
+                            Random rand = new Random();
+
                             foreach (string defect in defect_descs)
                             {
                                 var qp = new QualityPortion
@@ -440,7 +442,9 @@ namespace Plugins.DataStore.SQLite
                                         .Id
                                         )
                                     .FirstOrDefault()!
-                                    .UserId
+                                    .UserId,
+                                    Created = DateTime.Today.AddDays(-(rand.Next(100)))
+                                    
                                 };
 
 
