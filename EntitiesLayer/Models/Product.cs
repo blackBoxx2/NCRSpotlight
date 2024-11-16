@@ -13,16 +13,19 @@ namespace EntitiesLayer.Models
         public int ID { get; set; }
 
         [Required]
+        [Display(Name = "Supplier")]
         public int SupplierID { get; set; }
 
+        [Display(Name = "Supplier")]
         public Supplier? Supplier { get; set; }
 
         [Required]
+        [Display(Name = "Product Number")]
         public string ProductNumber { get; set; }
 
         [Required]
         public string Description { get; set; }
-
+        [Display(Name = "Pictures")]
         public ICollection<ProductPicture> ProductPictures { get; set; } = new HashSet<ProductPicture>();
 
         public ICollection<QualityPortion> QualityPortions { get; set; } = new HashSet<QualityPortion>();

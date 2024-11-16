@@ -79,7 +79,12 @@
                                            onchange="document.getElementById('ImagePreview').src = window.URL.createObjectURL(this.files[0])" />
                                 </div>
                                 <img id="ImagePreview" src="" />
-                            </div>                                          
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label">NonConforming: </label>
+                                    @Html.Raw("<span class='text-danger'>*</span>")
+                                <input type="checkbox" value="checked" disabled="disabled" />
+                            </div>
                     </div>
                 </div>
             </div>

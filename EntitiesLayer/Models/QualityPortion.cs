@@ -17,6 +17,7 @@ namespace EntitiesLayer.Models
 
         //public bool ProcessApplicable { get; set; } = false;
 
+        [Display(Name = "Product")]
         public int ProductID { get; set; } = 1;
 
         public Product? Product { get; set; }

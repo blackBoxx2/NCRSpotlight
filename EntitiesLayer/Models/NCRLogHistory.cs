@@ -12,12 +12,15 @@ namespace EntitiesLayer.Models
         [Key]
         public int ID { get; set; }
 
+        [Display(Name = "Changed By")]
         public string ChangedBy { get; set; }
 
+        [Display(Name = "Changed On")]
         public DateTime ChangedOn { get; set; }
 
         public string Comments { get; set; }
 
+        [Display(Name = "NCR")]
         public int NCRLogID { get; set; }
         public NCRLog NCRLog { get; set; }
     }

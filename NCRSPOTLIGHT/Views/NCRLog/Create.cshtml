@@ -33,6 +33,7 @@
                         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                         <div class="form-group">
                             <label asp-for="QualityPortion.ProductID" class="control-label"></label>
+                                @Html.Raw("<span class='text-danger'>*</span>")
                             @if (isQualityAssurance || isAdmin)
                             {
                                 <select asp-for="QualityPortion.ProductID" class="form-control" asp-items="ViewBag.ProductID"></select>
@@ -45,6 +46,7 @@
                         </div>
                         <div class="form-group">
                             <label asp-for="QualityPortion.Quantity" class="control-label"></label>
+                                @Html.Raw("<span class='text-danger'>*</span>")
                             @if (isQualityAssurance || isAdmin)
                             {
                                 <input asp-for="QualityPortion.Quantity" class="form-control" />
@@ -57,6 +59,7 @@
                         </div>
                         <div class="form-group">
                             <label asp-for="QualityPortion.QuantityDefective" class="control-label"></label>
+                                @Html.Raw("<span class='text-danger'>*</span>")
                             @if (isQualityAssurance || isAdmin)
                             {
                                 <input asp-for="QualityPortion.QuantityDefective" class="form-control" />
@@ -69,6 +72,7 @@
                         </div>
                         <div class="form-group">
                             <label asp-for="QualityPortion.OrderNumber" class="control-label"></label>
+                                @Html.Raw("<span class='text-danger'>*</span>")
                             @if (isQualityAssurance || isAdmin)
                             {
                                 <input asp-for="QualityPortion.OrderNumber" class="form-control" />
@@ -81,6 +85,7 @@
                         </div>
                         <div class="form-group">
                             <label asp-for="QualityPortion.DefectDescription" class="control-label"></label>
+                                @Html.Raw("<span class='text-danger'>*</span>")
                             @if (isQualityAssurance || isAdmin)
                             {
                                 <textarea asp-for="QualityPortion.DefectDescription" class="form-control" rows="4" cols="50"></textarea>
@@ -109,6 +114,11 @@
                             }
                             <img id="ImagePreview" src="" />
                         </div>
+                        <div class="form-group">
+                            <label class="control-label">NonConforming: </label>
+                            @Html.Raw("<span class='text-danger'>*</span>")
+                            <input type="checkbox" value="checked" disabled="disabled" />
+                        </div>
                     </div>
                 </div>
             </div>
@@ -127,36 +137,40 @@
                     <div class="accordion-body">
                         <div class="form-group">
                             <label asp-for="EngPortion.EngReview" class="control-label"></label>
+                                @Html.Raw("<span class='text-danger'>*</span>")
                             <select asp-for="EngPortion.EngReview" class="form-control" asp-items="@Html.GetEnumSelectList<EngReview>()"></select>
                             <span asp-validation-for="EngPortion.EngReview" class="text-danger"></span>
                         </div>
                         <div class="form-group">
                             <label asp-for="EngPortion.Disposition" class="form-label"></label>
+                                @Html.Raw("<span class='text-danger'>*</span>")
                             <textarea asp-for="EngPortion.Disposition" class="form-control" rows="4" cols="50" class="form-control" ></textarea>
                             <span asp-validation-for="EngPortion.Disposition" class="text-danger"></span>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group"> <!--Not Required -->
                             <label asp-for="EngPortion.Update" class="form-check-label"></label>
                             <input asp-for="EngPortion.Update" class="form-check-input" type="checkbox" />
                             <span asp-validation-for="EngPortion.Update" class="text-danger"></span>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group"> <!-- Not required -->
                             <label asp-for="EngPortion.Notif" class="form-check-label"></label>
                             <input asp-for="EngPortion.Notif" class="form-check-input" type="checkbox" />
                             <span asp-validation-for="EngPortion.Notif" class="text-danger"></span>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group"> <!-- Not required -->
                             <label asp-for="EngPortion.RevNumber" class="control-label"></label>
                             <input type="number" asp-for="EngPortion.RevNumber" class="form-control" />
                             <span asp-validation-for="EngPortion.RevNumber" class="text-danger"></span>
                         </div>
                         <div class="form-group">
                             <label asp-for="EngPortion.RevDate" class="control-label"></label>
+                                 @Html.Raw("<span class='text-danger'>*</span>")
                             <input asp-for="EngPortion.RevDate" class="form-control" value="" />
                             <span asp-validation-for="EngPortion.RevDate" class="text-danger"></span>
                         </div>
                         <div class="form-group">
                             <label asp-for="EngPortion.RepID" class="control-label"></label>
+                                @Html.Raw("<span class='text-danger'>*</span>")
                             <input asp-for="EngPortion.RepID" class="form-control" value="" />
                             <span asp-validation-for="EngPortion.RepID" class="text-danger"></span>
                         </div>

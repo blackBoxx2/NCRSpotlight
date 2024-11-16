@@ -13,9 +13,13 @@ namespace EntitiesLayer.Models
         [Key]
         public int ID { get; set; }
 
+        [Display(Name = "Quality Description")]
         public int QualityPortionID { get; set; }
+
+        [Display(Name = "Quality Description")]
         public QualityPortion? QualityPortion { get; set; }
 
+        [Display(Name = "Engineering Portion")]
         public int EngPortionID { get; set; }
         public EngPortion? EngPortion { get; set; }
 
@@ -23,6 +27,7 @@ namespace EntitiesLayer.Models
         public DateTime DateCreated { get; set; } = DateTime.Now;
 
         [NotMapped]
+        [Display(Name = "Date")]
         public string DateSummary
         {
             get
