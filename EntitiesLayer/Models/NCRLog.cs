@@ -11,6 +11,7 @@ namespace EntitiesLayer.Models
     public class NCRLog
     {
         [Key]
+        [Display(Name = "NCR No.")]
         public int ID { get; set; }
 
         [Display(Name = "Quality Description")]

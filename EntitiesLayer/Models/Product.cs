@@ -12,16 +12,31 @@ namespace EntitiesLayer.Models
         [Key]
         public int ID { get; set; }
 
+        #region Summary
+        [Display(Name = "Description of Product (including SAP No.):")]
+        public string Summary { get 
+            {
+                return $"{Description} - {SapNo}"     
+                    ; } }
+
+
+        #endregion
+
+
         [Required]
-        [Display(Name = "Supplier")]
+        [Display(Name = "Supplier Name:")]
         public int SupplierID { get; set; }
 
         [Display(Name = "Supplier")]
         public Supplier? Supplier { get; set; }
 
         [Required]
-        [Display(Name = "Product Number")]
+        [Display(Name = "PO or Prod No:")]
         public string ProductNumber { get; set; }
+
+        [Required]
+        [Display(Name = "SAP No.")]
+        public string SapNo { get; set; }
 
         [Required]
         public string Description { get; set; }

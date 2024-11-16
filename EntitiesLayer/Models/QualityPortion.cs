@@ -12,37 +12,38 @@ namespace EntitiesLayer.Models
     {
 
         [Key]
-        [Display(Name = "NCR Number")]
+        [Display(Name = "NCR No.")]
         public int ID { get; set; }
 
-        //public bool ProcessApplicable { get; set; } = false;
-
-        [Display(Name = "Product")]
+        [Display(Name = "Description of Product (including SAP No.):")]
         public int ProductID { get; set; } = 1;
 
         public Product? Product { get; set; }
 
         
-        [Display(Name = "Quantity Ordered")]
+        [Display(Name = "Quantity Recieved:")]
         public int? Quantity { get; set; }
 
         
-        [Display(Name = "Quantity Defective")]
+        [Display(Name = "Quantity Defective:")]
         public int? QuantityDefective { get; set; }
 
         
-        [Display(Name = "Order Number")]
+        [Display(Name = "Sales Order No.")]
         public string? OrderNumber { get; set; } = " ";
 
         
-        [Display(Name = "Defect Description")]
+        [Display(Name = "Description of Defect:")]
         public string? DefectDescription { get; set; } = " ";
 
-        [Display(Name = "Created By")]
+        [Display(Name = "Quality Representative Name:")]
         public string RepID { get; set; }
 
-        [Display(Name = "Identify Process Applicable: ")]
+        [Display(Name = "Identify Process Applicable:")]
         public ProcessApplicable ProcessApplicable { get; set; }
+
+        [Display(Name = "Date:")]
+        public DateTime? Created { get; set; }
 
         public ICollection<QualityPicture> qualityPictures { get; set; } = new HashSet<QualityPicture>();  
     }

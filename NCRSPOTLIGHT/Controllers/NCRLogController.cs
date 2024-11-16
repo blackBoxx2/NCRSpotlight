@@ -261,10 +261,15 @@ namespace NCRSPOTLIGHT.Controllers
         {
             if(log.QualityPortion != null)
             {
-                ViewBag.ProductID = new SelectList(await _getProductsAsyncUseCase.Execute(), "ID", "Description", log.QualityPortion.ProductID);
-                ViewBag.SupplierID = new SelectList(await _getProductsAsyncUseCase.Execute(), "ID", "Supplier.SupplierName", log.QualityPortion.ProductID);               
+                ViewBag.ProductID = new SelectList(await _getProductsAsyncUseCase.Execute(), "ID", "Summary", log.QualityPortion.ProductID);
+                ViewBag.SupplierID = new SelectList(await _getProductsAsyncUseCase.Execute(), "ID", "Supplier.SupplierName", log.QualityPortion.ProductID);
+                ViewBag.ProdNumber = new SelectList(await _getProductsAsyncUseCase.Execute(), "ID", "ProductNumber", log.QualityPortion.ProductID);
             }
-            ViewBag.ProductID = new SelectList(await _getProductsAsyncUseCase.Execute(), "ID", "Description");
+            else
+            {
+                ViewBag.ProductID = new SelectList(await _getProductsAsyncUseCase.Execute(), "ID", "Description");
+            }
+            
         }
         private bool NCRLogExists(int id)
         {

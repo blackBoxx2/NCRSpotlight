@@ -130,6 +130,10 @@ namespace Plugins.DataStore.SQLite.ncrcontext
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("SapNo")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.Property<int>("SupplierID")
                         .HasColumnType("INTEGER");
 
@@ -149,6 +153,9 @@ namespace Plugins.DataStore.SQLite.ncrcontext
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
+
+                    b.Property<DateTime?>("Created")
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("DefectDescription")
                         .HasColumnType("TEXT");

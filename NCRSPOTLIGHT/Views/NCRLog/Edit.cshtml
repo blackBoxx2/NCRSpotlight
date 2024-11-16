@@ -17,8 +17,10 @@
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
+            <p><strong>Document No: </strong>OPS-00011</p>
+
             <div class="form-group mb-2">
-                <label asp-for="ID" class="control-label">NCR Number</label>
+                <label asp-for="ID" class="control-label"></label>
                 <input asp-for="ID" class="form-control" readonly/>
             </div>
 
@@ -38,16 +40,30 @@
                 <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#qualityAccordion">
                     <div class="accordion-body">
                             <input type="hidden" asp-for="QualityPortion.ID" />
-                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>                                  
+                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
                             <div class="form-group">
-                                <label asp-for="QualityPortion.ProductID" class="control-label"></label>
-                      
+                                <label asp-for="QualityPortion.ProcessApplicable" class="control-label"></label>
+                                @Html.Raw("<span class='text-danger'>*</span>")
+                                <select asp-for="QualityPortion.ProcessApplicable" class="form-control" asp-items="@Html.GetEnumSelectList<ProcessApplicable>()"></select>
+                                <span asp-validation-for="QualityPortion.ProcessApplicable" class="text-danger"></span>
+                            </div>
+
+                            <div class="form-group">
+                                <label asp-for="QualityPortion.ProductID" class="control-label"></label>  
                                 <select asp-for="QualityPortion.ProductID" id="productDDL" onchange="DisplaySup(this.options[this.options.selectedIndex].value)" class="form-control" asp-items="ViewBag.ProductID"></select>
                             </div>
+
+                            <div id="supplierOutput" class="form-group">
+                                <label asp-for="QualityPortion.Product.ProductNumber" class="control-label"></label>
+                                <select id="prodNumber" asp-items="ViewBag.ProdNumber" class="form-control" disabled></select>
+                            </div>
+
                             <div id="supplierOutput" class="form-group">
                                 <label asp-for="QualityPortion.Product.Supplier.SupplierName" class="control-label"></label>
-                                <select id="mySelect" asp-items="ViewBag.SupplierID" class="form-control" disabled></select>
+                                <select id="supplier" asp-items="ViewBag.SupplierID" class="form-control" disabled></select>
                             </div>
+
                             <div class="form-group">
                                 <label asp-for="QualityPortion.Quantity" class="control-label"></label>
                                 <input asp-for="QualityPortion.Quantity" class="form-control" />
@@ -73,6 +89,10 @@
                                 <input asp-for="QualityPortion.RepID" class="form-control" readonly="readonly" />
                             </div>
                             <div class="form-group">
+                                <label asp-for="QualityPortion.Created" class="control-label"></label>
+                                <input asp-for="QualityPortion.Created" type="date" class="form-control" readonly="readonly" />
+                            </div>
+                            <div class="form-group">
                                 <label class="control-label custom-file-label">Upload Pictures: </label>
                                 <div>
                                     <input type="file" class="form-control" name="theFiles" multiple="multiple"
@@ -81,9 +101,8 @@
                                 <img id="ImagePreview" src="" />
                             </div>
                             <div class="form-group">
-                                <label class="control-label">NonConforming: </label>
-                                    @Html.Raw("<span class='text-danger'>*</span>")
-                                <input type="checkbox" value="checked" disabled="disabled" />
+                                <label class="control-label">Item Marked Nonconforming: </label>
+                                <input type="checkbox" class="form-check-input" checked disabled="disabled" />
                             </div>
                     </div>
                 </div>
@@ -168,7 +187,8 @@
     <script>
 
         function DisplaySup(supIndex){      
-            document.getElementById('mySelect').selectedIndex = supIndex - 1;
+            document.getElementById('supplier').selectedIndex = supIndex - 1;
+            document.getElementById('prodNumber').selectedIndex = supIndex - 1;
         }
 
 

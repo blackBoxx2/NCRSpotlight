@@ -337,6 +337,7 @@ namespace Plugins.DataStore.SQLite
                                     ProductNumber = prodNumber,
                                     SupplierID = supplierID,
                                     Supplier = context.Suppliers.FirstOrDefault(s => s.ID == supplierID),
+                                    SapNo = rnd.Next(10000,99999).ToString()
                                 };
 
                                 List<string> imgPaths = new List<string>()
