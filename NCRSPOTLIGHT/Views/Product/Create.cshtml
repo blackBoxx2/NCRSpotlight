@@ -24,6 +24,12 @@
                 <span asp-validation-for="ProductNumber" class="text-danger"></span>
             </div>
             <div class="form-group">
+                <label asp-for="SapNo" class="control-label"></label>
+                @Html.Raw("<span class='text-danger'>*</span>")
+                <input asp-for="SapNo" class="form-control" />
+                <span asp-validation-for="SapNo" class="text-danger"></span>
+            </div>
+            <div class="form-group">
                 <label asp-for="Description" class="control-label"></label>
                 @Html.Raw("<span class='text-danger'>*</span>")
                 <input asp-for="Description" class="form-control" />
