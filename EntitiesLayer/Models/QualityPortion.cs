@@ -41,6 +41,9 @@ namespace EntitiesLayer.Models
         [Display(Name = "Created By")]
         public string RepID { get; set; }
 
+        [Display(Name = "Identify Process Applicable: ")]
+        public ProcessApplicable ProcessApplicable { get; set; }
+
         public ICollection<QualityPicture> qualityPictures { get; set; } = new HashSet<QualityPicture>();  
     }
 }
