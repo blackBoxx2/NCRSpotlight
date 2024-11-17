@@ -165,7 +165,7 @@ namespace Plugins.DataStore.SQLite
                     for (int i = 0; i < 20; i++)
                     {
 
-                        int rnd = random.Next(4);
+                        int rnd = random.Next(5);
                         var roleID = context.Roles.ToList()[rnd].Id;
 
                         ApplicationUser user = new ApplicationUser
