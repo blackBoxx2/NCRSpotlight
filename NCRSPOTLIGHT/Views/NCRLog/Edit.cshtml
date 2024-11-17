@@ -37,7 +37,7 @@
 
                 </div>              
 
-                <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#qualityAccordion">
+                <div id="collapseOne" class="accordion-collapse show" aria-labelledby="headingOne" data-bs-parent="#qualityAccordion">
                     <div class="accordion-body">
                             <input type="hidden" asp-for="QualityPortion.ID" />
                             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
@@ -118,7 +118,7 @@
 
                 </div>
 
-                <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#engineerAccordion">
+                <div id="collapseTwo" class="accordion-collapse show" aria-labelledby="headingOne" data-bs-parent="#engineerAccordion">
                     <div class="accordion-body">
                         <div class="form-group">
                             <label asp-for="EngPortion.EngReview" class="control-label"></label>
@@ -146,6 +146,16 @@
                             <span asp-validation-for="EngPortion.RevNumber" class="text-danger"></span>
                         </div>
                         <div class="form-group">
+                            <label asp-for="EngPortion.OriginalRevNumber" class="control-label"></label>
+                            <input type="number" asp-for="EngPortion.OriginalRevNumber" class="form-control" />
+                            <span asp-validation-for="EngPortion.OriginalRevNumber" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="EngPortion.OriginalEngineer" class="control-label"></label>
+                            <input asp-for="EngPortion.OriginalEngineer" class="form-control" />
+                            <span asp-validation-for="EngPortion.OriginalEngineer" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
                             <label asp-for="EngPortion.RevDate" class="control-label"></label>
                             <input asp-for="EngPortion.RevDate" class="form-control" value="" />
                             <span asp-validation-for="EngPortion.RevDate" class="text-danger"></span>
@@ -154,6 +164,11 @@
                             <label asp-for="EngPortion.RepID" class="control-label"></label>
                             <input asp-for="EngPortion.RepID" class="form-control"/>
                             <span asp-validation-for="EngPortion.RepID" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="EngPortion.Date" class="control-label"></label>
+                            <input asp-for="EngPortion.Date" class="form-control" />
+                            <span asp-validation-for="EngPortion.Date" class="text-danger"></span>
                         </div>
 
 

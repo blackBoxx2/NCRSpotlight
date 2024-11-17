@@ -58,6 +58,9 @@ namespace Plugins.DataStore.SQLite
             engToUpdate.Update = engPortion.Update;
             engToUpdate.RevNumber = engPortion.RevNumber;
             engToUpdate.RevDate = engPortion.RevDate;
+            engToUpdate.Date = engPortion.Date;
+            engToUpdate.OriginalEngineer = engPortion.OriginalEngineer;
+            engToUpdate.OriginalRevNumber = engPortion.OriginalRevNumber;
             engToUpdate.RepID = engPortion.RepID;
             await _context.SaveChangesAsync();
 

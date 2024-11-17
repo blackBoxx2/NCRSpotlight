@@ -143,7 +143,7 @@ namespace NCRSPOTLIGHT.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("ID,DateCreated,Status")] NCRLog nCRLog, 
             [Bind("ProductID,Quantity,QuantityDefective,OrderNumber,DefectDescription,ProcessApplicable,RepID,Created")] QualityPortion qualityPortion, 
-            [Bind("EngReview,Disposition,Update,Notif,RevNumber,RevDate,RepID")] EngPortion engPortion)
+            [Bind("EngReview,Disposition,Update,Notif,RevNumber,RevDate,RepID,OriginalEngineer,OriginalRevNumber,Date")] EngPortion engPortion)
         {
             
             await _addQualityPortionAsyncUseCase.Execute(qualityPortion);
@@ -198,7 +198,7 @@ namespace NCRSPOTLIGHT.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int ID, int QualityPortionID, int EngPortionID, [Bind("ID,QualityPortionID,DateCreated,Status")] NCRLog nCRLog, 
             [Bind("ProductID,Quantity,QuantityDefective,OrderNumber,DefectDescription,ProcessApplicable,RepID,Created")] QualityPortion qualityPortion, 
-            [Bind("EngReview,Disposition,Update,Notif,RevNumber,RevDate,RepID")] EngPortion engPortion)
+            [Bind("EngReview,Disposition,Update,Notif,RevNumber,RevDate,RepID,OriginalEngineer,OriginalRevNumber,Date")] EngPortion engPortion)
         {
             if (ID != nCRLog.ID)
             {

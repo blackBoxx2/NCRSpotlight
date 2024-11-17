@@ -16,14 +16,14 @@
 
                 <p><strong>Document No: </strong>OPS-00011</p>
 
-                <dt class="col-sm-2">
+                <div class="col-sm-2 fw-bold">
                     @Html.DisplayNameFor(model => model.ID)
-                </dt>
-                <dd class="col-sm-10">
+                </div>
+                <div class="col-sm-10">
                     @Html.DisplayFor(model => model.ID)
-                </dd>
+                </div>
 
-            <div class="accordion-Item">
+            <div class="accordion-Item open">
 
                 <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
                     <h3 class="Accordion-Header" id="qualityHeading">Quality Assurance</h3>
@@ -31,68 +31,68 @@
 
             </div>
 
-                <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#qualityAccordion">
+                <div id="collapseOne" class="accordion-collapse show" aria-labelledby="headingOne" data-bs-parent="#qualityAccordion">
                 
-                    <dt class="col-sm-2">
+                    <div class="col-sm-2 fw-bold">
                         @Html.DisplayNameFor(model => model.QualityPortion.ProcessApplicable)
-                    </dt>
-                    <dd class="col-sm-10">
+                    </div>
+                    <div class="col-sm-10">
                         @Html.DisplayFor(model => model.QualityPortion.ProcessApplicable)
-                    </dd>
-                    <dt class="col-sm-2">
+                    </div>
+                    <div class="col-sm-2 fw-bold">
                         @Html.DisplayNameFor(model => model.QualityPortion.Product.Supplier.SupplierName)
-                    </dt>
-                    <dd class="col-sm-10">
+                    </div>
+                    <div class="col-sm-10">
                         @Html.DisplayFor(model => model.QualityPortion.Product.Supplier.SupplierName)
-                    </dd>               
-                    <dt class="col-sm-2">
+                    </div>               
+                    <div class="col-sm-2 fw-bold">
                         @Html.DisplayNameFor(model => model.QualityPortion.Product.Summary)
-                    </dt>
-                    <dd class="col-sm-10">
+                    </div>
+                    <div class="col-sm-10">
                         @Html.DisplayFor(model => model.QualityPortion.Product.Summary)
-                    </dd>
-                    <dt class="col-sm-2">
+                    </div>
+                    <div class="col-sm-2 fw-bold">
                         @Html.DisplayNameFor(model => model.QualityPortion.DefectDescription)
-                    </dt>
-                    <dd class="col-sm-10">
+                    </div>
+                    <div class="col-sm-10">
                         @Html.DisplayFor(model => model.QualityPortion.DefectDescription)
-                    </dd>
-                    <dt class="col-sm-2">
+                    </div>
+                    <div class="col-sm-2 fw-bold">
                         @Html.DisplayNameFor(model => model.QualityPortion.Product.ProductNumber)
-                    </dt>
-                    <dd class="col-sm-10">
+                    </div>
+                    <div class="col-sm-10">
                         @Html.DisplayFor(model => model.QualityPortion.Product.ProductNumber)
-                    </dd>
-                    <dt class="col-sm-2">
+                    </div>
+                    <div class="col-sm-2 fw-bold">
                         @Html.DisplayNameFor(model => model.QualityPortion.OrderNumber)
-                    </dt>
-                    <dd class="col-sm-10">
+                    </div>
+                    <div class="col-sm-10">
                         @Html.DisplayFor(model => model.QualityPortion.OrderNumber)
-                    </dd>
-                    <dt class="col-sm-2">
+                    </div>
+                    <div class="col-sm-2 fw-bold">
                         @Html.DisplayNameFor(model => model.QualityPortion.Quantity)
-                    </dt>
-                    <dd class="col-sm-10">
+                    </div>
+                    <div class="col-sm-10">
                         @Html.DisplayFor(model => model.QualityPortion.Quantity)
-                    </dd>
-                    <dt class="col-sm-2">
+                    </div>
+                    <div class="col-sm-2 fw-bold">
                         @Html.DisplayNameFor(model => model.QualityPortion.QuantityDefective)
-                    </dt>
-                    <dd class="col-sm-10">
+                    </div>
+                    <div class="col-sm-10">
                         @Html.DisplayFor(model => model.QualityPortion.QuantityDefective)
-                    </dd>
-                    <dt class="col-sm-2">
+                    </div>
+                    <div class="col-sm-2 fw-bold">
                         @Html.DisplayNameFor(model => model.QualityPortion.RepID)
-                    </dt>
-                    <dd class="col-sm-10">
+                    </div>
+                    <div class="col-sm-10">
                         @Html.DisplayFor(model => model.QualityPortion.RepID)
-                    </dd>
-                    <dt class="col-sm-2">
+                    </div>
+                    <div class="col-sm-2 fw-bold">
                         @Html.DisplayNameFor(model => model.QualityPortion.Created)
-                    </dt>
-                    <dd class="col-sm-10">
+                    </div>
+                    <div class="col-sm-10">
                         @Html.DisplayFor(model => model.QualityPortion.Created)
-                    </dd>
+                    </div>
                     <div class="form-group">
                         <label class="control-label">Item Marked Nonconforming: </label>
                         <input type="checkbox" class="form-check-input" checked disabled="disabled" />
@@ -111,64 +111,83 @@
 
             </div>
 
-            <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#engAccordion">
+            <div id="collapseTwo" class="accordion-collapse show" aria-labelledby="headingOne" data-bs-parent="#engAccordion">
 
 
-                <dt class="col-sm-2">
+                <div class="col-sm-2 fw-bold">
                     @Html.DisplayNameFor(model => model.EngPortion.EngReview)
-                </dt>
-                <dd class="col-sm-10">
+                </div>
+                <div class="col-sm-10">
                     @Html.DisplayFor(model => model.EngPortion.EngReview)
-                </dd>
-                <dt class="col-sm-2">
+                </div>
+                <div class="col-sm-2 fw-bold">
                     @Html.DisplayNameFor(model => model.EngPortion.Notif)
-                </dt>
-                <dd class="col-sm-10">
+                </div>
+                <div class ="col-sm-10">
                     @Html.DisplayFor(model => model.EngPortion.Notif)
-                </dd>
-                <dt class="col-sm-2">
+                </div>
+                <div class="col-sm-2 fw-bold">
                     @Html.DisplayNameFor(model => model.EngPortion.Update)
-                </dt>
-                <dd class="col-sm-10">
+                </div>
+                <div class="col-sm-10">
                     @Html.DisplayFor(model => model.EngPortion.Update)
-                </dd>
-                <dt class="col-sm-2">
+                </div>
+                <div class="col-sm-2 fw-bold">
                     @Html.DisplayNameFor(model => model.EngPortion.RevNumber)
-                </dt>
-                <dd class="col-sm-10">
+                </div>
+                <div class="col-sm-10">
                     @Html.DisplayFor(model => model.EngPortion.RevNumber)
-                </dd>
-                <dt class="col-sm-2">
+                </div>
+                <div class="col-sm-2 fw-bold">
+                    @Html.DisplayNameFor(model => model.EngPortion.OriginalRevNumber)
+                </div>
+                <div class="col-sm-10">
+                    @Html.DisplayFor(model => model.EngPortion.OriginalRevNumber)
+                </div>
+                <div class="col-sm-2 fw-bold">
                     @Html.DisplayNameFor(model => model.EngPortion.RevDate)
-                </dt>
-                <dd class="col-sm-10">
+                </div>
+                <div class="col-sm-10">
                     @Html.DisplayFor(model => model.EngPortion.RevDate)
-                </dd>
-                <dt class="col-sm-2">
+                </div>
+                <div class="col-sm-2 fw-bold">
+                    @Html.DisplayNameFor(model => model.EngPortion.OriginalEngineer)
+                </div>
+                <div class="col-sm-10">
+                    @Html.DisplayFor(model => model.EngPortion.OriginalEngineer)
+                </div>                 
+                <div class="col-sm-2 fw-bold">
                     @Html.DisplayNameFor(model => model.EngPortion.RepID)
-                </dt>
-                <dd class="col-sm-10">
+                </div>
+                <div class="col-sm-10">
                     @Html.DisplayFor(model => model.EngPortion.RepID)
-                </dd>
+                </div>
+                <div class="col-sm-2 fw-bold">
+                    @Html.DisplayNameFor(model => model.EngPortion.Date)
+                </div>
+                <div class="col-sm-10">
+                    @Html.DisplayFor(model => model.EngPortion.Date)
+                </div>
             
+            </div>
         </div>
 
 
 
 
-        <dt class = "col-sm-2">
+        <div class="col-sm-2 fw-bold">
             @Html.DisplayNameFor(model => model.DateCreated)
-        </dt>
-        <dd class = "col-sm-10">
+        </div>
+            <div class="col-sm-10">
             @Html.DisplayFor(model => model.DateCreated)
-        </dd>
-        <dt class = "col-sm-2">
+        </div>
+        <div class="col-sm-2 fw-bold">
             @Html.DisplayNameFor(model => model.Status)
-        </dt>
-        <dd class = "col-sm-10">
+        </div>
+        <div class="col-sm-10">
             @Html.DisplayFor(model => model.Status)
-        </dd>
-    </dl>
+        </div>
+    
     </section>
 
 </div>
