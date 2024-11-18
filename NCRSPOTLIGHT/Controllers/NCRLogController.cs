@@ -16,6 +16,9 @@ using UseCasesLayer.UseCaseInterfaces.ProductUseCaseInterfaces;
 using System.Security.Claims;
 using UseCasesLayer.UseCaseInterfaces.EngUseCaseInterface;
 using UseCasesLayer.UseCaseInterfaces.SuppliersUseCaseInterfaces;
+using Microsoft.AspNetCore.Identity;
+using EntitiesLayer.Models.ViewModels;
+using NCRSPOTLIGHT.Utilities;
 
 namespace NCRSPOTLIGHT.Controllers
 {
@@ -39,6 +42,7 @@ namespace NCRSPOTLIGHT.Controllers
         private readonly IGetSuppliersAsyncUseCase _getSuppliersAsyncUseCase;
         private readonly IGetSupplierByIDAsyncUseCase _getSupplierByIDAsyncUseCase;
 
+
         public NCRLogController(IAddNCRLogAsyncUseCase addNCRLogAsyncUseCase,
                                 IDeleteNCRLogAsyncUseCase deleteNCRLogAsyncUseCase,
                                 IGetNCRLogByIDAsyncUseCase getNCRLogByIDAsyncUseCase,
@@ -54,6 +58,7 @@ namespace NCRSPOTLIGHT.Controllers
                                 IUpdateEngPortionAsyncUseCase updateEngPortionAsyncUseCase,
                                 IGetSuppliersAsyncUseCase getSuppliersAsyncUseCase,
                                 IGetSupplierByIDAsyncUseCase getSupplierByIDAsyncUseCase
+
                                 )
         {
             _addNCRLogAsyncUseCase = addNCRLogAsyncUseCase;
@@ -130,7 +135,6 @@ namespace NCRSPOTLIGHT.Controllers
         {            
             ViewData["User"] = HttpContext.User.Identity.Name;
             LoadSelectList(new NCRLog());
-        
             var user = HttpContext.User;                      
 
             return View();

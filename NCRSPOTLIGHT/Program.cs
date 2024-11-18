@@ -41,6 +41,8 @@ var microsoftClientSecret = builder.Configuration["Microsoft:ClientSecret"];
 builder.Services.Configure<SmtpSettings>(builder.Configuration.GetSection("Smtp"));
 
 builder.Services.AddTransient<IEmailSender, NCRSpotlightEmailer>();
+builder.Services.AddScoped<RoleChecker>();
+
 #endregion
 
 

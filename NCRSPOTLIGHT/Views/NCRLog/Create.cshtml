@@ -1,12 +1,12 @@
 ﻿@using EntitiesLayer.Models
+@using NCRSPOTLIGHT.Utilities
 @model EntitiesLayer.Models.NCRLog
-
 @{
     ViewData["Title"] = "Create";
     string? user = ViewData["User"] as string;
     bool isQualityAssurance = ViewBag.QASection == "enabled";
     bool isEngineer = ViewBag.EngineerSection == "enabled";
-    bool isAdmin = ViewBag.IsAdmin;
+    bool isAdmin = ViewBag.IsAdmin as bool? ?? false;
 }
 
 <h1>Create</h1>
@@ -33,6 +33,8 @@
                         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                         <div class="form-group">
                             <label asp-for="QualityPortion.ProductID" class="control-label"></label>
+                            
+
                             @if (isQualityAssurance || isAdmin)
                             {
                                 <select asp-for="QualityPortion.ProductID" class="form-control" asp-items="ViewBag.ProductID"></select>
