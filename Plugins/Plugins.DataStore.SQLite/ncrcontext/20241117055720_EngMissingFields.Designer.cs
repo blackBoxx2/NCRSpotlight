@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Plugins.DataStore.SQLite;
 
@@ -10,9 +11,11 @@ using Plugins.DataStore.SQLite;
 namespace Plugins.DataStore.SQLite.ncrcontext
 {
     [DbContext(typeof(NCRContext))]
-    partial class NCRContextModelSnapshot : ModelSnapshot
+    [Migration("20241117055720_EngMissingFields")]
+    partial class EngMissingFields
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.10");
@@ -23,9 +26,6 @@ namespace Plugins.DataStore.SQLite.ncrcontext
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<DateTime?>("Date")
-                        .HasColumnType("TEXT");
-
                     b.Property<string>("Disposition")
                         .HasColumnType("TEXT");
 
@@ -35,9 +35,8 @@ namespace Plugins.DataStore.SQLite.ncrcontext
                     b.Property<bool>("Notif")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("OriginalEngineer")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
+                    b.Property<int?>("OriginalEngineer")
+                        .HasColumnType("INTEGER");
 
                     b.Property<int?>("OriginalRevNumber")
                         .HasColumnType("INTEGER");

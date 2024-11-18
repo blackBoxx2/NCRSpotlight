@@ -1,4 +1,5 @@
-﻿@model EntitiesLayer.Models.NCRLog
+﻿@using EntitiesLayer.Models
+@model EntitiesLayer.Models.NCRLog
 
 @{
     ViewData["Title"] = "Details";
@@ -11,171 +12,203 @@
     <button id="print" class="btn btn-primary">Print</button>
     <hr />
     <section id="printarea">
-    <div class="row" >
-        <div class="accordion" id="qualityAccordion">
+        <div class="">
 
-                <p><strong>Document No: </strong>OPS-00011</p>
+            <p><strong>Document No: </strong>OPS-00011</p>
 
-                <dt class="col-sm-2">
-                    @Html.DisplayNameFor(model => model.ID)
-                </dt>
-                <dd class="col-sm-10">
-                    @Html.DisplayFor(model => model.ID)
-                </dd>
-
-            <div class="accordion-Item">
-
-                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                    <h3 class="Accordion-Header" id="qualityHeading">Quality Assurance</h3>
-                </button>
-
+            <div class="form-group mb-2">
+                <label asp-for="ID" class="control-label"></label>
+                <input asp-for="ID" class="form-control" readonly />
             </div>
 
-                <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#qualityAccordion">
-                
-                    <dt class="col-sm-2">
-                        @Html.DisplayNameFor(model => model.QualityPortion.ProcessApplicable)
-                    </dt>
-                    <dd class="col-sm-10">
-                        @Html.DisplayFor(model => model.QualityPortion.ProcessApplicable)
-                    </dd>
-                    <dt class="col-sm-2">
-                        @Html.DisplayNameFor(model => model.QualityPortion.Product.Supplier.SupplierName)
-                    </dt>
-                    <dd class="col-sm-10">
-                        @Html.DisplayFor(model => model.QualityPortion.Product.Supplier.SupplierName)
-                    </dd>               
-                    <dt class="col-sm-2">
-                        @Html.DisplayNameFor(model => model.QualityPortion.Product.Summary)
-                    </dt>
-                    <dd class="col-sm-10">
-                        @Html.DisplayFor(model => model.QualityPortion.Product.Summary)
-                    </dd>
-                    <dt class="col-sm-2">
-                        @Html.DisplayNameFor(model => model.QualityPortion.DefectDescription)
-                    </dt>
-                    <dd class="col-sm-10">
-                        @Html.DisplayFor(model => model.QualityPortion.DefectDescription)
-                    </dd>
-                    <dt class="col-sm-2">
-                        @Html.DisplayNameFor(model => model.QualityPortion.Product.ProductNumber)
-                    </dt>
-                    <dd class="col-sm-10">
-                        @Html.DisplayFor(model => model.QualityPortion.Product.ProductNumber)
-                    </dd>
-                    <dt class="col-sm-2">
-                        @Html.DisplayNameFor(model => model.QualityPortion.OrderNumber)
-                    </dt>
-                    <dd class="col-sm-10">
-                        @Html.DisplayFor(model => model.QualityPortion.OrderNumber)
-                    </dd>
-                    <dt class="col-sm-2">
-                        @Html.DisplayNameFor(model => model.QualityPortion.Quantity)
-                    </dt>
-                    <dd class="col-sm-10">
-                        @Html.DisplayFor(model => model.QualityPortion.Quantity)
-                    </dd>
-                    <dt class="col-sm-2">
-                        @Html.DisplayNameFor(model => model.QualityPortion.QuantityDefective)
-                    </dt>
-                    <dd class="col-sm-10">
-                        @Html.DisplayFor(model => model.QualityPortion.QuantityDefective)
-                    </dd>
-                    <dt class="col-sm-2">
-                        @Html.DisplayNameFor(model => model.QualityPortion.RepID)
-                    </dt>
-                    <dd class="col-sm-10">
-                        @Html.DisplayFor(model => model.QualityPortion.RepID)
-                    </dd>
-                    <dt class="col-sm-2">
-                        @Html.DisplayNameFor(model => model.QualityPortion.Created)
-                    </dt>
-                    <dd class="col-sm-10">
-                        @Html.DisplayFor(model => model.QualityPortion.Created)
-                    </dd>
-                    <div class="form-group">
-                        <label class="control-label">Item Marked Nonconforming: </label>
-                        <input type="checkbox" class="form-check-input" checked disabled="disabled" />
+            <div class="accordion" id="qualityAccordion">
+
+                <div class="accordion-Item">
+
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                        <h3 class="Accordion-Header" id="qualityHeading">Quality Assurance</h3>
+                    </button>
+
+                </div>
+
+                <div id="collapseOne" class="accordion-collapse show" aria-labelledby="headingOne" data-bs-parent="#qualityAccordion">
+                    <div class="accordion-body">
+
+                        <div class="row my-md-3">
+                            <div class="form-group col-md-6">
+                                <label asp-for="QualityPortion.ProcessApplicable" class="control-label"></label>
+                                <select asp-for="QualityPortion.ProcessApplicable" class="form-control" disabled asp-items="@Html.GetEnumSelectList<ProcessApplicable>()"></select>
+                            </div>
+                        </div>
+
+
+                        <div class="row my-md-3">
+
+                            <div class="form-group col-md-12 col-lg-6 mb-lg-0 mb-md-3">
+                                <label asp-for="QualityPortion.ProductID" class="control-label"></label>
+                                <input asp-for="QualityPortion.Product.Summary" class="form-control" readonly/>
+                            </div>
+
+                            <div id="supplierOutput" class="form-group col-md-6 col-lg-2" style="margin-bottom: 0; margin-top:auto;">
+                                <label asp-for="QualityPortion.Product.ProductNumber" class="control-label"></label>
+                                <input asp-for="QualityPortion.Product.ProductNumber" class="form-control" readonly />
+                            </div>
+
+                            <div id="supplierOutput" class="form-group col-md-6 col-lg-4" style="margin-bottom: 0; margin-top:auto;">
+                                <label asp-for="QualityPortion.Product.Supplier.SupplierName" class="control-label"></label>
+                                <input asp-for="QualityPortion.Product.Supplier.SupplierName" class="form-control" readonly />
+                            </div>
+                        </div>
+
+
+
+
+
+                        <div class="row my-md-3">
+
+                            <div class="form-group col-md-4">
+                                <label asp-for="QualityPortion.Quantity" class="control-label"></label>
+                                <input asp-for="QualityPortion.Quantity" class="form-control" readonly />
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label asp-for="QualityPortion.QuantityDefective" class="control-label"></label>
+                                <input asp-for="QualityPortion.QuantityDefective" class="form-control" readonly />
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label asp-for="QualityPortion.OrderNumber" class="control-label"></label>
+                                <input asp-for="QualityPortion.OrderNumber" class="form-control" readonly/>
+                            </div>
+                        </div>
+
+
+
+                        <div class="form-group">
+                            <label asp-for="QualityPortion.DefectDescription" class="control-label"></label>
+                            <textarea asp-for="QualityPortion.DefectDescription" class="form-control" rows="10" cols="50" style="resize: none;" readonly></textarea>
+                        </div>
+
+                        <div class="row my-md-3">
+                            <div class="form-group col-md-4">
+                                <label asp-for="QualityPortion.RepID" class="control-label"></label>
+                                <input asp-for="QualityPortion.RepID" class="form-control" readonly="readonly" />
+                            </div>
+                            <div class="form-group col-md-4" style="margin-bottom: 0; margin-top:auto;">
+                                <label asp-for="QualityPortion.Created" class="control-label"></label>
+                                <input asp-for="QualityPortion.Created" type="date" class="form-control" readonly="readonly" />
+                            </div>
+                        </div>
+
+                        <div class="form-group col-md-4 my-md-3">
+                            <label class="control-label">Item Marked Nonconforming: </label>
+                            <input type="checkbox" class="form-check-input" checked disabled="disabled" />
+                        </div>
+
+                        <div class="form-group col-md-4">
+                            <div>
+                                @foreach (var pic in Model.QualityPortion.qualityPictures)
+                                {
+                                    <img src="data:image;base64,@System.Convert.ToBase64String(pic.FileContent.Content)" width="100" height="100" />
+                                }
+                            </div>
+                        </div>                 
                     </div>
                 </div>
             </div>
-        </div>
 
-        <div class="accordion" id="engAccordion">
+            <div class="accordion" id="engineerAccordion">
 
-            <div class="accordion-Item">
+                <div class="accordion-Item">
 
-                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="true" aria-controls="collapseOne">
-                    <h3 class="Accordion-Header" id="qualityHeading">Engineering</h3>
-                </button>
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseOne">
+                        <h3 class="Accordion-Header" id="engineerHeading">Engineering</h3>
+                    </button>
 
+                </div>
+
+                <div id="collapseTwo" class="accordion-collapse show" aria-labelledby="headingOne" data-bs-parent="#engineerAccordion">
+                    <div class="accordion-body">
+
+                        <div class="row my-md-3">
+                            <div class="form-group col-md-4">
+                                <label asp-for="EngPortion.EngReview" class="control-label"></label>
+                                <select asp-for="EngPortion.EngReview" class="form-control" asp-items="@Html.GetEnumSelectList<EngReview>()" disabled></select>
+                            </div>
+                        </div>
+
+                        <div class="row my-md-3">
+                            <div class="form-group">
+                                <label asp-for="EngPortion.Disposition" class="form-label"></label>
+                                <textarea asp-for="EngPortion.Disposition" class="form-control" rows="10" cols="50" style="resize: none;" class="form-control" readonly></textarea>
+                            </div>
+                        </div>
+
+                        <div class="row my-md-3">
+                            <div class="form-group col-md-12 col-lg-4 mb-md-3 m-lg-0">
+                                <label asp-for="EngPortion.Update" class="form-check-label mx-1"></label>
+                                <input asp-for="EngPortion.Update" class="form-check-input" type="checkbox" disabled/>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label asp-for="EngPortion.Notif" class="form-check-label mx-1"></label>
+                                <input asp-for="EngPortion.Notif" class="form-check-input" type="checkbox" disabled/>
+                            </div>
+                        </div>
+
+                        <div class="row my-md-3">
+                            <div class="form-group col-md-4">
+                                <label asp-for="EngPortion.OriginalRevNumber" class="control-label"></label>
+                                <input type="number" asp-for="EngPortion.OriginalRevNumber" class="form-control" readonly/>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label asp-for="EngPortion.RevNumber" class="control-label"></label>
+                                <input type="number" asp-for="EngPortion.RevNumber" class="form-control" readonly/>
+							</div>
+                        </div>
+
+                        <div class="row my-md-3">
+                            <div class="form-group col-md-4">
+                                <label asp-for="EngPortion.OriginalEngineer" class="control-label"></label>
+                                <input asp-for="EngPortion.OriginalEngineer" class="form-control" readonly/>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label asp-for="EngPortion.RevDate" class="control-label"></label>
+                                <input asp-for="EngPortion.RevDate" class="form-control" value="" readonly/>
+                            </div>
+                        </div>
+
+                        <div class="row my-md-3">
+                            <div class="form-group col-md-4">
+                                <label asp-for="EngPortion.RepID" class="control-label"></label>
+                                <input asp-for="EngPortion.RepID" class="form-control" readonly />
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label asp-for="EngPortion.Date" class="control-label"></label>
+                                <input asp-for="EngPortion.Date" class="form-control" readonly />
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
             </div>
 
-            <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#engAccordion">
 
+            <div class="form-group">
+                <label asp-for="DateCreated" class="control-label"></label>
+                <input asp-for="DateCreated" class="form-control" readonly/>
+            </div>
 
-                <dt class="col-sm-2">
-                    @Html.DisplayNameFor(model => model.EngPortion.EngReview)
-                </dt>
-                <dd class="col-sm-10">
-                    @Html.DisplayFor(model => model.EngPortion.EngReview)
-                </dd>
-                <dt class="col-sm-2">
-                    @Html.DisplayNameFor(model => model.EngPortion.Notif)
-                </dt>
-                <dd class="col-sm-10">
-                    @Html.DisplayFor(model => model.EngPortion.Notif)
-                </dd>
-                <dt class="col-sm-2">
-                    @Html.DisplayNameFor(model => model.EngPortion.Update)
-                </dt>
-                <dd class="col-sm-10">
-                    @Html.DisplayFor(model => model.EngPortion.Update)
-                </dd>
-                <dt class="col-sm-2">
-                    @Html.DisplayNameFor(model => model.EngPortion.RevNumber)
-                </dt>
-                <dd class="col-sm-10">
-                    @Html.DisplayFor(model => model.EngPortion.RevNumber)
-                </dd>
-                <dt class="col-sm-2">
-                    @Html.DisplayNameFor(model => model.EngPortion.RevDate)
-                </dt>
-                <dd class="col-sm-10">
-                    @Html.DisplayFor(model => model.EngPortion.RevDate)
-                </dd>
-                <dt class="col-sm-2">
-                    @Html.DisplayNameFor(model => model.EngPortion.RepID)
-                </dt>
-                <dd class="col-sm-10">
-                    @Html.DisplayFor(model => model.EngPortion.RepID)
-                </dd>
-            
+            <div class="form-group">
+                <label asp-for="Status" class="control-label"></label>
+                <select asp-for="Status" asp-items="@Html.GetEnumSelectList<NCRStatus>()" class="form-control" disabled></select>
+            </div>
+
         </div>
-
-
-
-
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.DateCreated)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.DateCreated)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Status)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Status)
-        </dd>
-    </dl>
     </section>
-
 </div>
 <div>
     <a asp-action="Edit" asp-route-id="@Model?.ID">Edit</a> |
     <a onclick="window.close()" style="cursor:pointer" class="btn-link">Back to List</a>
 </div>
+
 @section Scripts{
     <script>
     $(function () {
