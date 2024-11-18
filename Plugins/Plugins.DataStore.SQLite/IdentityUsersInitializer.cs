@@ -221,6 +221,7 @@ namespace Plugins.DataStore.SQLite
                             UserId = superAdminId,
                         }
                         );
+
                     context.SaveChanges();
                 }
 
