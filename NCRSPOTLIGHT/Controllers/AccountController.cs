@@ -263,25 +263,25 @@ namespace NCRSPOTLIGHT.Controllers
                 var result = await _signInManager.PasswordSignInAsync(user.UserName, password: "password", isPersistent: false, lockoutOnFailure: false);
                 if (result.Succeeded && returnUrl != null)
                 {
-                    if(user.Email == "admin@email.com" && user.Role != "Admin")
+                    if(user.Email == "admin@email.com" && user.Role != SD.Admin)
                     {
-                        _userManager.AddToRoleAsync(user, "Admin");
+                        _userManager.AddToRoleAsync(user, SD.Admin);
                     }
-                    else if (user.Email == "qa@email.com" && user.Role != "QualityAssurance")
+                    else if (user.Email == "qa@email.com" && user.Role != SD.QualityAssurance)
                     {
-                        _userManager.AddToRoleAsync(user, "QualityAssurance");
+                        _userManager.AddToRoleAsync(user, SD.QualityAssurance);
                     }
-                    else if (user.Email == "engineer@email.com" && user.Role != "Engineer")
+                    else if (user.Email == "engineer@email.com" && user.Role != SD.Engineer)
                     {
-                        _userManager.AddToRoleAsync(user, "Engineer");
+                        _userManager.AddToRoleAsync(user, SD.Engineer);
                     }
-                    else if (user.Email == "superadmin@email.com" && user.Role != "SuperAdmin")
+                    else if (user.Email == "superadmin@email.com" && user.Role != SD.SuperAdmin)
                     {
-                        _userManager.AddToRoleAsync(user, "SuperAdmin");
+                        _userManager.AddToRoleAsync(user, SD.SuperAdmin);
                     }
                     else
                     {
-                        _userManager.AddToRoleAsync(user, "BasicUser");
+                        _userManager.AddToRoleAsync(user, SD.User);
                     }
 
                     return LocalRedirect(returnUrl);
