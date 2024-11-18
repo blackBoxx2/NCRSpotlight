@@ -131,7 +131,12 @@ namespace NCRSPOTLIGHT.Controllers
             ViewData["User"] = HttpContext.User.Identity.Name;
             LoadSelectList(new NCRLog());
         
-            var user = HttpContext.User;                      
+            var user = HttpContext.User;
+            var userRoles = GetUserRoles(user);
+
+            ViewBag.QASection = userRoles.Contains("QualityAssurance") ? "enabled" : "disabled";
+            ViewBag.EngineerSection = userRoles.Contains("Engineer") ? "enabled" : "disabled";
+            ViewBag.IsAdmin = userRoles.Contains("Admin");
 
             return View();
         }
@@ -186,6 +191,11 @@ namespace NCRSPOTLIGHT.Controllers
             }
 
             var user = HttpContext.User;
+            var userRoles = GetUserRoles(user);
+
+            ViewBag.QASection = userRoles.Contains("QualityAssurance") ? "enabled" : "disabled";
+            ViewBag.EngineerSection = userRoles.Contains("Engineer") ? "enabled" : "disabled";
+            ViewBag.IsAdmin = userRoles.Contains("Admin");
 
             LoadSelectList(nCRLog);
             return View(nCRLog);
@@ -282,7 +292,13 @@ namespace NCRSPOTLIGHT.Controllers
         {
             var log = _getNCRLogByIDAsyncUseCase.Execute(id);
             return log != null;
-        }       
-
-	}
+        }
+        private List<string> GetUserRoles(ClaimsPrincipal user)
+        {
+            return User.Claims
+                       .Where(c => c.Type == ClaimTypes.Role)
+                       .Select(c => c.Value)
+                       .ToList();
+        }
+    }
 }

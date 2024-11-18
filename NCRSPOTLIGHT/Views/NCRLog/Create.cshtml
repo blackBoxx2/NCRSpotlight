@@ -98,7 +98,14 @@
                         </div>
                         <div class="form-group">
                             <label asp-for="QualityPortion.RepID" class="control-label"></label>
-                            <input asp-for="QualityPortion.RepID" class="form-control" value="@user" readonly="readonly" />
+                            @if (isQualityAssurance || isAdmin)
+                            {
+                                <input asp-for="QualityPortion.RepID" class="form-control" />
+                            }
+                            else
+                            {
+                                <input asp-for="QualityPortion.RepID" class="form-control" readonly="readonly" />
+                            }
                         </div>
                         <div class="form-group">
                             <label class="control-label custom-file-label">Upload Pictures: </label>
@@ -117,7 +124,14 @@
                         <div class="form-group">
                             <label class="control-label">NonConforming: </label>
                             @Html.Raw("<span class='text-danger'>*</span>")
-                            <input type="checkbox" value="checked" disabled="disabled" />
+                            @if (isQualityAssurance || isAdmin)
+                            {
+                                <input type="checkbox" class="form-check-input" checked />
+                            }
+                            else
+                            {
+                                <input type="checkbox" class="form-check-input" checked disabled="disabled" />
+                            }
                         </div>
                     </div>
                 </div>
@@ -138,40 +152,89 @@
                         <div class="form-group">
                             <label asp-for="EngPortion.EngReview" class="control-label"></label>
                                 @Html.Raw("<span class='text-danger'>*</span>")
-                            <select asp-for="EngPortion.EngReview" class="form-control" asp-items="@Html.GetEnumSelectList<EngReview>()"></select>
+                            @if (isEngineer || isAdmin)
+                            {
+                                <select asp-for="EngPortion.EngReview" class="form-control" asp-items="@Html.GetEnumSelectList<EngReview>()"></select>
+                            }
+                            else
+                            {
+                                <select asp-for="EngPortion.EngReview" class="form-control" asp-items="@Html.GetEnumSelectList<EngReview>()" disabled="disabled"></select>
+                            }
                             <span asp-validation-for="EngPortion.EngReview" class="text-danger"></span>
                         </div>
                         <div class="form-group">
                             <label asp-for="EngPortion.Disposition" class="form-label"></label>
                                 @Html.Raw("<span class='text-danger'>*</span>")
-                            <textarea asp-for="EngPortion.Disposition" class="form-control" rows="4" cols="50" class="form-control" ></textarea>
+                            @if (isEngineer || isAdmin)
+                            {
+                                <textarea asp-for="EngPortion.Disposition" class="form-control" rows="4" cols="50"></textarea>
+                            }
+                            else
+                            {
+                                <textarea asp-for="EngPortion.Disposition" class="form-control" rows="4" cols="50" readonly="readonly"></textarea>
+                            }
                             <span asp-validation-for="EngPortion.Disposition" class="text-danger"></span>
                         </div>
                         <div class="form-group"> <!--Not Required -->
                             <label asp-for="EngPortion.Update" class="form-check-label"></label>
-                            <input asp-for="EngPortion.Update" class="form-check-input" type="checkbox" />
+                            @if (isEngineer || isAdmin)
+                            {
+                                <input asp-for="EngPortion.Update" class="form-check-input" type="checkbox" />
+                            }
+                            else
+                            {
+                                <input asp-for="EngPortion.Update" class="form-check-input" type="checkbox" disabled="disabled" />
+                            }
                             <span asp-validation-for="EngPortion.Update" class="text-danger"></span>
                         </div>
                         <div class="form-group"> <!-- Not required -->
                             <label asp-for="EngPortion.Notif" class="form-check-label"></label>
-                            <input asp-for="EngPortion.Notif" class="form-check-input" type="checkbox" />
+                            @if (isEngineer || isAdmin)
+                            {
+                                <input asp-for="EngPortion.Notif" class="form-check-input" type="checkbox" />
+                            }
+                            else
+                            {
+                                <input asp-for="EngPortion.Notif" class="form-check-input" type="checkbox" disabled="disabled" />
+                            }
                             <span asp-validation-for="EngPortion.Notif" class="text-danger"></span>
                         </div>
                         <div class="form-group"> <!-- Not required -->
                             <label asp-for="EngPortion.RevNumber" class="control-label"></label>
-                            <input type="number" asp-for="EngPortion.RevNumber" class="form-control" />
+                            @if (isEngineer || isAdmin)
+                            {
+                                <input type="number" asp-for="EngPortion.RevNumber" class="form-control" />
+                            }
+                            else
+                            {
+                                <input type="number" asp-for="EngPortion.RevNumber" class="form-control" readonly="readonly" />
+                            }
                             <span asp-validation-for="EngPortion.RevNumber" class="text-danger"></span>
                         </div>
                         <div class="form-group">
                             <label asp-for="EngPortion.RevDate" class="control-label"></label>
                                  @Html.Raw("<span class='text-danger'>*</span>")
-                            <input asp-for="EngPortion.RevDate" class="form-control" value="" />
+                            @if (isEngineer || isAdmin)
+                            {
+                                <input asp-for="EngPortion.RevDate" class="form-control" value="" />
+                            }
+                            else
+                            {
+                                <input asp-for="EngPortion.RevDate" class="form-control" value="" readonly="readonly" />
+                            }
                             <span asp-validation-for="EngPortion.RevDate" class="text-danger"></span>
                         </div>
                         <div class="form-group">
                             <label asp-for="EngPortion.RepID" class="control-label"></label>
                                 @Html.Raw("<span class='text-danger'>*</span>")
-                            <input asp-for="EngPortion.RepID" class="form-control" value="" />
+                            @if (isEngineer || isAdmin)
+                            {
+                                <input asp-for="EngPortion.RepID" class="form-control" value="" />
+                            }
+                            else
+                            {
+                                <input asp-for="EngPortion.RepID" class="form-control" value="" readonly="readonly" />
+                            }
                             <span asp-validation-for="EngPortion.RepID" class="text-danger"></span>
                         </div>
 
