@@ -1,24 +1,23 @@
+using EntitiesLayer.Models.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
-using NCRSPOTLIGHT.Areas.Identity.Data;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
+using NCRSPOTLIGHT;
+using NCRSPOTLIGHT.Authorize;
 using NCRSPOTLIGHT.Utilities;
 using Plugins.DataStore.SQLite;
-using Plugins.DataStore.SQLite.JoinsUseCase;
 using UseCasesLayer.DataStorePluginInterfaces;
+using UseCasesLayer.UseCaseInterfaces.EngUseCase;
+using UseCasesLayer.UseCaseInterfaces.EngUseCaseInterface;
 using UseCasesLayer.UseCaseInterfaces.NCRLogUseCase;
 using UseCasesLayer.UseCaseInterfaces.NCRLogUseCaseInterfaces;
 using UseCasesLayer.UseCaseInterfaces.ProductUseCaseInterfaces;
 using UseCasesLayer.UseCaseInterfaces.ProductUseCases;
 using UseCasesLayer.UseCaseInterfaces.QualityPortionUseCase;
 using UseCasesLayer.UseCaseInterfaces.QualityPortionUseCaseInterfaces;
-using UseCasesLayer.UseCaseInterfaces.RepresentativesUseCase;
-using UseCasesLayer.UseCaseInterfaces.RepresentitiveUseCaseInterfaces;
-using UseCasesLayer.UseCaseInterfaces.RepresentitvesUseCase;
-using UseCasesLayer.UseCaseInterfaces.RoleRepUseCaseInterfaces;
-using UseCasesLayer.UseCaseInterfaces.RoleRepUseCases;
-using UseCasesLayer.UseCaseInterfaces.RoleUseCaseInterfaces;
-using UseCasesLayer.UseCaseInterfaces.RoleUseCases;
 using UseCasesLayer.UseCaseInterfaces.SuppliersUseCaseInterfaces;
 using UseCasesLayer.UseCaseInterfaces.SuppliersUseCases;
 var builder = WebApplication.CreateBuilder(args);
@@ -37,22 +36,20 @@ var smtpUsername = builder.Configuration["Smtp:Username"];
 var smtpPassword = builder.Configuration["Smtp:Password"];
 var smtpHost = builder.Configuration["Smtp:Host"];
 var smtpPort = builder.Configuration["Smtp:Port"];
+var microsoftClientID = builder.Configuration["Microsoft:ClientId"];
+var microsoftClientSecret = builder.Configuration["Microsoft:ClientSecret"];
 builder.Services.Configure<SmtpSettings>(builder.Configuration.GetSection("Smtp"));
 
 builder.Services.AddTransient<IEmailSender, NCRSpotlightEmailer>();
 #endregion
+
+
 builder.Services.AddDbContext<IdentityContext>(options => options.UseSqlite(connectionStringIdentity));
 
 builder.Services.AddDbContext<NCRContext>(options => options.UseSqlite(connectionStringNCRSpotlight));
-builder.Services.AddIdentity<IdentityUser, IdentityRole>(options => 
-{
-    options.SignIn.RequireConfirmedAccount = false;
-    options.User.RequireUniqueEmail = true;
-    options.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
-}).AddEntityFrameworkStores<IdentityContext>()
-.AddDefaultTokenProviders();
+builder.Services.AddTransient<IEmailSender, NCRSpotlightEmailer>();
 
-builder.Services.AddScoped<QualityPortionService>();
+
 
 // Add services to the container.
 //Without the .AddRazorPages we cant use .cshtml pages
@@ -61,12 +58,11 @@ builder.Services.AddControllersWithViews();
 
 //We will come back and add an If statement to check if its in development or QA
 builder.Services.AddTransient<ISupplierRepository, SupplierSQLRepository>();
-builder.Services.AddTransient<IRoleRepository, RoleSQLRepository>();
-builder.Services.AddTransient<IRepresentativeRepository, RepresentativeSQLRepository>();
-builder.Services.AddTransient<IRoleRepRepository, RoleRepSQLRepository>();
 builder.Services.AddTransient<IProductRepository, ProductSQLRepository>();
 builder.Services.AddTransient<IQualityPortionSQLRepository, QualityPortionSQLRepository>();
 builder.Services.AddTransient<INCRLogRepository, NCRLogSQLRepository>();
+builder.Services.AddTransient<IEngPortionRepository, EngineerPortionSQLRepository>();
+
 
 
 #region Register Supplier Services
@@ -76,27 +72,6 @@ builder.Services.AddTransient<IDeleteSupplierAsyncUseCase, DeleteSupplierAsyncUs
 builder.Services.AddTransient<IGetSupplierByIDAsyncUseCase, GetSupplierByIdAsyncUseCase>();
 builder.Services.AddTransient<IGetSuppliersAsyncUseCase, GetSuppliersAsyncUseCase>();
 builder.Services.AddTransient<IUpdateSupplierAsyncUseCase, UpdateSupplierAsyncUseCase>();
-
-//Representative
-builder.Services.AddTransient<IAddRepresentativeAsyncUseCase, AddRepresentativeAsyncUseCase>();
-builder.Services.AddTransient<IDeleteRepresentativeAsyncUseCase, DeleteRepresentativeAsyncUseCase>();
-builder.Services.AddTransient<IGetRepresentativesByIdAsyncUseCase, GetRepresentativesByIdAsyncUseCase>();
-builder.Services.AddTransient<IGetRepresentativesAsyncUseCase, GetRepresentativesAsyncUseCase>();
-builder.Services.AddTransient<IUpdateRepresentativeAsyncUseCase, UpdateRepresentativeAsyncUseCase>();
-
-//Register Role Services
-builder.Services.AddTransient<IAddRoleAsyncUserCase, AddRoleAsyncUseCase>();
-builder.Services.AddTransient<IDeleteRoleAsyncUserCase, DeleteRoleAsyncUseCase>();
-builder.Services.AddTransient<IGetRoleByIDAsyncUserCase, GetRolByIDUseCase>();
-builder.Services.AddTransient<IGetRoleAsyncUserCase, GetRoleAsyncUseCase>();
-builder.Services.AddTransient<IUpdateRoleAsyncUserCase, UpdateRoleAsyncUseCase>();
-
-//RoleRep
-builder.Services.AddTransient<IAddRoleRepAsyncUseCase, AddRoleRepAsyncUseCase>();
-builder.Services.AddTransient<IDeleteRoleRepAsyncUseCase, DeleteRoleRepAsyncUseCase>();
-builder.Services.AddTransient<IGetRoleRepByIDAsyncUseCase, GetRoleRepByIdAsyncUseCase>();
-builder.Services.AddTransient<IGetRoleRepAsyncUseCase, GetRoleRepAsyncUseCase>();
-builder.Services.AddTransient<IUpdateRoleRepAsyncUseCase, UpdateRoleRepAsyncUseCase>();
 
 //product
 builder.Services.AddTransient<IAddProductAsyncUseCase, AddProductAsyncUseCase>();
@@ -112,6 +87,14 @@ builder.Services.AddTransient<IUpdateQualityPortionAsyncUseCase, UpdateQualityPo
 builder.Services.AddTransient<IGetQualityPortionByIDAsyncUseCase, GetQualityPortionByIDAsyncUseCase>();
 builder.Services.AddTransient<IGetQualityPortionsAsyncUseCase, GetQualityPortionsAsyncUseCase>();
 
+//EngPortion
+
+builder.Services.AddTransient<IAddEngPortionAsyncUseCase, AddEngPortionAsyncUseCase>();
+builder.Services.AddTransient<IDeleteEngPortionAsyncUseCase, DeleteEngPortionAsyncUseCase>();
+builder.Services.AddTransient<IUpdateEngPortionAsyncUseCase, UpdateEngPortionAsyncUseCase>();
+builder.Services.AddTransient<IGetEngPortionsAsyncUseCase, GetEngPortionsAsyncUseCase>();
+builder.Services.AddTransient<IGetEngPortionsByIDAsyncUseCase, GetEngPortionByIDAsyncUseCase>();
+
 //NCRLog
 builder.Services.AddTransient<IAddNCRLogAsyncUseCase, AddNCRLogAsyncUseCase>();
 builder.Services.AddTransient<IDeleteNCRLogAsyncUseCase, DeleteNCRLogAsyncUseCase>();
@@ -123,19 +106,70 @@ builder.Services.AddTransient<IGetNCRLogsAsyncUseCase, GetNCRLogsAsyncUseCase>()
 
 
 //Implement Policy Based Authorization (Used for specific roles)
-builder.Services.AddAuthorization(options =>
+builder.Services.AddIdentity<ApplicationUser, IdentityRole>(
+    options =>
+    {
+        options.SignIn.RequireConfirmedAccount = false;
+        options.User.RequireUniqueEmail = true;
+        options.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
+        }
+    
+        )
+    .AddEntityFrameworkStores<IdentityContext>().AddDefaultTokenProviders();
+builder.Services.ConfigureApplicationCookie(opt =>
 {
-    options.AddPolicy("BasicUser", p => p.RequireRole("BasicUser"));
+    opt.AccessDeniedPath = new PathString("/Account/NoAccess");
+}
+);
 
-
-    options.AddPolicy("Engineer", p => p.RequireRole("Engineer"));
-    //    options.AddPolicy("ENRep", p => p.RequireClaim("Role", "ENRep"));
-
-    options.AddPolicy("Admin", p => p.RequireRole("Admin"));
-    options.AddPolicy("QualityAssurance", p => p.RequireRole("QualityAssurance"));
+builder.Services.Configure<IdentityOptions>(opt =>
+{
+    opt.Password.RequireDigit = false;
+    opt.Password.RequireLowercase = false;
+    opt.Password.RequireUppercase = false;
+    opt.Password.RequireNonAlphanumeric = false;
+    opt.Lockout.MaxFailedAccessAttempts = 3;
+    opt.SignIn.RequireConfirmedEmail = false;
 });
 
+//builder.Services.AddAuthorization(options =>
+//{
+//    options.AddPolicy("BasicUser", p => p.RequireRole("BasicUser"));
 
+
+//    options.AddPolicy("Engineer", p => p.RequireRole("Engineer"));
+//    //    options.AddPolicy("ENRep", p => p.RequireClaim("Role", "ENRep"));
+
+//    options.AddPolicy("QualityAssurance", p => p.RequireRole("QualityAssurance"));
+//});
+
+builder.Services.AddAuthorization(opt =>
+{
+
+    opt.AddPolicy("Engineer", p => p.RequireRole("Engineer"));
+    //    options.AddPolicy("ENRep", p => p.RequireClaim("Role", "ENRep"));
+
+    opt.AddPolicy("QualityAssurance", p => p.RequireRole(SD.QualityAssurance));
+    opt.AddPolicy("Admin", policy => policy.RequireRole(SD.Admin));
+    opt.AddPolicy("AdminAndUser", policy => policy.RequireRole(SD.Admin).RequireRole(SD.User));
+    opt.AddPolicy("AdminRole-CreateClaim", policy => policy.RequireRole(SD.Admin).RequireClaim("create", "True"));
+    opt.AddPolicy("AdminRole-CreateEditDeleteClaim", policy => policy
+    .RequireRole(SD.Admin)
+    .RequireClaim("create", "True")
+    .RequireClaim("edit", "True")
+    .RequireClaim("delete", "True"));
+
+    opt.AddPolicy("Admin_Create_Edit_DeleteAccess_OR_SuperAdminRole", policy => policy.RequireAssertion(context =>
+    AdminRole_CreateEditDeleteClaim_ORSuperAdminRole(context)
+    ));
+    opt.AddPolicy("OnlySuperAdminChecker", p => p.Requirements.Add(new OnlySuperAdminChecker()));
+});
+
+builder.Services.AddAuthentication().AddMicrosoftAccount(opt =>
+{
+    opt.ClientId = microsoftClientID;
+    opt.ClientSecret = microsoftClientSecret;
+});
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -167,7 +201,7 @@ app.MapRazorPages();
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
-    await IdentityUsersInitializer.InitializeAsync(serviceProvider: services, DeleteDatabase: true,
+    await IdentityUsersInitializer.InitializeAsync(serviceProvider: services, DeleteDatabase:true,
         UseMigrations: true, SeedSampleData: true);
 }
 
@@ -185,3 +219,13 @@ using (var scope = app.Services.CreateScope())
 
 
 app.Run();
+
+bool AdminRole_CreateEditDeleteClaim_ORSuperAdminRole(AuthorizationHandlerContext context)
+{
+    return (
+    context.User.IsInRole(SD.Admin) && context.User.HasClaim(c => c.Type == "Create" && c.Value == "True")
+    && context.User.HasClaim(c => c.Type == "Edit" && c.Value == "True")
+    && context.User.HasClaim(c => c.Type == "Delete" && c.Value == "True")
+     )
+     || context.User.IsInRole(SD.SuperAdmin);
+}

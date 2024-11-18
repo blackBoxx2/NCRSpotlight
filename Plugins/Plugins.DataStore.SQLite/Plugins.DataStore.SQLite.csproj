@@ -4,11 +4,6 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
-  <ItemGroup>
-    <Compile Remove="NCRMigration\**" />
-    <EmbeddedResource Remove="NCRMigration\**" />
-    <None Remove="NCRMigration\**" />
-  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />
@@ -21,5 +16,10 @@
     <ProjectReference Include="..\..\EntitiesLayer\EntitiesLayer.csproj" />
     <ProjectReference Include="..\..\UseCasesLayer\UseCasesLayer.csproj" />
   </ItemGroup>
+
+
+	<ItemGroup>
+	  <Folder Include="IdentityMigrations\" />
+	</ItemGroup>
 
 </Project>

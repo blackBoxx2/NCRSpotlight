@@ -58,10 +58,25 @@ namespace Plugins.DataStore.SQLite.Utilities
                 product.ProductPictures.Add(productPicture);
             }
         }
+        public static async Task SeedQualityPictures(string filePath, QualityPortion qp)
+        {
 
+            byte[] imageBytes = await DownloadImageAsync(filePath);
 
-
-
-
+            if (imageBytes != null && imageBytes.Length > 0)
+            {
+                QualityPicture qualityPicture = new QualityPicture
+                {
+                    MimeType = "image/jpeg", 
+                    FileName = Path.GetFileName(filePath),
+                    FileContent = new FileContent
+                    {
+                        Content = imageBytes 
+                    },
+                    QualityPortionID = qp.ID
+                };
+                qp.qualityPictures.Add(qualityPicture);
+            }
+        }
     }
 }

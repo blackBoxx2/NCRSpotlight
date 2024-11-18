@@ -21,10 +21,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\EntitiesLayer\EntitiesLayer.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Reference Include="EntitiesLayer">
       <HintPath>..\EntitiesLayer\bin\Debug\net8.0\EntitiesLayer.dll</HintPath>
     </Reference>

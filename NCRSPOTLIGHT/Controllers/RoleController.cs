@@ -1,174 +1,102 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using EntitiesLayer.Models;
-using Plugins.DataStore.SQLite;
-using UseCasesLayer.UseCaseInterfaces.RoleUseCaseInterfaces;
+﻿using EntitiesLayer.Models.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Plugins.DataStore.SQLite;
 
 namespace NCRSPOTLIGHT.Controllers
 {
     public class RoleController : Controller
     {
-        private readonly IAddRoleAsyncUserCase _addRoleAsyncUserCase;
-        private readonly IDeleteRoleAsyncUserCase _deleteRoleAsyncUserCase;
-        private readonly IGetRoleByIDAsyncUserCase _getRoleByIDAsyncUserCase;
-        private readonly IGetRoleAsyncUserCase _getRoleAsyncUserCase;
-        private readonly IUpdateRoleAsyncUserCase _updateRoleAsyncUserCase;
+        private readonly IdentityContext _db;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
 
-        public RoleController(IAddRoleAsyncUserCase addRoleAsyncUserCase,
-                              IDeleteRoleAsyncUserCase deleteRoleAsyncUserCase,
-                              IGetRoleByIDAsyncUserCase getRoleByIDAsyncUserCase,
-                              IGetRoleAsyncUserCase getRoleAsyncUserCase,
-                              IUpdateRoleAsyncUserCase updateRoleAsyncUserCase)
+        public RoleController(IdentityContext db,
+            UserManager<ApplicationUser> userManager,
+            RoleManager<IdentityRole> roleManager)
         {
-            this._addRoleAsyncUserCase = addRoleAsyncUserCase;
-            this._deleteRoleAsyncUserCase = deleteRoleAsyncUserCase;
-            this._getRoleByIDAsyncUserCase = getRoleByIDAsyncUserCase;
-            this._getRoleAsyncUserCase = getRoleAsyncUserCase;
-            this._updateRoleAsyncUserCase = updateRoleAsyncUserCase;
+            _db = db;
+            _userManager = userManager;
+            _roleManager = roleManager;
+        }
+        public IActionResult Index()
+        {
+
+            var roles = _db.Roles.ToList();
+
+
+            return View(roles);
         }
 
-
-
-        // GET: Roles
-        public async Task<IActionResult> Index()
+        [HttpGet]
+        public IActionResult Upsert(string roleId)
         {
-            var role = await _getRoleAsyncUserCase.Execute();
-            return View(role);
-        }
-
-        // GET: Roles/Details/5
-        public async Task<IActionResult> Details(string id)
-        {
-            if (id == null)
+            if (string.IsNullOrEmpty(roleId))
             {
-                return NotFound();
+                return View();
             }
-
-            var role = await _getRoleByIDAsyncUserCase.Execute(id);
-            if (role == null)
+            else
             {
-                return NotFound();
+                var objFromDb = _db.Roles.FirstOrDefault(x => x.Id == roleId);
+                return View(objFromDb);
             }
-
-            return View(role);
         }
 
-        // GET: Roles/Create
-
-        public IActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: Roles/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create( IdentityRole role)
+        public async Task<IActionResult> Upsert(IdentityRole roleObj)
         {
-            if (ModelState.IsValid)
+            //if (!await _roleManager.RoleExistsAsync(roleObj.Name))
+            //{
+            //    TempData[SD.Error] = $"Error, {roleObj.Name} does not exist";
+            //    return View(nameof(Index));
+            //}
+            if (string.IsNullOrEmpty(roleObj.NormalizedName))
             {
-                
-                await _addRoleAsyncUserCase.Execute(role);
-                return RedirectToAction(nameof(Index));
-            }
-            return View(role);
-        }
+                //create
+                await _roleManager.CreateAsync(new IdentityRole() { Name = roleObj.Name });
+                TempData[SD.Success] = "Role created successfully";
 
-        // GET: Roles/Edit/5
-        public async Task<IActionResult> Edit(string id)
-        {
-            if (id == null)
+            }
+            else
             {
-                return NotFound();
+                //update
+                var objFromDb = _db.Roles.FirstOrDefault(x => x.Id == roleObj.Id);
+                objFromDb.Name = roleObj.Name;
+                objFromDb.NormalizedName = roleObj.NormalizedName.ToUpper();
+                var result = await _roleManager.UpdateAsync(objFromDb);
+                TempData[SD.Success] = "Role updated successfully";
+
             }
-
-            var role = await _getRoleByIDAsyncUserCase.Execute(id);
-            if (role == null)
-            {
-                return NotFound();
-            }
-            return View(role);
-        }
-
-        // POST: Roles/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, [Bind("ID,RoleName")] IdentityRole role)
-        {
-            if (id != role.Id)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-
-                    await _updateRoleAsyncUserCase.Execute(id, role);
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!await RoleExists(role.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            return View(role);
-        }
-
-        // GET: Roles/Delete/5
-        public async Task<IActionResult> Delete(string id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var role = await _getRoleByIDAsyncUserCase.Execute(id);
-            if (role == null)
-            {
-                return NotFound();
-            }
-
-            return View(role);
-        }
-
-        // POST: Roles/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(string id)
-        {
-            var role = await _getRoleByIDAsyncUserCase.Execute(id);
-            if (role != null)
-            {
-                await _deleteRoleAsyncUserCase.Execute(role.Id);
-            }
-
             return RedirectToAction(nameof(Index));
         }
 
-        private async Task<bool> RoleExists(string id)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Policy = "OnlySuperAdminChecker")]
+        public async Task<IActionResult> Delete(string roleId)
         {
-            var role = await _getRoleByIDAsyncUserCase.Execute(id);
-            return role != null;
+
+
+            var objFromDb = _db.Roles.FirstOrDefault(x => x.Id == roleId);
+            if (objFromDb != null)
+            {
+                var userRolesForThisRole = _db.UserRoles.Where(u => u.RoleId == roleId).Count();
+                if (userRolesForThisRole > 0)
+                {
+                    TempData[SD.Error] = "Cannot delete this role, since there are users assigned to this role.";
+                    return RedirectToAction(nameof(Index));
+
+                }
+
+                var result = await _roleManager.DeleteAsync(objFromDb);
+                TempData[SD.Success] = "Role deleted successfully";
+                return RedirectToAction(nameof(Index));
+            }
+            TempData[SD.Error] = "Role not found";
+
+            return RedirectToAction(nameof(Index));
         }
     }
 }

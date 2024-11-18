@@ -13,6 +13,7 @@ namespace EntitiesLayer.Models
         public int ID { get; set; }
 
         [Required(ErrorMessage = "A supplier name is required")]
+        [Display(Name = "Supplier Name:")]
         public string SupplierName { get; set; }
 
         public ICollection<Product> Products { get; set; } = new HashSet<Product>();

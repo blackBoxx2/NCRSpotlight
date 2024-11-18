@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using EntitiesLayer.Models.ViewModels;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System.Diagnostics;
@@ -50,17 +51,15 @@ namespace Plugins.DataStore.SQLite
                 string qaRoleId = Guid.NewGuid().ToString();
                 string engineerRoleId = Guid.NewGuid().ToString();
                 string basicUserRoleId = Guid.NewGuid().ToString();
+                string superAdminRoleId = Guid.NewGuid().ToString();
 
                 string adminUserId = Guid.NewGuid().ToString();
                 string qaUserId = Guid.NewGuid().ToString();
                 string engineerUserId = Guid.NewGuid().ToString();
                 string basicUserId = Guid.NewGuid().ToString();
-                PasswordHasher<IdentityUser> passwordHasher = new PasswordHasher<IdentityUser>();
-                var pw = passwordHasher.HashPassword(null, "Adminpassword1");
-                if (passwordHasher.VerifyHashedPassword(null, pw, "Adminpassword1") != PasswordVerificationResult.Success)
-                {
-                    throw new Exception("Password hashing failed");
-                }
+                string superAdminId = Guid.NewGuid().ToString();
+                PasswordHasher<ApplicationUser> passwordHasher = new PasswordHasher<ApplicationUser>();
+
                 if (!context.Roles.Any())
                 {
                     context.Roles
@@ -68,7 +67,8 @@ namespace Plugins.DataStore.SQLite
                         new IdentityRole { Id = adminRoleId, Name = "Admin", NormalizedName = "ADMIN" },
                         new IdentityRole { Id = qaRoleId, Name = "QualityAssurance", NormalizedName = "QUALITYASSURANCE" },
                         new IdentityRole { Id = engineerRoleId, Name = "Engineer", NormalizedName = "ENGINEER" },
-                        new IdentityRole { Id = basicUserRoleId, Name = "BasicUser", NormalizedName = "BASICUSER" }
+                        new IdentityRole { Id = basicUserRoleId, Name = "BasicUser", NormalizedName = "BASICUSER" }, 
+                        new IdentityRole { Id = superAdminRoleId, Name = "SuperAdmin", NormalizedName = "SUPERADMIN" }
                         );
                     context.SaveChanges();
                 }
@@ -78,7 +78,7 @@ namespace Plugins.DataStore.SQLite
                 {
                     context.Users
                     .AddRange(
-                    new IdentityUser
+                    new ApplicationUser
                     {
                         Id = adminUserId,
                         UserName = "admin@email.com",
@@ -86,55 +86,129 @@ namespace Plugins.DataStore.SQLite
                         Email = "admin@email.com",
                         NormalizedEmail = "ADMIN@EMAIL.COM",
                         EmailConfirmed = true,
-                        PasswordHash = passwordHasher.HashPassword(null, "Adminpassword1.")
+                        PasswordHash = passwordHasher.HashPassword(null, "password"),
+                        RoleId = adminRoleId,
                     },
-                     new IdentityUser
-                     {
-                         Id = qaUserId,
-                         UserName = "qa@email.com",
-                         NormalizedUserName = "QA@EMAIL.COM",
-                         Email = "qa@email.com",
-                         NormalizedEmail = "QA@EMAIL.COM",
-                         EmailConfirmed = true,
-                         PasswordHash = passwordHasher.HashPassword(null, "Qapassword1.")
-                     },
-                     new IdentityUser
-                     {
-                         Id = engineerUserId,
-                         UserName = "engineer@email.com",
-                         NormalizedUserName = "ENGINEER@EMAIL.COM",
-                         Email = "engineer@email.com",
-                         NormalizedEmail = "ENGINEER@EMAIL.COM",
-                         EmailConfirmed = true,
-                         PasswordHash = passwordHasher.HashPassword(null, "Engineerpassword1.")
-                     },
-                     new IdentityUser
-                     {
-                         Id = basicUserId,
-                         UserName = "basic@email.com",
-                         NormalizedUserName = "BASIC@EMAIL.COM",
-                         Email = "basic@email.com",
-                         NormalizedEmail = "BASIC@EMAIL.COM",
-                         EmailConfirmed = true,
-                         PasswordHash = passwordHasher.HashPassword(null, "Basicpassword1.")
-                     }
+                    new ApplicationUser
+                    {
+                        Id = qaUserId,
+                        UserName = "qa@email.com",
+                        NormalizedUserName = "QA@EMAIL.COM",
+                        Email = "qa@email.com",
+                        NormalizedEmail = "QA@EMAIL.COM",
+                        EmailConfirmed = true,
+                        PasswordHash = passwordHasher.HashPassword(null, "password"),
+                        RoleId = qaRoleId
+                    },
+                    new ApplicationUser
+                    {
+                        Id = engineerUserId,
+                        UserName = "engineer@email.com",
+                        NormalizedUserName = "ENGINEER@EMAIL.COM",
+                        Email = "engineer@email.com",
+                        NormalizedEmail = "ENGINEER@EMAIL.COM",
+                        EmailConfirmed = true,
+                        PasswordHash = passwordHasher.HashPassword(null, "password"),
+                        RoleId = engineerRoleId
+                    },
+                    new ApplicationUser
+                    {
+                        Id = basicUserId,
+                        UserName = "basic@email.com",
+                        NormalizedUserName = "BASIC@EMAIL.COM",
+                        Email = "basic@email.com",
+                        NormalizedEmail = "BASIC@EMAIL.COM",
+                        EmailConfirmed = true,
+                        PasswordHash = passwordHasher.HashPassword(null, "password"),
+                        RoleId = basicUserRoleId
+                    },                  
+                    new ApplicationUser
+                    {
+                        Id = superAdminId,
+                        UserName = "superadmin@email.com",
+                        NormalizedUserName = "SUPERADMIN@EMAIL.COM",
+                        Email = "superadmin@email.com",
+                        NormalizedEmail = "SUPERADMIN@EMAIL.COM",
+                        EmailConfirmed = true,
+                        PasswordHash = passwordHasher.HashPassword(null, "password"),
+                        RoleId = superAdminRoleId
+                    }
+
+
                     );
+
+                    List<string> fakeEmails = new List<string>
+                    {
+                        "john.doe123@example.com",
+                        "sarah.connor456@example.com",
+                        "mike.wilson789@example.com",
+                        "lisa.smith321@example.com",
+                        "alice.johnson654@example.com",
+                        "bob.brown987@example.com",
+                        "charlie.davis234@example.com",
+                        "diana.martinez876@example.com",
+                        "evan.thomas543@example.com",
+                        "grace.lee210@example.com",
+                        "hannah.walker908@example.com",
+                        "isaac.hall159@example.com",
+                        "julia.miller753@example.com",
+                        "kevin.anderson852@example.com",
+                        "lily.garcia369@example.com",
+                        "mark.jones147@example.com",
+                        "nina.rodriguez258@example.com",
+                        "oliver.thompson369@example.com",
+                        "paula.white654@example.com",
+                        "quinn.harris789@example.com"
+                    };                   
+
+                    Random random = new Random();
+                    for (int i = 0; i < 20; i++)
+                    {
+
+                        int rnd = random.Next(5);
+                        var roleID = context.Roles.ToList()[rnd].Id;
+
+                        ApplicationUser user = new ApplicationUser
+                        {
+                            Id = Guid.NewGuid().ToString(),
+                            UserName = fakeEmails[i],
+                            NormalizedUserName = fakeEmails[i].ToUpper(),
+                            Email = fakeEmails[i],
+                            NormalizedEmail = fakeEmails[i].ToUpper(),
+                            EmailConfirmed = true,
+                            PasswordHash = passwordHasher.HashPassword(null, "password"),
+                            RoleId = roleID
+                        };
+
+                        
+                        var roles = new IdentityUserRole<string>
+                        { 
+                            RoleId = roleID,
+                            UserId = user.Id,
+                        };
+                        
+
+                        context.UserRoles.Add(roles);
+
+                        context.ApplicationUsers.Add(user);
+                    }
+
                     context.SaveChanges();
                 }
 
                 //give these folks some roles!
-                if (!context.UserRoles.Any())
-                {
-                    context.UserRoles
-                    .AddRange(
-                    new IdentityUserRole<string> { UserId = adminUserId, RoleId = adminRoleId },
-                    new IdentityUserRole<string> { UserId = qaUserId, RoleId = qaRoleId },
-                    new IdentityUserRole<string> { UserId = engineerUserId, RoleId = engineerRoleId },
-                    new IdentityUserRole<string> { UserId = basicUserId, RoleId = basicUserRoleId }
-                    );
+                //if (!context.UserRoles.Any())
+                //{
+                //    context.UserRoles
+                //    .AddRange(
+                //    new IdentityUserRole<string> { UserId = adminUserId, RoleId = adminRoleId },
+                //    new IdentityUserRole<string> { UserId = qaUserId, RoleId = qaRoleId },
+                //    new IdentityUserRole<string> { UserId = engineerUserId, RoleId = engineerRoleId },
+                //    new IdentityUserRole<string> { UserId = basicUserId, RoleId = basicUserRoleId }
+                //    );
 
-                    context.SaveChanges();
-                }
+                //    context.SaveChanges();
+                //}
             }
         }
     }

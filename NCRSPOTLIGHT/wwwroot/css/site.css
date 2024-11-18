@@ -16,7 +16,28 @@ html {
   position: relative;
   min-height: 100%;
 }
+#print{
+
+    
+}
 
 body {
   margin-bottom: 60px;
+}
+
+@media print {
+    body * {
+        visibility: hidden;
+    }
+
+    #printarea, #printarea * {
+        visibility: visible;
+            
+    }
+
+    #printarea {
+        position: absolute;
+        left: 0;
+        top: 0;
+    }
 }

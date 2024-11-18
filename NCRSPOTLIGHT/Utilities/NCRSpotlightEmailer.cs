@@ -13,7 +13,7 @@ namespace NCRSPOTLIGHT.Utilities
         {
             _smtpSettings = smtpSettings.Value;
         }
-        public async Task SendEmailAsync(string email, string subject, string htmlMessage)
+        public Task SendEmailAsync(string email, string subject, string htmlMessage)
         {
             var client = new SmtpClient
             {
@@ -23,10 +23,13 @@ namespace NCRSPOTLIGHT.Utilities
                 EnableSsl = true
             };
 
-            using (var message = new MailMessage(_smtpSettings.Username, email, subject, htmlMessage) { IsBodyHtml = true })
+            var message = new MailMessage(_smtpSettings.Username, email, subject, htmlMessage)
             {
-                await client.SendMailAsync(message);
-            }
+                IsBodyHtml = true
+            };
+
+            return client.SendMailAsync(message);
+
         }
     }
 }

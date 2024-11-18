@@ -1,4 +1,5 @@
-﻿using EntitiesLayer.Models;
+﻿
+using EntitiesLayer.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Http;
@@ -10,6 +11,9 @@ namespace Plugins.DataStore.SQLite
 {
     public class NCRInitializer
     {
+
+        
+
         public static async void Initialize(IServiceProvider serviceProvider,
             bool DeleteDatabase = false, bool UseMigrations = true,
             bool SeedSampleData = true)
@@ -18,10 +22,12 @@ namespace Plugins.DataStore.SQLite
             {
                 using var identityContext = new IdentityContext(serviceProvider.GetRequiredService<DbContextOptions<IdentityContext>>());
 
-                #region Prepare the Database
+                
 
-                try
-                {
+
+                    #region Prepare the Database
+                    try
+                    {
                     if (DeleteDatabase || !context.Database.CanConnect())
                     {
                         context.Database.EnsureDeleted();
@@ -42,17 +48,17 @@ namespace Plugins.DataStore.SQLite
                         {
                             context.Database.Migrate();
                         }
+
                     }
+
                 }
                 catch (Exception ex)
                 {
                     Debug.WriteLine(ex.GetBaseException().Message);
                 }
-
-                #endregion Prepare the Database
+                #endregion
 
                 #region Start seeding data
-
                 try
                 {
                     var identityRoles = await identityContext.Roles.Select(r => r.Name).ToListAsync();
@@ -80,9 +86,7 @@ namespace Plugins.DataStore.SQLite
                         "Titan Manufacturing Group",
                         "United Wholesale Solutions"
                     };
-
                     #region Product Seed Data Lists
-
                     List<string> productDescriptions = new List<string>
                     {
                         "SteelSeries Apex Pro Mechanical Keyboard",
@@ -131,21 +135,25 @@ namespace Plugins.DataStore.SQLite
                         "A0-0020"
                     };
 
-                    #endregion Product Seed Data Lists
+                    #endregion
 
-                    //Suppliers
+
+
+
+                        //Suppliers
                     if (!context.Suppliers.Any() || context.Suppliers.Count() < 20)
                     {
                         int id = context.Suppliers.Any() ? context.Suppliers.Max(s => s.ID) + 1 : 1;
                         foreach (string supplierName in supplierNames)
                         {
-                            if (!context.Suppliers.Any(s => s.SupplierName == supplierName))
+                            if(!context.Suppliers.Any(s => s.SupplierName == supplierName))
                             {
                                 context.Suppliers.Add(
                                 new Supplier
                                 {
                                     ID = id,
                                     SupplierName = supplierName,
+                                    
                                 }
                                 );
                                 id++;
@@ -158,113 +166,7 @@ namespace Plugins.DataStore.SQLite
                         context.SaveChanges();
                     }
 
-                    //if (!context.Representatives.Any())
-                    //{
-                    //    //Representatives seed data
-                    //    string[] firstNames = [
-                    //        "Alejandro",
-                    //    "Valeria",
-                    //    "Santiago",
-                    //    "Camila",
-                    //    "Diego",
-                    //    "Nathalia",
-                    //    "Luis",
-                    //    "Lorena",
-                    //    "Carlos",
-                    //    "Sofía",
-                    //    "Andrés",
-                    //    "Lucía",
-                    //    "Fernando",
-                    //    "Isabella",
-                    //    "Javier",
-                    //    "Gabriela",
-                    //    "Ricardo",
-                    //    "Mariana",
-                    //    "José",
-                    //    "Karen"];
-                    //    string[] middleNames = ["J.", "L.", "M.", "A.", "R.", "N.", "G.", "S.", "H.", "C.", "D.", "E.", "T.", "B.", "F.", "V.", "Q.", "P.", "K.", "Z."];
-
-                    //    string[] lastNames = [
-                    //        "Smith",
-                    //    "Johnson",
-                    //    "Williams",
-                    //    "Brown",
-                    //    "Jones",
-                    //    "Garcia",
-                    //    "Miller",
-                    //    "Davis",
-                    //    "Rodriguez",
-                    //    "Martinez",
-                    //    "Hernandez",
-                    //    "Lopez",
-                    //    "Gonzalez",
-                    //    "Wilson",
-                    //    "Anderson",
-                    //    "Taylor",
-                    //    "Thomas",
-                    //    "Moore",
-                    //    "Jackson",
-                    //    "Martin"];
-
-                    //    List<string> SelectedFirst = new List<string>();
-                    //    List<string> SelectedMiddle = new List<string>();
-                    //    List<string> SelectedLast = new List<string>();
-
-                    //    foreach (string first in firstNames)
-                    //    {
-                    //        SelectedFirst.Add(firstNames[random.Next(firstNames.Length)]);
-                    //        SelectedLast.Add(lastNames[random.Next(lastNames.Length)]);
-                    //        SelectedMiddle.Add(middleNames[random.Next(middleNames.Length)]);
-                    //    }
-
-                    //    for (int i = 0; i < 20; i++)
-                    //    {
-                    //        Representative representative = new Representative()
-                    //        {
-                    //            FirstName = SelectedFirst[i],
-                    //            MiddleInitial = SelectedMiddle[i],
-                    //            LastName = SelectedLast[i],
-                    //        };
-                    //        try
-                    //        {
-                    //            context.Representatives.Add(representative);
-                    //            context.SaveChanges();
-                    //        }
-                    //        catch (Exception ex)
-                    //        {
-                    //            context.Representatives.Remove(representative);
-                    //        }
-                    //    }
-                    //}
-
-                    ////RoleReps Seed Data
-                    //if (!context.RoleReps.Any())
-                    //{
-                    //    foreach (var ID in context.Representatives.Select(r => r.ID))
-                    //    {
-                    //        HashSet<int> nums = new HashSet<int>();
-                    //        for (int i = 0; i <= random.Next(0, 3); i++)
-                    //        {
-                    //            nums.Add(random.Next(1, 4));
-                    //        }
-                    //        foreach (int i in nums)
-                    //        {
-                    //            context.RoleReps.AddRange(
-
-                    //                new RoleRep()
-                    //                {
-                    //                    RoleID = i,
-                    //                    RepresentativeID = ID
-                    //                }
-
-                    //            );
-                    //        }
-                    //    }
-
-                    //    await context.SaveChangesAsync();
-                    //}
-
-                    //Product Initializer
+                            //Product Initializer               
 
                     if (!context.Products.Any() || context.Products.Count() < 20)
                     {
@@ -281,6 +183,7 @@ namespace Plugins.DataStore.SQLite
 
                             if (!context.Products.Any(p => p.Description == prodDescription))
                             {
+
                                 var suppliers = context.Suppliers.ToList();
                                 int randIndex = rnd.Next(suppliers.Count);
                                 int supplierID = suppliers[randIndex].ID;
@@ -292,6 +195,7 @@ namespace Plugins.DataStore.SQLite
                                     ProductNumber = prodNumber,
                                     SupplierID = supplierID,
                                     Supplier = context.Suppliers.FirstOrDefault(s => s.ID == supplierID),
+                                    SapNo = rnd.Next(10000,99999).ToString()
                                 };
 
                                 List<string> imgPaths = new List<string>()
@@ -326,16 +230,129 @@ namespace Plugins.DataStore.SQLite
                             }
                         }
 
+                        if (!context.EngPortions.Any())
+                        {
+                            EngPortion a = new EngPortion();
+                            context.EngPortions.Add(a);
+                        }
+
+
+
+                        //QualityPortion seed data
+                        if (!context.QualityPortions.Any())
+                        {
+
+                            string[] defect_descs = {
+                                "crack on bottom",
+                                "sustained damage during shipping",
+                                "lcd damaged",
+                                "plastic is malformed",
+                                "injection mould was not properly filled",
+                                "poor threading",
+                                "loose connection fit",
+                                "frayed wires",
+                                "paint is chipped",
+                                "varnish is scratched",
+                                "deep gouge in left side",
+                                "bulb glass came crushed"
+                            };
+
+                            int ordNum = 1;
+
+                            List<string> imgPaths = new List<string>()
+                                {
+                                    @"Assets\ProductImages\keyboard.jpg",
+                                    @"Assets\ProductImages\ram.jpg",
+                                    @"Assets\ProductImages\ryzen.jpg",
+                                    @"Assets\ProductImages\intel.jpg",
+                                    @"Assets\ProductImages\nvidia.jpg",
+                                    @"Assets\ProductImages\ssd.jpg",
+                                    @"Assets\ProductImages\rog-motherboard.jpg",
+                                    @"Assets\ProductImages\towercase.jpg",
+                                    @"Assets\ProductImages\powersupply.jpg",
+                                    @"Assets\ProductImages\pccooler.jpg",
+                                    @"Assets\ProductImages\mouse.jpg",
+                                    @"Assets\ProductImages\headset.jpg",
+                                    @"Assets\ProductImages\kingstonssd.jpg",
+                                    @"Assets\ProductImages\router.jpg",
+                                    @"Assets\ProductImages\hdd.jpg",
+                                    @"Assets\ProductImages\monitor.jpg",
+                                    @"Assets\ProductImages\printer.jpg",
+                                    @"Assets\ProductImages\NAS.jpg",
+                                    @"Assets\ProductImages\steamdeck.jpg",
+                                    @"Assets\ProductImages\portablecharger.jpg"
+                            };
+
+                            Random rand = new Random();
+
+                            foreach (string defect in defect_descs)
+                            {
+                                var qp = new QualityPortion
+                                {
+                                    ProductID = ordNum,
+                                    OrderNumber = $"0001-{ordNum:D4}",
+                                    DefectDescription = defect,
+                                    Quantity = (int)Math.Round((78.0 * (ordNum * 0.6)) / 1.5),
+                                    QuantityDefective = ordNum * 2,
+                                    RepID = identityContext.UserRoles.Where(
+                                        p => p.RoleId == identityContext.Roles
+                                        .FirstOrDefault(p => p.Name == "QualityAssurance")!
+                                        .Id
+                                        )
+                                    .FirstOrDefault()!
+                                    .UserId,
+                                    Created = DateTime.Today.AddDays(-(rand.Next(100)))
+                                    
+                                };
+
+
+
+                                await WebImagestoByArrayStatic.SeedQualityPictures(imgPaths[ordNum - 1], qp);
+
+                                context.QualityPortions.Add(qp);
+                                ordNum++;
+                            }
+
+                        }
+
                         await context.SaveChangesAsync();
+                        if (!context.NCRLog.Any())
+                        {
+                            var date = new DateTime(2000, 01, 01);
+                            for (int i = 1; i < 9; i++)
+                            {
+                                var ncrl = new NCRLog
+                                {
+                                    EngPortionID = 1,
+                                    QualityPortionID = i,
+                                    DateCreated = date,
+                                    Status = NCRStatus.Active
+
+                                };
+                                date = date.AddDays(7);
+                                context.NCRLog.Add(ncrl);
+                            }
+                        }
+
+                        await context.SaveChangesAsync();
+
                     }
                 }
-                catch (Exception ex)
+                
+
+                catch(Exception ex)
                 {
                     Debug.WriteLine($"Error here: {ex.Message}");
                 }
 
-                #endregion Start seeding data
+                
+                #endregion
             }
+            
         }
+    
+        
     }
+
+    
 }

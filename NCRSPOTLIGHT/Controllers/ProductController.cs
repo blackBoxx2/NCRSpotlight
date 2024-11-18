@@ -14,6 +14,7 @@ using System.Numerics;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Humanizer.Bytes;
+using Microsoft.AspNetCore.Authorization;
 
 namespace NCRSPOTLIGHT.Controllers
 {
@@ -82,7 +83,7 @@ namespace NCRSPOTLIGHT.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ID,SupplierID,ProductNumber,Description,Picture")] Product product, List<IFormFile> theFiles)
+        public async Task<IActionResult> Create([Bind("ID,SupplierID,ProductNumber,Description,Picture,SapNo")] Product product, List<IFormFile> theFiles)
         {   
 
             if (ModelState.IsValid)
@@ -118,7 +119,7 @@ namespace NCRSPOTLIGHT.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ID,SupplierID,ProductNumber,Description")] Product product, List<IFormFile> theFiles)
+        public async Task<IActionResult> Edit(int id, [Bind("ID,SupplierID,ProductNumber,Description,SapNo")] Product product, List<IFormFile> theFiles)
         {
             product.ProductPictures = _getProductByIDAsyncUseCase.Execute(id).Result.ProductPictures;
 

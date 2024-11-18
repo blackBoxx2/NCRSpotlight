@@ -25,6 +25,7 @@ namespace Plugins.DataStore.SQLite
         {
             var NCRContext = await _context.NCRLog
                 .Include(p => p.QualityPortion)
+                .Include(p => p.EngPortion)
                 .AsNoTracking()
                 .ToListAsync();
 
@@ -36,7 +37,8 @@ namespace Plugins.DataStore.SQLite
             if (id == null) return null;
 
             var log = await _context.NCRLog
-                .Include(p => p.QualityPortion)
+                .Include(p => p.QualityPortion).ThenInclude(q => q.Product).ThenInclude(p => p.Supplier)
+                .Include(p => p.EngPortion)
                 .AsNoTracking()
                 .FirstOrDefaultAsync(m => m.ID == id);
 
@@ -60,7 +62,7 @@ namespace Plugins.DataStore.SQLite
                 .FirstOrDefaultAsync(p => p.ID == id);
             if (logToUpdate == null) return;
 
-            logToUpdate.QualityPortionID = log.ID;
+            logToUpdate.QualityPortionID = log.QualityPortionID;
             logToUpdate.Status = log.Status;
 
             await _context.SaveChangesAsync();
