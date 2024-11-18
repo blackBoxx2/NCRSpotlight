@@ -9,9 +9,9 @@
 
 <h2>NCRLog</h2>
 <hr />
-<div class="row">
-    <div class="">
-        <form asp-action="Create">
+<form asp-action="Create">
+    <div class="m-lg-5 m-md-0 shadow-lg p-3 mb-5 rounded">
+        
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
             <p><strong>Document No: </strong>OPS-00011</p>
@@ -39,33 +39,39 @@
                         <input type="hidden" asp-for="QualityPortion.ID" />
                         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-                        <div class="form-group col-md-4">
-                            <label asp-for="QualityPortion.ProcessApplicable" class="control-label"></label>
-                            @Html.Raw("<span class='text-danger'>*</span>")
-                            <select asp-for="QualityPortion.ProcessApplicable" class="form-control" asp-items="@Html.GetEnumSelectList<ProcessApplicable>()"></select>
-                            <span asp-validation-for="QualityPortion.ProcessApplicable" class="text-danger"></span>
+                        <div class="row my-md-3">
+                            <div class="form-group col-md-6">
+                                <label asp-for="QualityPortion.ProcessApplicable" class="control-label"></label>
+                                @Html.Raw("<span class='text-danger'>*</span>")
+                                <select asp-for="QualityPortion.ProcessApplicable" class="form-control" asp-items="@Html.GetEnumSelectList<ProcessApplicable>()"></select>
+                                <span asp-validation-for="QualityPortion.ProcessApplicable" class="text-danger"></span>
+                            </div>
                         </div>
 
-                        <div class="row my-3">
-                            
-                            <div class="form-group col-md-4">
-                                <label asp-for="QualityPortion.ProductID" class="control-label"></label>
+
+                        <div class="row my-md-3">
+
+                            <div class="form-group col-md-12 col-lg-6 mb-lg-0 mb-md-3">
+                                <label asp-for="QualityPortion.ProductID" class="control-label" ></label>
                                 <select asp-for="QualityPortion.ProductID" id="productDDL" onchange="DisplaySup(this.options[this.options.selectedIndex].value)" class="form-control" asp-items="ViewBag.ProductID"></select>
                             </div>
-                        
-                            <div id="supplierOutput" class="form-group col-md-4">
-                                <label asp-for="QualityPortion.Product.ProductNumber" class="control-label"></label>
-                                <select id="prodNumber" asp-items="ViewBag.ProdNumber" class="form-control" disabled></select>
+
+                            <div id="supplierOutput" class="form-group col-md-6 col-lg-2" style="margin-bottom: 0; margin-top:auto;">
+                                        <label asp-for="QualityPortion.Product.ProductNumber" class="control-label"></label>
+                                        <select id="prodNumber" asp-items="ViewBag.ProdNumber" class="form-control" disabled></select>
                             </div>
 
-                            <div id="supplierOutput" class="form-group col-md-4">
-                                <label asp-for="QualityPortion.Product.Supplier.SupplierName" class="control-label"></label>
-                                <select id="supplier" asp-items="ViewBag.SupplierID" class="form-control" disabled></select>
+                            <div id="supplierOutput" class="form-group col-md-6 col-lg-4" style="margin-bottom: 0; margin-top:auto;">
+                                        <label asp-for="QualityPortion.Product.Supplier.SupplierName" class="control-label"></label>
+                                        <select id="supplier" asp-items="ViewBag.SupplierID" class="form-control" disabled></select>
                             </div>
-
                         </div>
 
-                        <div class="row my-3">
+
+
+
+
+                        <div class="row my-md-3">
 
                             <div class="form-group col-md-4">
                                 <label asp-for="QualityPortion.Quantity" class="control-label"></label>
@@ -82,8 +88,9 @@
                                 <input asp-for="QualityPortion.OrderNumber" class="form-control" />
                                 <span asp-validation-for="QualityPortion.OrderNumber" class="text-danger"></span>
                             </div>
-
                         </div>
+
+                        
 
                         <div class="form-group">
                             <label asp-for="QualityPortion.DefectDescription" class="control-label" ></label>
@@ -91,19 +98,18 @@
                             <span asp-validation-for="QualityPortion.DefectDescription" class="text-danger"></span>
                         </div>
 
-                        <div class="row my-3">
-
+                        <div class="row my-md-3">
                             <div class="form-group col-md-4">
                                 <label asp-for="QualityPortion.RepID" class="control-label"></label>
                                 <input asp-for="QualityPortion.RepID" class="form-control" value="@ViewData["User"]" readonly="readonly" />
                             </div>
-                            <div class="form-group col-md-4">
+                            <div class="form-group col-md-4" style="margin-bottom: 0; margin-top:auto;">
                                 <label asp-for="QualityPortion.Created" class="control-label"></label>
                                 <input asp-for="QualityPortion.Created" type="date" class="form-control" readonly="readonly" />
                             </div>
                         </div>
 
-                        <div class="form-group col-md-4">
+                        <div class="form-group col-md-4 my-md-3">
                             <label class="control-label">Item Marked Nonconforming: </label>
                             <input type="checkbox" class="form-check-input" checked disabled="disabled" />
                         </div>
@@ -132,57 +138,74 @@
 
                 <div id="collapseTwo" class="accordion-collapse show" aria-labelledby="headingOne" data-bs-parent="#engineerAccordion">
                     <div class="accordion-body">
-                        <div class="form-group">
-                            <label asp-for="EngPortion.EngReview" class="control-label"></label>
-                            <select asp-for="EngPortion.EngReview" class="form-control" asp-items="@Html.GetEnumSelectList<EngReview>()"></select>
-                            <span asp-validation-for="EngPortion.EngReview" class="text-danger"></span>
-                        </div>
-                        <div class="form-group">
-                            <label asp-for="EngPortion.Disposition" class="form-label"></label>
-                            <textarea asp-for="EngPortion.Disposition" class="form-control" rows="4" cols="50" class="form-control"></textarea>
-                            <span asp-validation-for="EngPortion.Disposition" class="text-danger"></span>
-                        </div>
-                        <div class="form-group">
-                            <label asp-for="EngPortion.Update" class="form-check-label"></label>
-                            <input asp-for="EngPortion.Update" class="form-check-input" type="checkbox" />
-                            <span asp-validation-for="EngPortion.Update" class="text-danger"></span>
-                        </div>
-                        <div class="form-group">
-                            <label asp-for="EngPortion.Notif" class="form-check-label"></label>
-                            <input asp-for="EngPortion.Notif" class="form-check-input" type="checkbox" />
-                            <span asp-validation-for="EngPortion.Notif" class="text-danger"></span>
-                        </div>
-                        <div class="form-group">
-                            <label asp-for="EngPortion.RevNumber" class="control-label"></label>
-                            <input type="number" asp-for="EngPortion.RevNumber" class="form-control" />
-                            <span asp-validation-for="EngPortion.RevNumber" class="text-danger"></span>
-                        </div>
-                        <div class="form-group">
-                            <label asp-for="EngPortion.OriginalRevNumber" class="control-label"></label>
-                            <input type="number" asp-for="EngPortion.OriginalRevNumber" class="form-control" />
-                            <span asp-validation-for="EngPortion.OriginalRevNumber" class="text-danger"></span>
-                        </div>
-                        <div class="form-group">
-                            <label asp-for="EngPortion.OriginalEngineer" class="control-label"></label>
-                            <input asp-for="EngPortion.OriginalEngineer" value="none" class="form-control" />
-                            <span asp-validation-for="EngPortion.OriginalEngineer" class="text-danger"></span>
-                        </div>
-                        <div class="form-group">
-                            <label asp-for="EngPortion.RevDate" class="control-label"></label>
-                            <input asp-for="EngPortion.RevDate" class="form-control" value="" />
-                            <span asp-validation-for="EngPortion.RevDate" class="text-danger"></span>
-                        </div>
-                        <div class="form-group">
-                            <label asp-for="EngPortion.RepID" class="control-label"></label>
-                            <input asp-for="EngPortion.RepID" class="form-control" />
-                            <span asp-validation-for="EngPortion.RepID" class="text-danger"></span>
-                        </div>
-                        <div class="form-group">
-                            <label asp-for="EngPortion.Date" class="control-label"></label>
-                            <input asp-for="EngPortion.Date" class="form-control" />
-                            <span asp-validation-for="EngPortion.Date" class="text-danger"></span>
+
+                        <div class="row my-md-3">
+                            <div class="form-group col-md-4">
+                                <label asp-for="EngPortion.EngReview" class="control-label"></label>
+                                <select asp-for="EngPortion.EngReview" class="form-control" asp-items="@Html.GetEnumSelectList<EngReview>()"></select>
+                                <span asp-validation-for="EngPortion.EngReview" class="text-danger"></span>
+                            </div>
                         </div>
 
+                        <div class="row my-md-3">
+                            <div class="form-group">
+                                <label asp-for="EngPortion.Disposition" class="form-label"></label>
+                                <textarea asp-for="EngPortion.Disposition" class="form-control" rows="10" cols="50" style="resize: none;" class="form-control"></textarea>
+                                <span asp-validation-for="EngPortion.Disposition" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="row my-md-3">
+                            <div class="form-group col-md-12 col-lg-4 mb-md-3 m-lg-0">
+                                <label asp-for="EngPortion.Update" class="form-check-label mx-1"></label>
+                                <input asp-for="EngPortion.Update" class="form-check-input" type="checkbox" />
+                                <span asp-validation-for="EngPortion.Update" class="text-danger"></span>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label asp-for="EngPortion.Notif" class="form-check-label mx-1"></label>
+                                <input asp-for="EngPortion.Notif" class="form-check-input" type="checkbox" />
+                                <span asp-validation-for="EngPortion.Notif" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="row my-md-3">
+                            <div class="form-group col-md-4">
+                                <label asp-for="EngPortion.OriginalRevNumber" class="control-label"></label>
+                                <input type="number" asp-for="EngPortion.OriginalRevNumber" class="form-control" />
+                                <span asp-validation-for="EngPortion.OriginalRevNumber" class="text-danger"></span>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label asp-for="EngPortion.RevNumber" class="control-label"></label>
+                                <input type="number" asp-for="EngPortion.RevNumber" class="form-control" />
+                                <span asp-validation-for="EngPortion.RevNumber" class="text-danger"></span>
+                            </div>         
+                        </div>
+
+                        <div class="row my-md-3">
+                            <div class="form-group col-md-4">
+                                <label asp-for="EngPortion.OriginalEngineer" class="control-label"></label>
+                                <input asp-for="EngPortion.OriginalEngineer" value="None" class="form-control" />
+                                <span asp-validation-for="EngPortion.OriginalEngineer" class="text-danger"></span>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label asp-for="EngPortion.RevDate" class="control-label"></label>
+                                <input asp-for="EngPortion.RevDate" class="form-control" value="" />
+                                <span asp-validation-for="EngPortion.RevDate" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="row my-md-3">
+                            <div class="form-group col-md-4">
+                                <label asp-for="EngPortion.RepID" class="control-label"></label>
+                                <input asp-for="EngPortion.RepID" class="form-control" />
+                                <span asp-validation-for="EngPortion.RepID" class="text-danger"></span>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label asp-for="EngPortion.Date" class="control-label"></label>
+                                <input asp-for="EngPortion.Date" class="form-control" />
+                                <span asp-validation-for="EngPortion.Date" class="text-danger"></span>
+                            </div>
+                        </div>
 
                     </div>
                 </div>
@@ -200,13 +223,13 @@
                 <select asp-for="Status" asp-items="@Html.GetEnumSelectList<NCRStatus>()" class="form-control"></select>
                 <span asp-validation-for="Status" class="text-danger"></span>
             </div>
-
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
+       
     </div>
-</div>
+    <div class="form-group m-5">
+        <input type="submit" value="Save" class="btn btn-primary" />
+    </div>
+</form>
+
 
 <div>
     <a asp-action="Index">Back to List</a>
