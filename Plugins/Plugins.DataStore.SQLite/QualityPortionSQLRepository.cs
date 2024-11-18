@@ -73,6 +73,7 @@ namespace Plugins.DataStore.SQLite
             qualityPortionToUpdate.DefectDescription = qualityPortion.DefectDescription;
             qualityPortionToUpdate.RepID = qualityPortion.RepID;
             qualityPortionToUpdate.qualityPictures = qualityPortion.qualityPictures;
+            qualityPortionToUpdate.ProcessApplicable = qualityPortion.ProcessApplicable;
             await _context.SaveChangesAsync();
 
         }

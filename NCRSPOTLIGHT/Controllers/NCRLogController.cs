@@ -132,8 +132,9 @@ namespace NCRSPOTLIGHT.Controllers
 
         // GET: NCRLog/Create
         public async Task<IActionResult> Create()
-        {            
+        {
             ViewData["User"] = HttpContext.User.Identity.Name;
+            ViewData["NCRNumber"] = _getNCRLogsAsyncUseCase.Execute().Result.Last().ID + 1;
             LoadSelectList(new NCRLog());
             var user = HttpContext.User;                      
 
@@ -145,7 +146,9 @@ namespace NCRSPOTLIGHT.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ID,DateCreated,Status")] NCRLog nCRLog, [Bind("ProductID,Quantity,QuantityDefective,OrderNumber,DefectDescription,RepID")] QualityPortion qualityPortion, [Bind("EngReview,Disposition,Update,Notif,RevNumber,RevDate,RepID")] EngPortion engPortion)
+        public async Task<IActionResult> Create([Bind("ID,DateCreated,Status")] NCRLog nCRLog, 
+            [Bind("ProductID,Quantity,QuantityDefective,OrderNumber,DefectDescription,ProcessApplicable,RepID,Created")] QualityPortion qualityPortion, 
+            [Bind("EngReview,Disposition,Update,Notif,RevNumber,RevDate,RepID,OriginalEngineer,OriginalRevNumber,Date")] EngPortion engPortion)
         {
             
             await _addQualityPortionAsyncUseCase.Execute(qualityPortion);
@@ -198,19 +201,24 @@ namespace NCRSPOTLIGHT.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int ID, int QualityPortionID, int EngPortionID, [Bind("ID,QualityPortionID,DateCreated,Status")] NCRLog nCRLog, [Bind("ID,ProductID,Quantity,QuantityDefective,OrderNumber,DefectDescription,RepID")] QualityPortion qualityPortion, [Bind("EngReview,Disposition,Update,Notif,RevNumber,RevDate,RepID")] EngPortion engPortion)
+        public async Task<IActionResult> Edit(int ID, int QualityPortionID, int EngPortionID, [Bind("ID,QualityPortionID,DateCreated,Status")] NCRLog nCRLog, 
+            [Bind("ProductID,Quantity,QuantityDefective,OrderNumber,DefectDescription,ProcessApplicable,RepID,Created")] QualityPortion qualityPortion, 
+            [Bind("EngReview,Disposition,Update,Notif,RevNumber,RevDate,RepID,OriginalEngineer,OriginalRevNumber,Date")] EngPortion engPortion)
         {
             if (ID != nCRLog.ID)
             {
                 return NotFound();
             }        
 
+            qualityPortion.ID = QualityPortionID;
+            engPortion.ID = EngPortionID;
+
             if (ModelState.IsValid)
             {
                 try
                 {
                     await _updateEngPortionAsyncUseCase.Execute(EngPortionID, engPortion);
-                    await _UpdateQualityPortionAsyncUseCase.Execute(QualityPortionID, qualityPortion);
+                    await _UpdateQualityPortionAsyncUseCase.Execute(nCRLog.QualityPortionID, qualityPortion);
                     await _updateNCRLogAsyncUseCase.Execute(ID, nCRLog);                    
                 }
                 catch (DbUpdateConcurrencyException)
@@ -265,10 +273,17 @@ namespace NCRSPOTLIGHT.Controllers
         {
             if(log.QualityPortion != null)
             {
-                ViewBag.ProductID = new SelectList(await _getProductsAsyncUseCase.Execute(), "ID", "Description", log.QualityPortion.ProductID);
-                ViewBag.SupplierID = new SelectList(await _getProductsAsyncUseCase.Execute(), "ID", "Supplier.SupplierName", log.QualityPortion.ProductID);               
+                ViewBag.ProductID = new SelectList(await _getProductsAsyncUseCase.Execute(), "ID", "Summary", log.QualityPortion.ProductID);
+                ViewBag.SupplierID = new SelectList(await _getProductsAsyncUseCase.Execute(), "ID", "Supplier.SupplierName", log.QualityPortion.ProductID);
+                ViewBag.ProdNumber = new SelectList(await _getProductsAsyncUseCase.Execute(), "ID", "ProductNumber", log.QualityPortion.ProductID);
             }
-            ViewBag.ProductID = new SelectList(await _getProductsAsyncUseCase.Execute(), "ID", "Description");
+            else
+            {
+                ViewBag.ProductID = new SelectList(await _getProductsAsyncUseCase.Execute(), "ID", "Description");
+                ViewBag.SupplierID = new SelectList(await _getProductsAsyncUseCase.Execute(), "ID", "Supplier.SupplierName");
+                ViewBag.ProdNumber = new SelectList(await _getProductsAsyncUseCase.Execute(), "ID", "ProductNumber");
+            }
+            
         }
         private bool NCRLogExists(int id)
         {

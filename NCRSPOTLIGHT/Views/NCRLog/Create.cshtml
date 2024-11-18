@@ -1,12 +1,8 @@
 ﻿@using EntitiesLayer.Models
-@using NCRSPOTLIGHT.Utilities
 @model EntitiesLayer.Models.NCRLog
+
 @{
     ViewData["Title"] = "Create";
-    string? user = ViewData["User"] as string;
-    bool isQualityAssurance = ViewBag.QASection == "enabled";
-    bool isEngineer = ViewBag.EngineerSection == "enabled";
-    bool isAdmin = ViewBag.IsAdmin as bool? ?? false;
 }
 
 <h1>Create</h1>
@@ -14,103 +10,112 @@
 <h2>NCRLog</h2>
 <hr />
 <div class="row">
-    <div class="col-md-4">
-        <form form asp-action="Create" method="post" enctype="multipart/form-data">
+    <div class="">
+        <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <p><strong>Document No: </strong>OPS-00011</p>
+
+            <div class="form-group mb-2">
+                <label asp-for="ID" class="control-label"></label>
+                <input asp-for="ID" class="form-control" value="@ViewData["NCRNumber"]" readonly />
+            </div>
+
+            <input type="hidden" asp-for="QualityPortionID" />
+            <input type="hidden" asp-for="EngPortionID" />
+
             <div class="accordion" id="qualityAccordion">
 
                 <div class="accordion-Item">
-                    
-                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
                         <h3 class="Accordion-Header" id="qualityHeading">Quality Assurance</h3>
                     </button>
 
-                </div>              
+                </div>
 
-                <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#qualityAccordion">
+                <div id="collapseOne" class="accordion-collapse show" aria-labelledby="headingOne" data-bs-parent="#qualityAccordion">
                     <div class="accordion-body">
-
+                        <input type="hidden" asp-for="QualityPortion.ID" />
                         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                        <div class="form-group">
-                            <label asp-for="QualityPortion.ProductID" class="control-label"></label>
-                            
 
-                            @if (isQualityAssurance || isAdmin)
-                            {
-                                <select asp-for="QualityPortion.ProductID" class="form-control" asp-items="ViewBag.ProductID"></select>
-                            }
-                            else
-                            {
-                                <select asp-for="QualityPortion.ProductID" class="form-control" asp-items="ViewBag.ProductID" disabled="disabled"></select>
-                            }
-                            <span asp-validation-for="QualityPortion.ProductID" class="text-danger"></span>
+                        <div class="form-group col-md-4">
+                            <label asp-for="QualityPortion.ProcessApplicable" class="control-label"></label>
+                            @Html.Raw("<span class='text-danger'>*</span>")
+                            <select asp-for="QualityPortion.ProcessApplicable" class="form-control" asp-items="@Html.GetEnumSelectList<ProcessApplicable>()"></select>
+                            <span asp-validation-for="QualityPortion.ProcessApplicable" class="text-danger"></span>
                         </div>
-                        <div class="form-group">
-                            <label asp-for="QualityPortion.Quantity" class="control-label"></label>
-                            @if (isQualityAssurance || isAdmin)
-                            {
+
+                        <div class="row my-3">
+                            
+                            <div class="form-group col-md-4">
+                                <label asp-for="QualityPortion.ProductID" class="control-label"></label>
+                                <select asp-for="QualityPortion.ProductID" id="productDDL" onchange="DisplaySup(this.options[this.options.selectedIndex].value)" class="form-control" asp-items="ViewBag.ProductID"></select>
+                            </div>
+                        
+                            <div id="supplierOutput" class="form-group col-md-4">
+                                <label asp-for="QualityPortion.Product.ProductNumber" class="control-label"></label>
+                                <select id="prodNumber" asp-items="ViewBag.ProdNumber" class="form-control" disabled></select>
+                            </div>
+
+                            <div id="supplierOutput" class="form-group col-md-4">
+                                <label asp-for="QualityPortion.Product.Supplier.SupplierName" class="control-label"></label>
+                                <select id="supplier" asp-items="ViewBag.SupplierID" class="form-control" disabled></select>
+                            </div>
+
+                        </div>
+
+                        <div class="row my-3">
+
+                            <div class="form-group col-md-4">
+                                <label asp-for="QualityPortion.Quantity" class="control-label"></label>
                                 <input asp-for="QualityPortion.Quantity" class="form-control" />
-                            }
-                            else
-                            {
-                                <input asp-for="QualityPortion.Quantity" class="form-control" readonly="readonly" />
-                            }
-                            <span asp-validation-for="QualityPortion.Quantity" class="text-danger"></span>
-                        </div>
-                        <div class="form-group">
-                            <label asp-for="QualityPortion.QuantityDefective" class="control-label"></label>
-                            @if (isQualityAssurance || isAdmin)
-                            {
+                                <span asp-validation-for="QualityPortion.Quantity" class="text-danger"></span>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label asp-for="QualityPortion.QuantityDefective" class="control-label"></label>
                                 <input asp-for="QualityPortion.QuantityDefective" class="form-control" />
-                            }
-                            else
-                            {
-                                <input asp-for="QualityPortion.QuantityDefective" class="form-control" readonly="readonly" />
-                            }
-                            <span asp-validation-for="QualityPortion.QuantityDefective" class="text-danger"></span>
-                        </div>
-                        <div class="form-group">
-                            <label asp-for="QualityPortion.OrderNumber" class="control-label"></label>
-                            @if (isQualityAssurance || isAdmin)
-                            {
+                                <span asp-validation-for="QualityPortion.QuantityDefective" class="text-danger"></span>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label asp-for="QualityPortion.OrderNumber" class="control-label"></label>
                                 <input asp-for="QualityPortion.OrderNumber" class="form-control" />
-                            }
-                            else
-                            {
-                                <input asp-for="QualityPortion.OrderNumber" class="form-control" readonly="readonly" />
-                            }
-                            <span asp-validation-for="QualityPortion.OrderNumber" class="text-danger"></span>
+                                <span asp-validation-for="QualityPortion.OrderNumber" class="text-danger"></span>
+                            </div>
+
                         </div>
+
                         <div class="form-group">
-                            <label asp-for="QualityPortion.DefectDescription" class="control-label"></label>
-                            @if (isQualityAssurance || isAdmin)
-                            {
-                                <textarea asp-for="QualityPortion.DefectDescription" class="form-control" rows="4" cols="50"></textarea>
-                            }
-                            else
-                            {
-                                <textarea asp-for="QualityPortion.DefectDescription" class="form-control" rows="4" cols="50" readonly="readonly"></textarea>
-                            }
+                            <label asp-for="QualityPortion.DefectDescription" class="control-label" ></label>
+                            <textarea asp-for="QualityPortion.DefectDescription" class="form-control" rows="10" cols="50" style="resize: none;"></textarea>
                             <span asp-validation-for="QualityPortion.DefectDescription" class="text-danger"></span>
                         </div>
-                        <div class="form-group">
-                            <label asp-for="QualityPortion.RepID" class="control-label"></label>
-                            <input asp-for="QualityPortion.RepID" class="form-control" value="@user" readonly="readonly" />
+
+                        <div class="row my-3">
+
+                            <div class="form-group col-md-4">
+                                <label asp-for="QualityPortion.RepID" class="control-label"></label>
+                                <input asp-for="QualityPortion.RepID" class="form-control" value="@ViewData["User"]" readonly="readonly" />
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label asp-for="QualityPortion.Created" class="control-label"></label>
+                                <input asp-for="QualityPortion.Created" type="date" class="form-control" readonly="readonly" />
+                            </div>
                         </div>
-                        <div class="form-group">
+
+                        <div class="form-group col-md-4">
+                            <label class="control-label">Item Marked Nonconforming: </label>
+                            <input type="checkbox" class="form-check-input" checked disabled="disabled" />
+                        </div>
+
+                        <div class="form-group col-md-4">
                             <label class="control-label custom-file-label">Upload Pictures: </label>
-                            @if (isQualityAssurance || isAdmin)
-                            {
+                            <div>
                                 <input type="file" class="form-control" name="theFiles" multiple="multiple"
                                        onchange="document.getElementById('ImagePreview').src = window.URL.createObjectURL(this.files[0])" />
-                            }
-                            else
-                            {
-                                <input type="file" class="form-control" name="theFiles" multiple="multiple"
-                                       onchange="document.getElementById('ImagePreview').src = window.URL.createObjectURL(this.files[0])" disabled="disabled" />
-                            }
-                            <img id="ImagePreview" src="" />
+                            </div>
                         </div>
+                        <img id="ImagePreview" src="" width="100" height="100"/>
                     </div>
                 </div>
             </div>
@@ -119,13 +124,13 @@
 
                 <div class="accordion-Item">
 
-                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="true" aria-controls="collapseOne">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseOne">
                         <h3 class="Accordion-Header" id="engineerHeading">Engineering</h3>
                     </button>
 
                 </div>
 
-                <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#engineerAccordion">
+                <div id="collapseTwo" class="accordion-collapse show" aria-labelledby="headingOne" data-bs-parent="#engineerAccordion">
                     <div class="accordion-body">
                         <div class="form-group">
                             <label asp-for="EngPortion.EngReview" class="control-label"></label>
@@ -134,7 +139,7 @@
                         </div>
                         <div class="form-group">
                             <label asp-for="EngPortion.Disposition" class="form-label"></label>
-                            <textarea asp-for="EngPortion.Disposition" class="form-control" rows="4" cols="50" class="form-control" ></textarea>
+                            <textarea asp-for="EngPortion.Disposition" class="form-control" rows="4" cols="50" class="form-control"></textarea>
                             <span asp-validation-for="EngPortion.Disposition" class="text-danger"></span>
                         </div>
                         <div class="form-group">
@@ -153,14 +158,29 @@
                             <span asp-validation-for="EngPortion.RevNumber" class="text-danger"></span>
                         </div>
                         <div class="form-group">
+                            <label asp-for="EngPortion.OriginalRevNumber" class="control-label"></label>
+                            <input type="number" asp-for="EngPortion.OriginalRevNumber" class="form-control" />
+                            <span asp-validation-for="EngPortion.OriginalRevNumber" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="EngPortion.OriginalEngineer" class="control-label"></label>
+                            <input asp-for="EngPortion.OriginalEngineer" value="none" class="form-control" />
+                            <span asp-validation-for="EngPortion.OriginalEngineer" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
                             <label asp-for="EngPortion.RevDate" class="control-label"></label>
                             <input asp-for="EngPortion.RevDate" class="form-control" value="" />
                             <span asp-validation-for="EngPortion.RevDate" class="text-danger"></span>
                         </div>
                         <div class="form-group">
                             <label asp-for="EngPortion.RepID" class="control-label"></label>
-                            <input asp-for="EngPortion.RepID" class="form-control" value="" />
+                            <input asp-for="EngPortion.RepID" class="form-control" />
                             <span asp-validation-for="EngPortion.RepID" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="EngPortion.Date" class="control-label"></label>
+                            <input asp-for="EngPortion.Date" class="form-control" />
+                            <span asp-validation-for="EngPortion.Date" class="text-danger"></span>
                         </div>
 
 
@@ -168,15 +188,16 @@
                 </div>
             </div>
 
+
             <div class="form-group">
                 <label asp-for="DateCreated" class="control-label"></label>
-                <input type="date" asp-for="DateCreated" class="form-control" value="" />
+                <input asp-for="DateCreated" class="form-control" />
                 <span asp-validation-for="DateCreated" class="text-danger"></span>
             </div>
 
             <div class="form-group">
                 <label asp-for="Status" class="control-label"></label>
-                <select asp-for="Status" class="form-control" asp-items="@Html.GetEnumSelectList<NCRStatus>()"></select>
+                <select asp-for="Status" asp-items="@Html.GetEnumSelectList<NCRStatus>()" class="form-control"></select>
                 <span asp-validation-for="Status" class="text-danger"></span>
             </div>
 
@@ -193,4 +214,14 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script>
+
+        function DisplaySup(supIndex){
+            document.getElementById('supplier').selectedIndex = supIndex - 1;
+            document.getElementById('prodNumber').selectedIndex = supIndex - 1;
+        }
+
+
+    </script>
 }

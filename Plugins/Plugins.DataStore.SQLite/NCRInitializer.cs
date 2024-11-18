@@ -165,150 +165,8 @@ namespace Plugins.DataStore.SQLite
                         }
                         context.SaveChanges();
                     }
-                    //Roles seed data
-                    //string[] roles = ["Admin", "QA"];
 
-
-                    //int rolesCount = identityRoles.Count;
-                    //if(!context.Roles.Any())
-                    //{
-                    //    foreach (string role in identityRoles)
-                    //    {
-
-                    //        Role role1 = new Role()
-                    //        {
-
-                    //            RoleName = role
-                    //        };
-
-                    //        try
-                    //        {
-                    //            context.Roles.Add(role1);
-                    //            context.SaveChanges();
-                    //        }
-                    //        catch (Exception ex)
-                    //        {
-                    //            context.Roles.Remove(role1);
-                    //        }
-                    //    }
-                    //}
-
-                    //if(!context.Representatives.Any())
-                    //{
-                    //    //Representatives seed data
-                    //    string[] firstNames = [
-                    //        "Alejandro",
-                    //    "Valeria",
-                    //    "Santiago",
-                    //    "Camila",
-                    //    "Diego",
-                    //    "Nathalia",
-                    //    "Luis",
-                    //    "Lorena",
-                    //    "Carlos",
-                    //    "Sofía",
-                    //    "Andrés",
-                    //    "Lucía",
-                    //    "Fernando",
-                    //    "Isabella",
-                    //    "Javier",
-                    //    "Gabriela",
-                    //    "Ricardo",
-                    //    "Mariana",
-                    //    "José",
-                    //    "Karen"];
-                    //    string[] middleNames = ["J.", "L.", "M.", "A.", "R.", "N.", "G.", "S.", "H.", "C.", "D.", "E.", "T.", "B.", "F.", "V.", "Q.", "P.", "K.", "Z."];
-
-                    //    string[] lastNames = [
-                    //        "Smith",
-                    //    "Johnson",
-                    //    "Williams",
-                    //    "Brown",
-                    //    "Jones",
-                    //    "Garcia",
-                    //    "Miller",
-                    //    "Davis",
-                    //    "Rodriguez",
-                    //    "Martinez",
-                    //    "Hernandez",
-                    //    "Lopez",
-                    //    "Gonzalez",
-                    //    "Wilson",
-                    //    "Anderson",
-                    //    "Taylor",
-                    //    "Thomas",
-                    //    "Moore",
-                    //    "Jackson",
-                    //    "Martin"];
-
-                    //    List<string> SelectedFirst = new List<string>();
-                    //    List<string> SelectedMiddle = new List<string>();
-                    //    List<string> SelectedLast = new List<string>();
-
-                    //    foreach (string first in firstNames)
-                    //    {
-                    //        SelectedFirst.Add(firstNames[random.Next(firstNames.Length)]);
-                    //        SelectedLast.Add(lastNames[random.Next(lastNames.Length)]);
-                    //        SelectedMiddle.Add(middleNames[random.Next(middleNames.Length)]);
-                    //    }
-
-                    //    for (int i = 0; i < 20; i++)
-                    //    {
-                    //        Representative representative = new Representative()
-                    //        {
-                    //            FirstName = SelectedFirst[i],
-                    //            MiddleInitial = SelectedMiddle[i],
-                    //            LastName = SelectedLast[i],
-                    //        };
-                    //        try
-                    //        {
-                    //            context.Representatives.Add(representative);
-                    //            context.SaveChanges();
-
-                    //        }
-                    //        catch (Exception ex)
-                    //        {
-                    //            context.Representatives.Remove(representative);
-                    //        }
-                    //    }
-                    //}
-
-
-
-                    //RoleReps Seed Data                   
-                    //if (!context.RoleReps.Any()) 
-                    //{
-                    //    foreach (var ID in context.Representatives.Select(r => r.ID))
-                    //    {
-
-                    //        HashSet<int> nums = new HashSet<int>();
-                    //        for (int i = 0; i <= random.Next(0, 3); i++)
-                    //        {
-                    //            nums.Add(random.Next(1, 4));
-                    //        }
-                    //        foreach (int i in nums)
-                    //        {
-
-                    //            context.RoleReps.AddRange(
-
-                    //                new RoleRep()
-                    //                {
-                    //                    RoleID = i,
-                    //                    RepresentativeID = ID
-                    //                }
-
-                    //            );
-
-                    //        }
-
-                    //    }
-
-                    //        await context.SaveChangesAsync();
-                    //}
-
-
-
-                    //Product Initializer               
+                            //Product Initializer               
 
                     if (!context.Products.Any() || context.Products.Count() < 20)
                     {
@@ -337,6 +195,7 @@ namespace Plugins.DataStore.SQLite
                                     ProductNumber = prodNumber,
                                     SupplierID = supplierID,
                                     Supplier = context.Suppliers.FirstOrDefault(s => s.ID == supplierID),
+                                    SapNo = rnd.Next(10000,99999).ToString()
                                 };
 
                                 List<string> imgPaths = new List<string>()
@@ -424,6 +283,8 @@ namespace Plugins.DataStore.SQLite
                                     @"Assets\ProductImages\portablecharger.jpg"
                             };
 
+                            Random rand = new Random();
+
                             foreach (string defect in defect_descs)
                             {
                                 var qp = new QualityPortion
@@ -439,7 +300,9 @@ namespace Plugins.DataStore.SQLite
                                         .Id
                                         )
                                     .FirstOrDefault()!
-                                    .UserId
+                                    .UserId,
+                                    Created = DateTime.Today.AddDays(-(rand.Next(100)))
+                                    
                                 };
 
 

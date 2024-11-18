@@ -67,6 +67,7 @@ namespace Plugins.DataStore.SQLite
             productToUpdate.ProductNumber = product.ProductNumber;
             productToUpdate.Description = product.Description;
             productToUpdate.ProductPictures = product.ProductPictures;
+            productToUpdate.SapNo = product.SapNo;
             await _context.SaveChangesAsync();
 
         }

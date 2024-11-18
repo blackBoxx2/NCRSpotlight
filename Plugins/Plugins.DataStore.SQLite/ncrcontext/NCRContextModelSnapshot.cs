@@ -23,6 +23,9 @@ namespace Plugins.DataStore.SQLite.ncrcontext
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<DateTime?>("Date")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Disposition")
                         .HasColumnType("TEXT");
 
@@ -30,6 +33,13 @@ namespace Plugins.DataStore.SQLite.ncrcontext
                         .HasColumnType("INTEGER");
 
                     b.Property<bool>("Notif")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("OriginalEngineer")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int?>("OriginalRevNumber")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("RepID")
@@ -130,6 +140,10 @@ namespace Plugins.DataStore.SQLite.ncrcontext
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("SapNo")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.Property<int>("SupplierID")
                         .HasColumnType("INTEGER");
 
@@ -150,11 +164,17 @@ namespace Plugins.DataStore.SQLite.ncrcontext
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<DateTime?>("Created")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("DefectDescription")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("OrderNumber")
                         .HasColumnType("TEXT");
+
+                    b.Property<int>("ProcessApplicable")
+                        .HasColumnType("INTEGER");
 
                     b.Property<int>("ProductID")
                         .HasColumnType("INTEGER");
