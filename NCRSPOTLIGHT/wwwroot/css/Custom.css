@@ -1,0 +1,77 @@
+﻿
+.dashboard{
+    display:grid;
+    grid-template-columns: repeat(12, 1fr);
+    grid-template-rows: repeat(12, 1fr);
+    column-gap: 10px;
+    row-gap:10px;
+    max-width:100%;
+    min-height:100vh;
+    border:2px solid #00364e;
+    padding: 8px;
+    margin: 10px auto;
+    box-sizing:border-box;
+}
+
+/*.top-dashboard{
+    display:flex;   
+    gap:20px;
+    column-span: all;
+    background-color:aquamarine;
+    height:400px;
+    padding:5px;
+}*/
+/*.col{
+    background-color:cadetblue;
+    border-radius:6px;
+}*/
+.ncrStatus {
+    grid-column: 1/-1;
+    background-color: cadetblue;
+    border-radius: 6px;
+    grid-row: 1/2;
+    display:flex;
+    justify-content:space-evenly;
+    align-items:center;
+    padding:5px;
+}
+
+.status{
+    background-color:burlywood;
+    width:200px;
+    height:100px;
+    border-radius:5px;
+}
+
+.numNCR {
+    grid-column: 1/4;
+    background-color: cadetblue;
+    border-radius: 6px;
+    grid-row: 2/4;
+}
+
+.activeNCR {
+    grid-column: 1/4;
+    background-color: cadetblue;
+    border-radius: 6px;
+    grid-row: 4/6;
+}
+.overTime {
+    grid-column: 4/8;
+    background-color: cadetblue;
+    border-radius: 6px;
+    grid-row: 2/6;
+}
+
+.bySuppliers {
+    grid-column: 8/-1;
+    background-color: cadetblue;
+    border-radius: 6px;
+    grid-row: 2/6;
+}
+.partsNCR{
+    grid-column: 1/-1;
+        background-color: cadetblue;
+    border-radius: 6px;
+    grid-row: 6/9;
+}

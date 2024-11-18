@@ -127,16 +127,12 @@ namespace NCRSPOTLIGHT.Controllers
 
         // GET: NCRLog/Create
         public async Task<IActionResult> Create()
-        {            
+        {
             ViewData["User"] = HttpContext.User.Identity.Name;
+            ViewData["NCRNumber"] = _getNCRLogsAsyncUseCase.Execute().Result.Last().ID + 1;
             LoadSelectList(new NCRLog());
         
-            var user = HttpContext.User;
-            var userRoles = GetUserRoles(user);
-
-            ViewBag.QASection = userRoles.Contains("QualityAssurance") ? "enabled" : "disabled";
-            ViewBag.EngineerSection = userRoles.Contains("Engineer") ? "enabled" : "disabled";
-            ViewBag.IsAdmin = userRoles.Contains("Admin");
+            var user = HttpContext.User;                      
 
             return View();
         }
@@ -148,9 +144,15 @@ namespace NCRSPOTLIGHT.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("ID,DateCreated,Status")] NCRLog nCRLog, 
             [Bind("ProductID,Quantity,QuantityDefective,OrderNumber,DefectDescription,ProcessApplicable,RepID,Created")] QualityPortion qualityPortion, 
-            [Bind("EngReview,Disposition,Update,Notif,RevNumber,RevDate,RepID")] EngPortion engPortion)
+            [Bind("EngReview,Disposition,Update,Notif,RevNumber,RevDate,RepID,OriginalEngineer,OriginalRevNumber,Date")] EngPortion engPortion,
+            List<IFormFile> theFiles)
         {
             
+            if(theFiles.Count > 0)
+            {
+                await AddDocumentsAsync(qualityPortion, theFiles);
+            }
+
             await _addQualityPortionAsyncUseCase.Execute(qualityPortion);
             await _addEngPortionAsyncUseCase.Execute(engPortion);
             nCRLog.QualityPortionID = _getQualityPortionsAsyncUseCase.Execute().Result.Last().ID;
@@ -182,8 +184,7 @@ namespace NCRSPOTLIGHT.Controllers
             {
                 return NotFound();
             }
-            
-            
+    
             var nCRLog = await _getNCRLogByIDAsyncUseCase.Execute(id);
             if (nCRLog == null)
             {
@@ -191,11 +192,6 @@ namespace NCRSPOTLIGHT.Controllers
             }
 
             var user = HttpContext.User;
-            var userRoles = GetUserRoles(user);
-
-            ViewBag.QASection = userRoles.Contains("QualityAssurance") ? "enabled" : "disabled";
-            ViewBag.EngineerSection = userRoles.Contains("Engineer") ? "enabled" : "disabled";
-            ViewBag.IsAdmin = userRoles.Contains("Admin");
 
             LoadSelectList(nCRLog);
             return View(nCRLog);
@@ -208,13 +204,15 @@ namespace NCRSPOTLIGHT.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int ID, int QualityPortionID, int EngPortionID, [Bind("ID,QualityPortionID,DateCreated,Status")] NCRLog nCRLog, 
             [Bind("ProductID,Quantity,QuantityDefective,OrderNumber,DefectDescription,ProcessApplicable,RepID,Created")] QualityPortion qualityPortion, 
-            [Bind("EngReview,Disposition,Update,Notif,RevNumber,RevDate,RepID")] EngPortion engPortion)
+            [Bind("EngReview,Disposition,Update,Notif,RevNumber,RevDate,RepID,OriginalEngineer,OriginalRevNumber,Date")] EngPortion engPortion,
+            List<IFormFile> theFiles)
         {
             if (ID != nCRLog.ID)
             {
                 return NotFound();
-            }        
+            }
 
+            qualityPortion.qualityPictures = _getQualityPortionByIDAsyncUseCase.Execute(QualityPortionID).Result.qualityPictures;
             qualityPortion.ID = QualityPortionID;
             engPortion.ID = EngPortionID;
 
@@ -222,6 +220,7 @@ namespace NCRSPOTLIGHT.Controllers
             {
                 try
                 {
+                    await AddDocumentsAsync(qualityPortion, theFiles);
                     await _updateEngPortionAsyncUseCase.Execute(EngPortionID, engPortion);
                     await _UpdateQualityPortionAsyncUseCase.Execute(nCRLog.QualityPortionID, qualityPortion);
                     await _updateNCRLogAsyncUseCase.Execute(ID, nCRLog);                    
@@ -284,7 +283,9 @@ namespace NCRSPOTLIGHT.Controllers
             }
             else
             {
-                ViewBag.ProductID = new SelectList(await _getProductsAsyncUseCase.Execute(), "ID", "Description");
+                ViewBag.ProductID = new SelectList(await _getProductsAsyncUseCase.Execute(), "ID", "Summary");
+                ViewBag.SupplierID = new SelectList(await _getProductsAsyncUseCase.Execute(), "ID", "Supplier.SupplierName");
+                ViewBag.ProdNumber = new SelectList(await _getProductsAsyncUseCase.Execute(), "ID", "ProductNumber");
             }
             
         }
@@ -293,12 +294,33 @@ namespace NCRSPOTLIGHT.Controllers
             var log = _getNCRLogByIDAsyncUseCase.Execute(id);
             return log != null;
         }
-        private List<string> GetUserRoles(ClaimsPrincipal user)
+        private async Task AddDocumentsAsync(QualityPortion qualityPortion, List<IFormFile> theFiles)
         {
-            return User.Claims
-                       .Where(c => c.Type == ClaimTypes.Role)
-                       .Select(c => c.Value)
-                       .ToList();
+
+            foreach (var f in theFiles)
+            {
+                if (f != null)
+                {
+                    string mimeType = f.ContentType;
+                    string fileName = Path.GetFileName(f.FileName);
+                    long fileLength = f.Length;
+                    if (!(fileName == "" || fileLength == 0))
+                    {
+                        QualityPicture p = new QualityPicture();
+                        using (var memoryStream = new MemoryStream())
+                        {
+                            await f.CopyToAsync(memoryStream);
+
+                            p.FileContent.Content = memoryStream.ToArray();
+
+                        }
+                        p.MimeType = mimeType;
+                        p.FileName = fileName;
+                        qualityPortion.qualityPictures.Add(p);
+                    };
+                }
+            }
         }
+
     }
 }

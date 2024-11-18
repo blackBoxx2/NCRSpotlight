@@ -1,47 +1,86 @@
-﻿
+﻿@using Plugins.DataStore.SQLite
+@using EntitiesLayer.Models;
+@inject NCRContext ncrContext;
 @{
     ViewData["Title"] = "Index";
 }
 
 <h1>Reports</h1>
-<div id="chartContainer">
+@* id="chartContainer" *@
+<div  class="dashboard">
+@* 	<div class="row top-dashboard">
+ *@		@* Number of NCR's
+		Number of Active NCR 
+		-Two Row one column
+		*@
 
+		@* Graph of NCR's by Suppliers
+		Two Row 3 Column
+		*@ 
+		<div class="ncrStatus">
+			<div class="status">
+				QREP
+			</div >
+		<div class="status">
+				ENG
+			</div>
+		<div class="status">
+				PROC
+			</div>
+		</div>
+		<div class="numNCR">
+
+			@ncrContext.NCRLog.Count()
+			Number of NCR
+
+		</div>
+
+	<div class="activeNCR">
+		@ncrContext.NCRLog.Where(n => n.Status == NCRStatus.Active).Count()
+		Number of Active NCR
+	</div>
+
+
+		<div class="overTime">
+			Graph of NCR Over TimeSpan
+		</div>
+		<div id="ncrBySupplier" class="bySuppliers">
+			Graph of NCR's by Suppliers
+		</div>
+		<div class="partsNCR">
+			Parts with most NCR
+		</div>
+@* 	</div>
+ *@
 </div>
 
 
 @section Scripts
 {
-    <script src="https://cdn.canvasjs.com/canvasjs.min.js"></script>
-		<script type="text/javascript">
-
+	<script src="https://cdn.canvasjs.com/canvasjs.min.js"></script>
+	<script type="text/javascript">
 		window.onload = function () {
-			var chart = new CanvasJS.Chart("chartContainer", {
-				theme: "light2",
-				animationEnabled: true,
-				title: {
-					text: "Simple Column Chart in ASP.NET MVC"
-				},
-				subtitles: [
-					{ text: "Try Resizing the Browser" }
-				],
-				data: [
-				{
-					type: "pie", //change type to bar, line, area, pie, etc
-					dataPoints: [
-					{ x: 10, y: 71 },
-					{ x: 20, y: 55 },
-					{ x: 30, y: 50 },
-					{ x: 40, y: 65 },
-					{ x: 50, y: 95 },
-					{ x: 60, y: 68 },
-					{ x: 70, y: 28 },
-					{ x: 80, y: 34 },
-					{ x: 90, y: 14 }
-					]
-				}
-				]
-			});
-			chart.render();
+			 fetch('/Report/NCRBySupplier')
+					.then(response => response.json()) 
+					.then(data => {
+						   var chart = new CanvasJS.Chart("ncrBySupplier", {
+							theme: "light2",
+					   exportEnabled: true,
+							animationEnabled: true,
+							   title: {
+								text: "NCR Logs by Supplier"
+							},
+								data: [
+									   {
+										   type: "pie",
+								dataPoints: data 
+							}
+						]
+					});
+
+					chart.render();
+				})
+				.catch(error => console.error('Error fetching data:', error)); 
 		};
 	</script>
 }

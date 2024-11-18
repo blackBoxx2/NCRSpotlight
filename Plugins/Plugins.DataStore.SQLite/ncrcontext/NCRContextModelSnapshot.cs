@@ -23,6 +23,9 @@ namespace Plugins.DataStore.SQLite.ncrcontext
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<DateTime?>("Date")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Disposition")
                         .HasColumnType("TEXT");
 
@@ -30,6 +33,13 @@ namespace Plugins.DataStore.SQLite.ncrcontext
                         .HasColumnType("INTEGER");
 
                     b.Property<bool>("Notif")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("OriginalEngineer")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int?>("OriginalRevNumber")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("RepID")

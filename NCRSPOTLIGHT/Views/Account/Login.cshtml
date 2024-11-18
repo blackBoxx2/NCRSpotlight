@@ -3,23 +3,25 @@
 @using Microsoft.AspNetCore.Identity
 @inject SignInManager<ApplicationUser> signInManager
 
-
-<div class="row col-md-10 offset-mid-1">
-    <h1 class="text-primary text-center pt-2"> Login</h1>
+<link rel="stylesheet" href="~/css/log_in.css" asp-append-version="true" />
+<div class="all-sections">
+    <div class="log-section">
+    <h1 class="main-title"> Log In</h1>
+    <section class="form-section">
     <form method="post" asp-controller="Account" asp-action="Login" asp-route-returnurl="@ViewData["ReturnUrl"]">
-        <div class="border p-2 rounded">
+        <div class="content border p-2 rounded row-cols-md-2">
             <div asp-validation-summary="All" class="text-danger"></div>
 
             <div class="form-group pt-2">
-                <label asp-for="Email" class="col-12"></label>
+                <label asp-for="Email" class="col-12 text-md-start"></label>
                 <div class="col-md-12">
                     <input asp-for="Email" class="form-control" />
-                    <span asp-validation-for="Email" class="text-danger"></span>
+                    <span asp-validation-for="Email" class="text-danger "></span>
                 </div>
             </div>
 
             <div class="form-group pt-2">
-                <label asp-for="Password" class="col-12"></label>
+                    <label asp-for="Password" class="col-12 text-md-start"></label>
                 <div class="col-md-12">
                     <input asp-for="Password" class="form-control" />
                     <span asp-validation-for="Password" class="text-danger"></span>
@@ -36,39 +38,46 @@
             </div>
 
             <div class="form-group pt-3">
-                <div class="col-md-6 offset-md-3">
-                    <button class="btn btn-success form-control">Login</button>
+                <div class="text-left">
+                    <button class="btn_login">Login</button>
                 </div>
 
-                <div class="row">
-                    <div class="col-6">
+                <div class="row-cols-md4">
+                    <div class="col-12">
                         <a asp-action="Register" asp-route-returnurl="@ViewData["ReturnUrl"]"> Register as a new user?</a>
                     </div>                    
-                    <div class="col-6 text-end">
+                    <div class="col-12">
                         <a asp-action="ForgotPassword" > Forgot Password?</a>
                     </div>
                 </div>
             </div>
-                             
-
-
-        </div>
-    </form>
-    <div class="container ">
-        <form class="row" method="post" asp-action="Login">
-            <input type="hidden" name="returnUrl" value="@ViewData["ReturnUrl"]" />
-            <div class="btn-group mx-auto col-10">
-            <button class="btn btn-success" type="submit" name="email" value="admin@email.com">Admin Login</button>
-            <button class="btn btn-dark" type="submit" name="email" value="qa@email.com">QualityAssurance Login</button>
-            <button class="btn btn-info" type="submit" name="email" value="basic@email.com">Basic Login</button>
-            <button class="btn btn-outline-secondary" type="submit" name="email" value="engineer@email.com">Engineer Login</button>
-            <button class="btn btn-danger" type="submit" name="email" value="superAdmin@email.com">SuperAdmin Login</button>
+            <div class="welcome-section col-2">
+            <img src="/images/crossfire_logo.png" class="img-crsf-logo" />
+            <h2>Welcome Again</h2>
+            <p>We are glad to take you back, explore our new system to make your life easier with the NCRS reports</p>
             </div>
-        </form>
-
-
-
+        </div>
+                
+            </form>
+    </section>
     </div>
+
+    <section class="form-section">
+        <div class=" row-cols-md-2">
+            <form class="row d-flex" method="post" asp-action="Login">
+                <input type="hidden" name="returnUrl" value="@ViewData["ReturnUrl"]" />
+                    <div class="btn-group hidden">
+                            <button class="btn-group-child" type="submit" name="email" value="admin@email.com">Admin Login</button>
+                            <button class="btn-group-child" type="submit" name="email" value="qa@email.com">QualityAssurance Login</button>
+                            <button class="btn-group-child" type="submit" name="email" value="basic@email.com">Basic Login</button>
+                            <button class="btn-group-child" type="submit" name="email" value="engineer@email.com">Engineer Login</button>
+                            <button class="btn-group-child" type="submit" name="email" value="superAdmin@email.com">SuperAdmin Login</button>
+                    </div>
+        </form>
+     </div>
+    </section>
+    
+   
     @{
         var schemes = await signInManager.GetExternalAuthenticationSchemesAsync();
         var loginProviders = schemes.ToList();
@@ -105,3 +114,21 @@
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
 }
+<script>
+    let btnLogin = document.querySelector('.btn_login');
+    let btnsLogChilds = document.querySelector('.btn-group');
+    let emailInput = document.querySelector('.input[name="Email"]')
+    let passInput = document.querySelector('.input[name="Password"]')
+    btnLogin.addEventListener('click', () => {
+        if (emailInput == "" && passInput == ""){ break; }
+        else if (emailInput == "") { break; }
+        else if (passInput == "") { break; }
+        else { 
+        if (btnsLogChilds.classList.contains('hidden')) {
+            btnsLogChilds.classList.remove('hidden');
+            alert('Please select one of the type of logins to continue');
+        }
+        }
+    });
+    
+</script>

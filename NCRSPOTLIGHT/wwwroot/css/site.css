@@ -1,28 +1,72 @@
-html {
-  font-size: 14px;
-}
-
-@media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
-}
-
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
-}
 
 html {
-  position: relative;
-  min-height: 100%;
-}
-#print{
-
-    
+    position: relative;
+    min-height: 100%;
+    font-size: 18px;
 }
 
 body {
-  margin-bottom: 60px;
+    margin-bottom: 60px;
+}
+
+nav {
+    font-family: Arial;
+}
+
+
+header {
+    background-color: #FFF;
+    cursor: col-resize;
+}
+
+header .navbar-nav .nav-item {
+    display: inline-block;
+    margin-right: 5px !important;
+    margin-left: 5px !important;
+    flex-grow: 1;
+
+}
+
+ul {
+    align-content: center !important;
+}
+
+.custom-items {
+    display: flex;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    align-items: center;
+    justify-content: center;
+}
+
+.icon-nav {
+    display: inline-block;
+}
+
+.icon-log {
+    width: 20px;
+    height: auto;
+}
+
+.main-icon {
+    transform: scale(4.2);
+    max-width: 25px;
+    display: inline-block;
+    margin-left: 40px;
+    margin-right: 20px;
+    margin-bottom: 3px;
+    height: auto;
+}
+
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+    box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
+
+@media (min-width: 768px) {
+    html {
+        font-size: 16px;
+    }
 }
 
 @media print {
