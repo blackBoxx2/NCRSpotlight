@@ -12,9 +12,11 @@
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light  border-bottom box-shadow mb-3">
             <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">NCRSPOTLIGHT</a>
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">NCRSPOTLIGHT 
+                    <img src="/images/crossfire_logo.png" class="main-icon" />
+                </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -41,16 +43,16 @@
                             </a>
                             <ul class="dropdown-menu">
                                 <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="Supplier" asp-action="Index">Suppliers</a>
+                                    <a class="nav-link text-white" asp-area="" asp-controller="Supplier" asp-action="Index">Suppliers</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="Product" asp-action="Index">Products</a>
+                                    <a class="nav-link text-white" asp-area="" asp-controller="Product" asp-action="Index">Products</a>
                                 </li>                       
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="Index">Users</a>
+                            <a class="nav-link text-white" asp-area="" asp-controller="User" asp-action="Index">Users</a>
                         </li>                        
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Role" asp-action="Index">Roles</a>
+                            <a class="nav-link text-white" asp-area="" asp-controller="Role" asp-action="Index">Roles</a>
                         </li>
                                 <li class="nav-item">
                                     <a class="nav-link" asp-controller="Account" asp-action="Register">Register</a>

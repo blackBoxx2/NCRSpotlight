@@ -164,12 +164,12 @@ builder.Services.AddAuthorization(opt =>
     ));
     opt.AddPolicy("OnlySuperAdminChecker", p => p.Requirements.Add(new OnlySuperAdminChecker()));
 });
-
+/*
 builder.Services.AddAuthentication().AddMicrosoftAccount(opt =>
 {
     opt.ClientId = microsoftClientID;
     opt.ClientSecret = microsoftClientSecret;
-});
+});*/
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
