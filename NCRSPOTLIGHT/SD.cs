@@ -2,7 +2,8 @@
 {
     public static class SD
     {
-        public const string QualityAssurance = "QualityAssurance";
+        public const string QualityAssurance = "QualityAssurance";        
+        public const string Engineer = "Engineer";
         public const string User = "BasicUser";
         public const string Admin = "Admin";
         public const string Success = "Success";

@@ -193,6 +193,35 @@ namespace Plugins.DataStore.SQLite
                         context.ApplicationUsers.Add(user);
                     }
 
+                    context.UserRoles.AddRange(
+                        
+                        new IdentityUserRole<string>
+                        {
+                            RoleId = adminRoleId,
+                            UserId = adminUserId,
+                        },
+                        new IdentityUserRole<string>
+                        {
+                            RoleId = qaRoleId,
+                            UserId = qaUserId,
+                        },
+                        new IdentityUserRole<string>
+                        {
+                            RoleId = engineerRoleId,
+                            UserId = engineerUserId,
+                        },
+                        new IdentityUserRole<string>
+                        {
+                            RoleId = basicUserRoleId,
+                            UserId = basicUserId,
+                        },
+                        new IdentityUserRole<string>
+                        {
+                            RoleId = superAdminRoleId,
+                            UserId = superAdminId,
+                        }
+                        );
+
                     context.SaveChanges();
                 }
 
