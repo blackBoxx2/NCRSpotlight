@@ -127,8 +127,9 @@ namespace NCRSPOTLIGHT.Controllers
 
         // GET: NCRLog/Create
         public async Task<IActionResult> Create()
-        {            
+        {
             ViewData["User"] = HttpContext.User.Identity.Name;
+            ViewData["NCRNumber"] = _getNCRLogsAsyncUseCase.Execute().Result.Last().ID + 1;
             LoadSelectList(new NCRLog());
         
             var user = HttpContext.User;                      
@@ -275,6 +276,8 @@ namespace NCRSPOTLIGHT.Controllers
             else
             {
                 ViewBag.ProductID = new SelectList(await _getProductsAsyncUseCase.Execute(), "ID", "Description");
+                ViewBag.SupplierID = new SelectList(await _getProductsAsyncUseCase.Execute(), "ID", "Supplier.SupplierName");
+                ViewBag.ProdNumber = new SelectList(await _getProductsAsyncUseCase.Execute(), "ID", "ProductNumber");
             }
             
         }
