@@ -146,7 +146,7 @@ namespace NCRSPOTLIGHT.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ID,DateCreated,Status")] NCRLog nCRLog, 
+        public async Task<IActionResult> Create([Bind("ID,DateCreated,Status,Phase")] NCRLog nCRLog, 
             [Bind("ProductID,Quantity,QuantityDefective,OrderNumber,DefectDescription,ProcessApplicable,RepID,Created")] QualityPortion qualityPortion, 
             [Bind("EngReview,Disposition,Update,Notif,RevNumber,RevDate,RepID,OriginalEngineer,OriginalRevNumber,Date")] EngPortion engPortion,
             List<IFormFile> theFiles)
@@ -206,7 +206,7 @@ namespace NCRSPOTLIGHT.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int ID, int QualityPortionID, int EngPortionID, [Bind("ID,QualityPortionID,DateCreated,Status")] NCRLog nCRLog, 
+        public async Task<IActionResult> Edit(int ID, int QualityPortionID, int EngPortionID, [Bind("ID,QualityPortionID,DateCreated,Status,Phase")] NCRLog nCRLog, 
             [Bind("ProductID,Quantity,QuantityDefective,OrderNumber,DefectDescription,ProcessApplicable,RepID,Created")] QualityPortion qualityPortion, 
             [Bind("EngReview,Disposition,Update,Notif,RevNumber,RevDate,RepID,OriginalEngineer,OriginalRevNumber,Date")] EngPortion engPortion,
             List<IFormFile> theFiles)
@@ -301,7 +301,7 @@ namespace NCRSPOTLIGHT.Controllers
 
                     });
 
-                    page.Content().BorderVertical(1).Column(column =>
+                    page.Content().BorderVertical(1).BorderBottom(1).Column(column =>
                     {
 
                         column.Item().BorderHorizontal(1).PaddingHorizontal(10).BorderColor(Colors.Grey.Medium).Row(row =>

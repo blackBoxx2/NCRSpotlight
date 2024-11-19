@@ -65,6 +65,7 @@ namespace Plugins.DataStore.SQLite
 
             logToUpdate.QualityPortionID = log.QualityPortionID;
             logToUpdate.Status = log.Status;
+            logToUpdate.Phase = log.Phase;
 
             await _context.SaveChangesAsync();
 
