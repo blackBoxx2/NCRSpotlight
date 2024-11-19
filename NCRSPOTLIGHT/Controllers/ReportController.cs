@@ -27,8 +27,7 @@ namespace NCRSPOTLIGHT.Controllers
                 .ThenInclude(qp => qp.Product)
                 .ThenInclude(p => p.Supplier)
                 .ToListAsync();
-            var qualityPortions =  ncrLogs.Select(n => n.QualityPortion)
-                .ToList(); 
+            var qualityPortions =  ncrLogs.Select(n => n.QualityPortion).ToList(); 
             var products =  qualityPortions.Select(p => p.Product).ToList();
             var ncrLog = new Dictionary<string, int>();
             foreach(var ncr in ncrLogs)
@@ -49,8 +48,86 @@ namespace NCRSPOTLIGHT.Controllers
             {
                 Label = kvp.Key,
                 y = kvp.Value
-            }).ToList();
+            })
+             .OrderByDescending(v => v.y)
+                .ToList();
             return Json(dataPoints);
         }
+
+        public async Task<IActionResult> Top4MostBrokenProducts()
+        {
+            var ncrs = await nCRContext.NCRLog
+                .Include(n => n.QualityPortion)
+                .ThenInclude(qp => qp.Product)
+                .ThenInclude(p => p.Supplier)
+                .ToListAsync();
+
+            var products = ncrs.Select(q => q.QualityPortion.Product.Description).ToList();
+
+            var fourMostCommonProducts = new Dictionary<string, int>();
+
+            foreach(var ncr in ncrs)
+            {
+                if(ncr.QualityPortion.Product.Description !=null)
+                {
+                    if(fourMostCommonProducts.ContainsKey(ncr.QualityPortion.Product.Description))
+                    {
+                        fourMostCommonProducts[ncr.QualityPortion.Product.Description]++;
+                    }
+                    else
+                    {
+                        fourMostCommonProducts[ncr.QualityPortion.Product.Description] = 1;
+                    }
+                }
+            }
+
+			var dataPoints = fourMostCommonProducts.Select(kvp => new
+			{
+				Label = kvp.Key,
+				y = kvp.Value
+			})
+            .OrderByDescending(v => v.y)
+            .Take(4)
+	        .ToList();
+			return Json(dataPoints);
+		}
+
+        public async Task<IActionResult> NumberOfNCROverTime()
+        {
+            var ncrs = await nCRContext.NCRLog
+                .Include(n => n.QualityPortion)
+                .ThenInclude(qp => qp.Product)
+                .ThenInclude(p => p.Supplier)
+                .ToListAsync();
+            var months = Enumerable.Range(1, 2)
+                 .Select(month => new DateTime(2024, month, 1)
+                 .ToString("MMMM"))
+                 .ToList();
+
+            var ncrInMonth = new Dictionary<string, int>();
+            foreach(var ncr in ncrs)
+            {
+                if(ncr.DateCreated != DateTime.MinValue)
+                {
+                    if(ncrInMonth.ContainsKey(ncr.DateCreated.ToString("MMMM")))
+                    {
+                        ncrInMonth[ncr.DateCreated.ToString("MMMM")]++;
+                    }
+                    else
+                    {
+						ncrInMonth[ncr.DateCreated.ToString("MMMM")] =1;
+
+					}
+				}
+
+            }
+			var dataPoints = ncrInMonth.Select(kvp => new
+			{
+				Label = kvp.Key,
+				y = kvp.Value
+			})
+            .ToList();
+			return Json(dataPoints);
+		}
     }
 }
