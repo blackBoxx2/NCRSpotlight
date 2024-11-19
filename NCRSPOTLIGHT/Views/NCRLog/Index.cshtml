@@ -33,7 +33,10 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.QualityPortion)
+                NCR Number
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.QualityPortion.Product.Supplier)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.DateCreated)
@@ -41,17 +44,18 @@
             <th>
                 @Html.DisplayNameFor(model => model.Status)
             </th>
-            <th></th>
+            <th>Actions</th>
         </tr>
     </thead>
     <tbody>
 @foreach (var item in Model) {
-            <tr onclick="window.open('@Url.Action("Details", "NCRLog", new{ID = item.ID})','_blank');" style="cursor:pointer;"
-                ncrlog-id="@item.ID"> 
+            <tr> 
 
             <td>
-                @Html.DisplayFor(modelItem => item.QualityPortion.DefectDescription)
-                
+                    @($"{item.ID:D8}")
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.QualityPortion.Product.Supplier.SupplierName)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.DateSummary)
@@ -59,7 +63,11 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Status)
             </td>
-            
+            <td>
+                    <a asp-action="Edit" asp-route-id="@item.ID">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.ID">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.ID">Delete</a>
+            </td>
         </tr>
 }
     </tbody>

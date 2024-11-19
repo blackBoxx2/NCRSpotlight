@@ -18,6 +18,7 @@ using UseCasesLayer.UseCaseInterfaces.EngUseCaseInterface;
 using UseCasesLayer.UseCaseInterfaces.SuppliersUseCaseInterfaces;
 using Microsoft.AspNetCore.Identity;
 using EntitiesLayer.Models.ViewModels;
+using Microsoft.DotNet.Scaffolding.Shared.T4Templating;
 
 namespace NCRSPOTLIGHT.Controllers
 {
@@ -40,6 +41,7 @@ namespace NCRSPOTLIGHT.Controllers
         private readonly IUpdateEngPortionAsyncUseCase _updateEngPortionAsyncUseCase;
         private readonly IGetSuppliersAsyncUseCase _getSuppliersAsyncUseCase;
         private readonly IGetSupplierByIDAsyncUseCase _getSupplierByIDAsyncUseCase;
+        private NCRContext NCRContext;
 
         public NCRLogController(IAddNCRLogAsyncUseCase addNCRLogAsyncUseCase,
                                 IDeleteNCRLogAsyncUseCase deleteNCRLogAsyncUseCase,
@@ -55,7 +57,8 @@ namespace NCRSPOTLIGHT.Controllers
                                 IGetEngPortionsAsyncUseCase getEngPortionsAsyncUseCase,
                                 IUpdateEngPortionAsyncUseCase updateEngPortionAsyncUseCase,
                                 IGetSuppliersAsyncUseCase getSuppliersAsyncUseCase,
-                                IGetSupplierByIDAsyncUseCase getSupplierByIDAsyncUseCase
+                                IGetSupplierByIDAsyncUseCase getSupplierByIDAsyncUseCase,
+                                NCRContext NCRContext
                                 )
         {
             _addNCRLogAsyncUseCase = addNCRLogAsyncUseCase;
@@ -73,6 +76,7 @@ namespace NCRSPOTLIGHT.Controllers
             _updateEngPortionAsyncUseCase = updateEngPortionAsyncUseCase;
             _getSuppliersAsyncUseCase = getSuppliersAsyncUseCase;
             _getSupplierByIDAsyncUseCase = getSupplierByIDAsyncUseCase;
+            this.NCRContext = NCRContext;
 
         }
 
@@ -80,7 +84,7 @@ namespace NCRSPOTLIGHT.Controllers
         public async Task<IActionResult> Index(DateTime StartDate, DateTime EndDate, string? AutoFilterDate = null)
         {
 
-            var nCRContext = await _getNCRLogsAsyncUseCase.Execute();
+            var nCRContext = NCRContext.NCRLog;
 
             
 
@@ -106,7 +110,11 @@ namespace NCRSPOTLIGHT.Controllers
             ViewData["StartDate"] = StartDate.ToString("yyyy-MM-dd");
             ViewData["EndDate"] = EndDate.ToString("yyyy-MM-dd");
 
-            nCRContext = nCRContext.Where(p=> p.DateCreated >= StartDate && p.DateCreated <= EndDate.AddDays(1));
+            var sorted = nCRContext
+                .Include(p=>p.QualityPortion)
+                .ThenInclude(p=>p.Product)
+                .ThenInclude(p=>p.Supplier)
+                .Where(p=> p.DateCreated >= StartDate && p.DateCreated <= EndDate.AddDays(1));
 
             // get user
             UserManager<ApplicationUser> userManager = HttpContext.RequestServices.GetService(typeof(UserManager<ApplicationUser>)) as UserManager<ApplicationUser>;
@@ -117,10 +125,9 @@ namespace NCRSPOTLIGHT.Controllers
                 //ViewData["LastViewed"] = appUser.LastViewedNCRS;// debug, view the last viewed ncr time on the page
                 appUser.LastViewedNCRS = DateTime.Now;
                 await userManager.UpdateAsync(appUser);
-
             }
 
-            return View(nCRContext);
+            return View(sorted);
         }
 
         // GET: NCRLog/Details/5
