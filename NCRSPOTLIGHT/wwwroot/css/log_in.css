@@ -2,8 +2,8 @@
     background-color:#89939E
 }
 h1 {
-    margin-top: 10px;
-    margin-bottom: 20px;
+    margin-top: 20px;
+    margin-bottom: 10px;
     margin-left: 20px;
     text-align: center;
 }
@@ -66,10 +66,11 @@ button {
     align-items:center;
 }
 .all-sections {
-    padding: 30px;
+    padding: 0px;
+    width:100%;
     border-radius: 10px;
     box-shadow: 5px 10px 10px rgba(0, 0, 0, 0.1);
-    margin-top: 40px;
+    margin-top: 10px;
     background-color: #C4C8CD;
     position: relative;
 }
@@ -78,7 +79,7 @@ button {
 }
 
 .form-section {
-    padding: 30px;
+    padding: 26px;
     border-radius: 10px;
     box-shadow: 5px 10px 10px rgba(0, 0, 0, 0.1);
     margin-top: 40px;
@@ -87,20 +88,38 @@ button {
     flex:2;
     flex-direction:column;
 }
+.welcome-form-section {
+    padding:98px;
+    margin-top: 40px;
+    margin-left: 5px;
+    border-radius: 10px;
+    box-shadow: 5px 10px 10px rgba(0, 0, 0, 0.1);
+    background-color: #f4f4f4;
+    width: 100%;
+}
 .welcome-section {
-    flex: 1;
     text-align: center;
     padding: 20px;
-    background-color: #f4f4f4;
     border-radius: 10px;
-    flex-direction:column;
 }
 .main-title{
     color: black;
     font-size:35px;
     margin: 0;
 }
-
+.btns-section {
+    margin-top: 20px;
+    margin-left: 30px;
+    margin-bottom:10px;
+    width: 94%;
+    padding: 0px;
+    border-radius: 10px;
+    box-shadow: 5px 10px 10px rgba(0, 0, 0, 0.1);
+    background-color: #FFFF;
+    position: relative;
+    flex: 2;
+    flex-direction: column;
+}
 .btns-type-log{
     margin: 10px 10px 10px 10px;
     align-items:center;
@@ -156,13 +175,14 @@ button {
     min-width: 35%;
     max-width: 35%;
 }
+/*
 .hidden{
     display: none !important;
 }
-
+    */
 
 .img-crsf-logo {
-    width: 100px;
+    width: 130px;
     margin-bottom: 20px;
 }
 

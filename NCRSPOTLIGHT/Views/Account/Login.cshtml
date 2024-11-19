@@ -1,15 +1,18 @@
-﻿@model LoginViewModel
+﻿
+@model LoginViewModel
 @using EntitiesLayer.Models.ViewModels
 @using Microsoft.AspNetCore.Identity
 @inject SignInManager<ApplicationUser> signInManager
 
 <link rel="stylesheet" href="~/css/log_in.css" asp-append-version="true" />
+
 <div class="all-sections">
-    <div class="log-section">
     <h1 class="main-title"> Log In</h1>
+    <div class="row">
+        <div class="col-md-6">
     <section class="form-section">
     <form method="post" asp-controller="Account" asp-action="Login" asp-route-returnurl="@ViewData["ReturnUrl"]">
-        <div class="content border p-2 rounded row-cols-md-2">
+        <div class="content border p-2 rounded row-cols-md-8">
             <div asp-validation-summary="All" class="text-danger"></div>
 
             <div class="form-group pt-2">
@@ -29,11 +32,9 @@
             </div>
             <div class="form-group pt-2">
                 <div class="col-md-12">
-                    <div class="custom-checkbox">
-                <label asp-for="RememberMe" class="col-12">
-                    <input asp-for="RememberMe"/>
+                <label asp-for="RememberMe" class="col-12"> Remember Me?
+                <input asp-for="RememberMe" />
                 </label>
-                    </div>
                 </div>
             </div>
 
@@ -42,31 +43,35 @@
                     <button class="btn_login">Login</button>
                 </div>
 
-                <div class="row-cols-md4">
-                    <div class="col-12">
+                <div class="row-cols-md-4">
+                    <div class="col-12" style="width:100%;">
                         <a asp-action="Register" asp-route-returnurl="@ViewData["ReturnUrl"]"> Register as a new user?</a>
                     </div>                    
-                    <div class="col-12">
-                        <a asp-action="ForgotPassword" > Forgot Password?</a>
+                    <div class="col-12" style="width:100%">
+                        <a asp-action="ForgotPassword"> Forgot Password?</a>
                     </div>
                 </div>
             </div>
-            <div class="welcome-section col-2">
-            <img src="/images/crossfire_logo.png" class="img-crsf-logo" />
-            <h2>Welcome Again</h2>
-            <p>We are glad to take you back, explore our new system to make your life easier with the NCRS reports</p>
-            </div>
-        </div>
-                
-            </form>
-    </section>
-    </div>
+        </div> 
 
-    <section class="form-section">
-        <div class=" row-cols-md-2">
+        </form>
+        </section>
+        </div>
+                <div class="col-md-6">
+                    <section class="welcome-form-section">
+                        <div class="welcome-section text-center">
+                            <img src="/images/crossfire_logo.png" class="img-crsf-logo" />
+                            <h2>Welcome Again</h2>
+                            <p>We are glad to take you back, explore our new system to make your life easier with the NCRS reports</p>
+                        </div>
+                    </section>
+                </div>
+    </div>
+    <section class="btns-section">
+        <div class=" row-cols-md-2" style="margin-right:40px; margin-top:0px;">
             <form class="row d-flex" method="post" asp-action="Login">
                 <input type="hidden" name="returnUrl" value="@ViewData["ReturnUrl"]" />
-                    <div class="btn-group hidden">
+                    <div class="btn-group">
                             <button class="btn-group-child" type="submit" name="email" value="admin@email.com">Admin Login</button>
                             <button class="btn-group-child" type="submit" name="email" value="qa@email.com">QualityAssurance Login</button>
                             <button class="btn-group-child" type="submit" name="email" value="basic@email.com">Basic Login</button>
@@ -114,6 +119,7 @@
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
 }
+<!--
 <script>
     let btnLogin = document.querySelector('.btn_login');
     let btnsLogChilds = document.querySelector('.btn-group');
@@ -132,3 +138,4 @@
     });
     
 </script>
+-->
