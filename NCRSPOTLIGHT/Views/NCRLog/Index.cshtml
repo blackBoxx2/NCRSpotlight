@@ -45,6 +45,9 @@
                 @Html.DisplayNameFor(model => model.DateCreated)
             </th>
             <th>
+                @Html.DisplayNameFor(model => model.Phase)
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.Status)
             </th>
             <th>
@@ -53,7 +56,7 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
+    @foreach (var item in Model) {
         
         <tr> 
 
@@ -70,6 +73,9 @@
                 @Html.DisplayFor(modelItem => item.DateSummary)
             </td>
             <td>
+                @Html.DisplayFor(modelItem => item.Phase)
+            </td>
+            <td>
                 @Html.DisplayFor(modelItem => item.Status)
             </td>
             <td>
@@ -79,6 +85,6 @@
             
             
         </tr>
-}
+    }
     </tbody>
 </table>

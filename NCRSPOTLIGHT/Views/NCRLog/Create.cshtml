@@ -219,8 +219,14 @@
             </div>
 
             <div class="form-group">
+                <label asp-for="Phase" class="control-label"></label>
+                <select asp-for="Phase" asp-items="@Html.GetEnumSelectList<NCRPhase>()" class="form-control" disabled></select>
+                <span asp-validation-for="Phase" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
                 <label asp-for="Status" class="control-label"></label>
-                <select asp-for="Status" asp-items="@Html.GetEnumSelectList<NCRStatus>()" class="form-control"></select>
+                <select asp-for="Status" asp-items="@Html.GetEnumSelectList<NCRStatus>()" class="form-control" disabled></select>
                 <span asp-validation-for="Status" class="text-danger"></span>
             </div>
        
