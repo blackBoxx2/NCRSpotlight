@@ -16,6 +16,10 @@ using UseCasesLayer.UseCaseInterfaces.ProductUseCaseInterfaces;
 using System.Security.Claims;
 using UseCasesLayer.UseCaseInterfaces.EngUseCaseInterface;
 using UseCasesLayer.UseCaseInterfaces.SuppliersUseCaseInterfaces;
+using System.Reflection.Metadata;
+using QuestPDF.Fluent;
+using QuestPDF.Previewer;
+using QuestPDF.Helpers;
 
 namespace NCRSPOTLIGHT.Controllers
 {
@@ -271,6 +275,120 @@ namespace NCRSPOTLIGHT.Controllers
             }
           
             return RedirectToAction(nameof(Index));
+        }
+
+        public async Task<IActionResult> GeneratePDF(int ID)
+        {
+
+            QuestPDF.Settings.License = QuestPDF.Infrastructure.LicenseType.Community;
+
+            var Log = await _getNCRLogByIDAsyncUseCase.Execute(ID);
+
+            var doc = QuestPDF.Fluent.Document.Create(container =>
+            {
+
+                container.Page(page =>
+                {
+                    page.Size(PageSizes.A4);
+                    page.Margin(2, QuestPDF.Infrastructure.Unit.Centimetre);
+                    page.Header().Border(1).PaddingHorizontal(10).BorderColor(Colors.Grey.Medium)
+                    .Row(row =>
+                    {
+
+                        row.AutoItem().PaddingVertical(5).Text("CrossFire Canada").FontSize(20);
+                        row.AutoItem().PaddingHorizontal(10).LineVertical(1).LineColor(Colors.Grey.Medium);
+                        row.AutoItem().PaddingVertical(5).AlignBottom().Text("Internal Process Document");
+
+                    });
+
+                    page.Content().BorderVertical(1).Column(column =>
+                    {
+
+                        column.Item().BorderHorizontal(1).PaddingHorizontal(10).BorderColor(Colors.Grey.Medium).Row(row =>
+                        {
+                            row.AutoItem().PaddingVertical(5).Text($"Document Number: OPS-00011");
+                            row.AutoItem().Height(25).PaddingHorizontal(10).LineVertical(1).LineColor(Colors.Grey.Medium);
+                            row.AutoItem().PaddingVertical(5).Text("Document Name: Non-Conformance Report");
+                        });
+                        column.Item().BorderHorizontal(1).PaddingHorizontal(10).BorderColor(Colors.Grey.Medium).Row(row =>
+                        {
+                            row.AutoItem().PaddingVertical(5).Text($"NCR Number: {Log.ID}");
+                            row.AutoItem().Height(25).PaddingHorizontal(10).LineVertical(1).LineColor(Colors.Grey.Medium);
+                            if (Log.QualityPortion.ProcessApplicable.ToString() == "Supplier")
+                            {
+                                row.AutoItem().PaddingVertical(5).Text($"Process Applicable: Supplier or Rec-Insp");
+                            }
+                            else
+                            {
+                                row.AutoItem().PaddingVertical(5).Text($"Process Applicable: WIP (Production Order)");
+                            }
+
+                        });
+
+                        column.Item().PaddingHorizontal(10).BorderColor(Colors.Grey.Medium).Row(row => {
+
+                            row.AutoItem().PaddingTop(5).Width(300).Text("Description of Item (including SAP No.):");
+                            row.AutoItem().Height(20).PaddingHorizontal(10).LineVertical(1).LineColor(Colors.Grey.Medium);
+                            row.AutoItem().PaddingTop(5).Text("PO or Prod. NO.");
+
+                        });
+
+                        column.Item().BorderBottom(1).PaddingHorizontal(10).BorderColor(Colors.Grey.Medium).Row(row =>
+                        {
+
+                            row.AutoItem().Width(300).Text(Log.QualityPortion.Product.Summary);
+                            row.AutoItem().Height(20).PaddingHorizontal(10).LineVertical(1).LineColor(Colors.Grey.Medium);
+                            row.AutoItem().Text(Log.QualityPortion.Product.ProductNumber);
+
+                        });
+
+                        column.Item().BorderHorizontal(1).PaddingHorizontal(10).BorderColor(Colors.Grey.Medium).Row(row =>
+                        {
+                            row.AutoItem().PaddingVertical(5).Text($"Sales Order No. {Log.QualityPortion.OrderNumber}");
+                            row.AutoItem().Height(25).PaddingHorizontal(10).LineVertical(1).LineColor(Colors.Grey.Medium);
+                            row.AutoItem().PaddingVertical(5).Text($"Quantity Ordered: {Log.QualityPortion.Quantity}");
+                            row.AutoItem().Height(25).PaddingHorizontal(10).LineVertical(1).LineColor(Colors.Grey.Medium);
+                            row.AutoItem().PaddingVertical(5).Text($"Quantity Defective: {Log.QualityPortion.QuantityDefective}");
+
+                        });
+
+                        column.Item().PaddingHorizontal(10).BorderColor(Colors.Grey.Medium).Row(row =>
+                        {
+
+                            row.AutoItem().PaddingTop(5).Width(300).Text("Description of Defect: (in as much detail as possible)");
+
+                        });
+
+                        column.Item().BorderBottom(1).PaddingHorizontal(10).PaddingBottom(5).Text(Log.QualityPortion.DefectDescription);
+
+                        column.Item().BorderHorizontal(1).PaddingHorizontal(10).BorderColor(Colors.Grey.Medium).Row(row =>
+                        {
+
+                            row.AutoItem().PaddingTop(5).Text("Item Non-Conforming: Yes");
+                            row.AutoItem().PaddingHorizontal(10).LineVertical(1).LineColor(Colors.Grey.Medium);
+                            row.AutoItem().PaddingVertical(5).Text($"Date: {Log.QualityPortion.Created}");
+
+                        });
+
+                        column.Item().BorderHorizontal(1).PaddingHorizontal(10).BorderColor(Colors.Grey.Medium).Row(row =>
+                        {
+
+                            row.AutoItem().PaddingVertical(5).Text($"QA Rep: {Log.QualityPortion.RepID}");
+
+                        });
+
+
+                    });
+
+                });
+
+            });
+
+            doc.GeneratePdfAndShow();
+
+            return RedirectToAction("Details", new { Log.ID });
+
+
         }
 
         public async void LoadSelectList(NCRLog log)

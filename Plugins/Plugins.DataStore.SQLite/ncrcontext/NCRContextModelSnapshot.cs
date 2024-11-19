@@ -84,6 +84,9 @@ namespace Plugins.DataStore.SQLite.ncrcontext
                     b.Property<int>("EngPortionID")
                         .HasColumnType("INTEGER");
 
+                    b.Property<int>("Phase")
+                        .HasColumnType("INTEGER");
+
                     b.Property<int>("QualityPortionID")
                         .HasColumnType("INTEGER");
 

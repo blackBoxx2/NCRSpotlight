@@ -24,7 +24,7 @@ namespace Plugins.DataStore.SQLite
         public async Task<IEnumerable<NCRLog>> GetNCRLogAsync()
         {
             var NCRContext = await _context.NCRLog
-                .Include(p => p.QualityPortion)
+                .Include(p => p.QualityPortion).ThenInclude(q => q.Product).ThenInclude(p => p.Supplier)
                 .Include(p => p.EngPortion)
                 .AsNoTracking()
                 .ToListAsync();

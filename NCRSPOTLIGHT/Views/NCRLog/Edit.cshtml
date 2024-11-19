@@ -230,7 +230,8 @@
     </div>
 
     <div class="form-group m-5">
-        <input type="submit" value="Save" class="btn btn-primary" />
+        <input type="submit" value="Save" class="btn button-primary" />
+        <a asp-action="Index" class="btn button-secondary">Back to List</a>
     </div>
 </form>
 @section Scripts {
@@ -242,7 +243,6 @@
             document.getElementById('supplier').selectedIndex = supIndex - 1;
             document.getElementById('prodNumber').selectedIndex = supIndex - 1;
         }
-
 
     </script>
 
