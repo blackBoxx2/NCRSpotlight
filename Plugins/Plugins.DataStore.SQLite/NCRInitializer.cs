@@ -318,7 +318,7 @@ namespace Plugins.DataStore.SQLite
                         await context.SaveChangesAsync();
                         if (!context.NCRLog.Any())
                         {
-                            var date = new DateTime(2000, 01, 01);
+                            var date = new DateTime(2024, 1, 01);
                             for (int i = 1; i < 9; i++)
                             {
                                 var ncrl = new NCRLog
@@ -329,6 +329,7 @@ namespace Plugins.DataStore.SQLite
                                     Status = NCRStatus.Active
 
                                 };
+                                date = date.AddMonths(1);
                                 date = date.AddDays(7);
                                 context.NCRLog.Add(ncrl);
                             }
