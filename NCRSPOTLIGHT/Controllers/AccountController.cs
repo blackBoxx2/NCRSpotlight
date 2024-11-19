@@ -258,9 +258,21 @@ namespace NCRSPOTLIGHT.Controllers
 
                 if (user is null)
                 {
-                    return NotFound();
+                    ModelState.AddModelError("", "Username or Password Incorrect");
+
+                    return View(loginViewModel);
                 }
-                var result = await _signInManager.PasswordSignInAsync(user.UserName, password: "password", isPersistent: false, lockoutOnFailure: false);
+                Microsoft.AspNetCore.Identity.SignInResult result;
+                if (user.Email == "admin@email.com" || user.Email == "superadmin@email.com" || user.Email == "qa@email.com" || user.Email == "engineer@email.com")
+                {
+                result = await _signInManager.PasswordSignInAsync(user.UserName, password: "password", isPersistent: false, lockoutOnFailure: false);
+
+                }
+                else
+                {
+                    result = await _signInManager.PasswordSignInAsync(user.UserName, loginViewModel.Password, isPersistent: false, lockoutOnFailure: false);
+
+                }
                 if (result.Succeeded && returnUrl != null)
                 {
                     if(user.Email == "admin@email.com" && user.Role != SD.Admin)
