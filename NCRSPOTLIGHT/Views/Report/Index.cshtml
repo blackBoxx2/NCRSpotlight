@@ -1,6 +1,7 @@
 ﻿@using Plugins.DataStore.SQLite
 @using EntitiesLayer.Models;
 @inject NCRContext ncrContext;
+@model IEnumerable<EntitiesLayer.Models.NCRLog>
 @{
     ViewData["Title"] = "Index";
 }
@@ -19,40 +20,92 @@
 		*@ 
 		<div class="ncrStatus">
 			<div class="status">
-				QREP
+				<span>QREP</span>
 			</div >
-		<div class="status">
-				ENG
+			<div class="status">
+				<span>ENG</span>
 			</div>
-		<div class="status">
-				PROC
+			<div class="status">
+				<span>PROC</span>
 			</div>
 		</div>
 		<div class="numNCR">
-
-			@ncrContext.NCRLog.Count()
-			Number of NCR
-
+			<figure id="ncrCount">@ncrContext.NCRLog.Count()</figure>
+			<label for="ncrCount">Non-Compliance Reports</label>
 		</div>
 
-	<div class="activeNCR">
-		@ncrContext.NCRLog.Where(n => n.Status == NCRStatus.Active).Count()
-		Number of Active NCR
-	</div>
+		<div class="activeNCR">
+			
+			<figure id="activeCount">
+				@ncrContext.NCRLog.Where(n => n.Status == NCRStatus.Active).Count()
+			</figure>
+			<label for="activeCount">Active NCRs</label>
+		</div>
 
 
 		<div class="overTime">
-			Graph of NCR Over TimeSpan
+			<label>Graph of NCRs over time</label>
 		</div>
-		<div id="ncrBySupplier" class="bySuppliers">
-			Graph of NCR's by Suppliers
-		</div>
+		<figure id="ncrBySupplier" class="bySuppliers">
+
+		</figure>
 		<div class="partsNCR">
-			Parts with most NCR
+			<label>Graph of parts with the most NCRs</label>
 		</div>
+
+		<div id="FiveMostRecentNCRs">
+			<label for="tblFiveMostRecentNCRs">Five most recent non-compliance reports</label>
+			<table id="tblFiveMostRecentNCRs" class="table">
+				<thead>
+					<tr>
+						<th>
+							NCR Number
+						</th>
+						<th>
+							@Html.DisplayNameFor(model => model.QualityPortion.Product.Supplier)
+						</th>
+						<th>
+							@Html.DisplayNameFor(model => model.DateCreated)
+						</th>
+						<th>
+							@Html.DisplayNameFor(model => model.Status)
+						</th>
+						<th>Actions</th>
+					</tr>
+				</thead>
+				<tbody>
+					@foreach (var item in Model)
+					{
+						<tr>
+
+							<td>
+								@($"{item.ID:D8}")
+							</td>
+							<td>
+								@Html.DisplayFor(modelItem => item.QualityPortion.Product.Supplier.SupplierName)
+							</td>
+							<td>
+								@Html.DisplayFor(modelItem => item.DateSummary)
+							</td>
+							<td>
+								@Html.DisplayFor(modelItem => item.Status)
+							</td>
+							<td>
+								<a asp-action="Edit" asp-route-id="@item.ID">Edit</a> |
+								<a asp-action="Details" asp-route-id="@item.ID">Details</a> |
+								<a asp-action="Delete" asp-route-id="@item.ID">Delete</a>
+							</td>
+						</tr>
+					}
+				</tbody>
+			</table>
+
+		</div>
+
 @* 	</div>
  *@
 </div>
+
 
 
 @section Scripts
