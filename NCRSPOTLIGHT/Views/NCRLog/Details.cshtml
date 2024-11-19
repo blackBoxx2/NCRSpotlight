@@ -1,15 +1,20 @@
 ﻿@using EntitiesLayer.Models
+@using QuestPDF.Companion
+@using QuestPDF.Fluent
+@using QuestPDF.Helpers
+@using QuestPDF.Previewer;
 @model EntitiesLayer.Models.NCRLog
 
 @{
     ViewData["Title"] = "Details";
 }
 
+
 <h1>Details</h1>
 
 <div>
     <h4>NCRLog</h4>
-    <button id="print" class="btn btn-primary">Print</button>
+    <a asp-controller="NCRLog" asp-action="GeneratePDF" asp-route-id="@Model?.ID" class="btn button-primary">Print</a>
     <hr />
     <section id="printarea">
         <div class="">
@@ -204,18 +209,7 @@
         </div>
     </section>
 </div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.ID">Edit</a> |
-    <a onclick="window.close()" style="cursor:pointer" class="btn-link">Back to List</a>
+<div class="form-group my-2">
+    <a asp-action="Edit" asp-route-id="@Model?.ID" class="btn button-primary">Edit</a>
+    <a asp-action="Index" class="btn button-secondary mx-1">Back to List</a>
 </div>
-
-@section Scripts{
-    <script>
-    $(function () {
-        //Handle Print
-        $("#print").on("click", function () {
-            window.print();
-        });
-    })
-</script>
-}

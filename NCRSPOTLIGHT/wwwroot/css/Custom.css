@@ -75,3 +75,28 @@
     border-radius: 6px;
     grid-row: 6/9;
 }
+
+.button-primary {
+    color: #fff;
+    background-color: #173451;
+    border-color: #173451;
+}
+
+.button-secondary {
+    color: #fff;
+    background-color: #5897c9;
+    border-color: #5897c9;
+}
+
+.button-primary:hover {
+    color: #fff;
+    background-color: #355b79;
+    border-color: #355b79;
+}
+
+.button-secondary:hover {
+    color: #fff;
+    background-color: #3e6a8d;
+    border-color: #3e6a8d;
+}
+
