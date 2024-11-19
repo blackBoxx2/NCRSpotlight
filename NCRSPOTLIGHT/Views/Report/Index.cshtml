@@ -13,13 +13,13 @@
 
 		<div class="wrapper">
 			<div class=" sub-panel">
-				<p>				QREP</p>
-				<p>0</p>
+				<p>				QA</p>
+				<p>@ncrContext.NCRLog.Where(l => l.Phase == NCRPhase.QA).Count()</p>
 
 			</div>
 			<div class=" sub-panel">
 				<p>				ENG</p>
-				<p>0</p>
+				<p>@ncrContext.NCRLog.Where(l => l.Phase == NCRPhase.ENG).Count()</p>
 
 
 			</div>
@@ -27,7 +27,7 @@
 				<p>
 					PROC
 				</p>
-				<p>8</p>
+				<p>@ncrContext.NCRLog.Where(l => l.Phase == NCRPhase.PO).Count()</p>
 
 			</div>
 
@@ -225,7 +225,7 @@
 								},
 								title: {
 									display: true,
-									text: 'Top 4 Products with the most NCR\'s',
+									text: 'Products with the most NCR\'s',
 									font: { size: 20, weight: 'bold' },
 									padding: { top: 40, bottom: 20 }
 								}

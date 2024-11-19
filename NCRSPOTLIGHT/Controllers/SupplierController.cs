@@ -152,7 +152,14 @@ namespace NCRSPOTLIGHT.Controllers
             var supplier = await _getSupplierByIDAsyncUseCase.Execute(id);
             if (supplier != null)
             {
+                try { 
                 await _deleteSupplierAsyncUseCase.Execute(supplier.ID);
+                }
+                catch
+                {
+                    ModelState.AddModelError("", "Cannot Delete Supplier With existing NCR's");
+                    return View(supplier);
+                }
             }
             return RedirectToAction(nameof(Index));
         }
