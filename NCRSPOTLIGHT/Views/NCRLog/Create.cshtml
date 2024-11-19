@@ -53,6 +53,7 @@
 
                             <div class="form-group col-md-12 col-lg-6 mb-lg-0 mb-md-3">
                                 <label asp-for="QualityPortion.ProductID" class="control-label" ></label>
+                            @Html.Raw("<span class='text-danger'>*</span>")
                                 <select asp-for="QualityPortion.ProductID" id="productDDL" onchange="DisplaySup(this.options[this.options.selectedIndex].value)" class="form-control" asp-items="ViewBag.ProductID"></select>
                             </div>
 
@@ -75,16 +76,19 @@
 
                             <div class="form-group col-md-4">
                                 <label asp-for="QualityPortion.Quantity" class="control-label"></label>
+                            @Html.Raw("<span class='text-danger'>*</span>")
                                 <input asp-for="QualityPortion.Quantity" class="form-control" />
                                 <span asp-validation-for="QualityPortion.Quantity" class="text-danger"></span>
                             </div>
                             <div class="form-group col-md-4">
                                 <label asp-for="QualityPortion.QuantityDefective" class="control-label"></label>
+                            @Html.Raw("<span class='text-danger'>*</span>")
                                 <input asp-for="QualityPortion.QuantityDefective" class="form-control" />
                                 <span asp-validation-for="QualityPortion.QuantityDefective" class="text-danger"></span>
                             </div>
                             <div class="form-group col-md-4">
                                 <label asp-for="QualityPortion.OrderNumber" class="control-label"></label>
+                            @Html.Raw("<span class='text-danger'>*</span>")
                                 <input asp-for="QualityPortion.OrderNumber" class="form-control" />
                                 <span asp-validation-for="QualityPortion.OrderNumber" class="text-danger"></span>
                             </div>
@@ -94,6 +98,7 @@
 
                         <div class="form-group">
                             <label asp-for="QualityPortion.DefectDescription" class="control-label" ></label>
+                        @Html.Raw("<span class='text-danger'>*</span>")
                             <textarea asp-for="QualityPortion.DefectDescription" class="form-control" rows="10" cols="50" style="resize: none;"></textarea>
                             <span asp-validation-for="QualityPortion.DefectDescription" class="text-danger"></span>
                         </div>
@@ -124,6 +129,7 @@
                         <img id="ImagePreview" src="" width="100" height="100"/>
                     </div>
                 </div>
+                <hr />
             </div>
 
             <div class="accordion" id="engineerAccordion">
@@ -142,6 +148,7 @@
                         <div class="row my-md-3">
                             <div class="form-group col-md-4">
                                 <label asp-for="EngPortion.EngReview" class="control-label"></label>
+                            @Html.Raw("<span class='text-danger'>*</span>")
                                 <select asp-for="EngPortion.EngReview" class="form-control" asp-items="@Html.GetEnumSelectList<EngReview>()"></select>
                                 <span asp-validation-for="EngPortion.EngReview" class="text-danger"></span>
                             </div>
@@ -150,6 +157,7 @@
                         <div class="row my-md-3">
                             <div class="form-group">
                                 <label asp-for="EngPortion.Disposition" class="form-label"></label>
+                            @Html.Raw("<span class='text-danger'>*</span>")
                                 <textarea asp-for="EngPortion.Disposition" class="form-control" rows="10" cols="50" style="resize: none;" class="form-control"></textarea>
                                 <span asp-validation-for="EngPortion.Disposition" class="text-danger"></span>
                             </div>
@@ -197,11 +205,13 @@
                         <div class="row my-md-3">
                             <div class="form-group col-md-4">
                                 <label asp-for="EngPortion.RepID" class="control-label"></label>
+                            @Html.Raw("<span class='text-danger'>*</span>")
                                 <input asp-for="EngPortion.RepID" class="form-control" />
                                 <span asp-validation-for="EngPortion.RepID" class="text-danger"></span>
                             </div>
                             <div class="form-group col-md-4">
                                 <label asp-for="EngPortion.Date" class="control-label"></label>
+                            @Html.Raw("<span class='text-danger'>*</span>")
                                 <input asp-for="EngPortion.Date" class="form-control" />
                                 <span asp-validation-for="EngPortion.Date" class="text-danger"></span>
                             </div>
@@ -209,17 +219,20 @@
 
                     </div>
                 </div>
+                <hr />
             </div>
 
 
             <div class="form-group">
                 <label asp-for="DateCreated" class="control-label"></label>
+            @Html.Raw("<span class='text-danger'>*</span>")
                 <input asp-for="DateCreated" class="form-control" />
                 <span asp-validation-for="DateCreated" class="text-danger"></span>
             </div>
 
             <div class="form-group">
                 <label asp-for="Status" class="control-label"></label>
+            @Html.Raw("<span class='text-danger'>*</span>")
                 <select asp-for="Status" asp-items="@Html.GetEnumSelectList<NCRStatus>()" class="form-control"></select>
                 <span asp-validation-for="Status" class="text-danger"></span>
             </div>
