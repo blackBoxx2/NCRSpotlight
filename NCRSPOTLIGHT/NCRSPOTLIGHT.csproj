@@ -7,6 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Include="wwwroot\Crossfire Logo - no bkgd.png" />
+    <None Include="wwwroot\Crossfire Logo.PNG" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="MailKit" Version="4.8.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.MicrosoftAccount" Version="8.0.11" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.10" />
@@ -29,6 +34,10 @@
     <ProjectReference Include="..\Plugins\Plugins.DataStore.InMemory\Plugins.DataStore.InMemory.csproj" />
     <ProjectReference Include="..\Plugins\Plugins.DataStore.SQLite\Plugins.DataStore.SQLite.csproj" />
     <ProjectReference Include="..\UseCasesLayer\UseCasesLayer.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Assets\Company\" />
   </ItemGroup>
 
 </Project>
