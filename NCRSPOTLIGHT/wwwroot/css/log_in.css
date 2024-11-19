@@ -66,7 +66,8 @@ button {
     align-items:center;
 }
 .all-sections {
-    padding: 0px;
+    padding-top: 1em;
+    padding-bottom: 1em;
     width:100%;
     border-radius: 10px;
     box-shadow: 5px 10px 10px rgba(0, 0, 0, 0.1);
