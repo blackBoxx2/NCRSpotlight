@@ -16,6 +16,8 @@ using UseCasesLayer.UseCaseInterfaces.ProductUseCaseInterfaces;
 using System.Security.Claims;
 using UseCasesLayer.UseCaseInterfaces.EngUseCaseInterface;
 using UseCasesLayer.UseCaseInterfaces.SuppliersUseCaseInterfaces;
+using Microsoft.AspNetCore.Identity;
+using EntitiesLayer.Models.ViewModels;
 
 namespace NCRSPOTLIGHT.Controllers
 {
@@ -80,11 +82,17 @@ namespace NCRSPOTLIGHT.Controllers
 
             var nCRContext = await _getNCRLogsAsyncUseCase.Execute();
 
+            
+
             // first time startup
             if (EndDate == DateTime.MinValue)
             {
                 StartDate = nCRContext.Min(p => p.DateCreated).Date;
                 EndDate = nCRContext.Max(p => p.DateCreated).Date;
+            }
+            if (!String.IsNullOrEmpty(AutoFilterDate))
+            {
+                StartDate = DateTime.Parse(AutoFilterDate);
             }
             // edge case protection
             if (EndDate < StartDate)
@@ -94,17 +102,24 @@ namespace NCRSPOTLIGHT.Controllers
                 StartDate = temp;
             }
 
-            if (AutoFilterDate != null)
-            {
-                StartDate = DateTime.Parse(AutoFilterDate);
-            }
-
-
             // set boxes
             ViewData["StartDate"] = StartDate.ToString("yyyy-MM-dd");
             ViewData["EndDate"] = EndDate.ToString("yyyy-MM-dd");
 
             nCRContext = nCRContext.Where(p=> p.DateCreated >= StartDate && p.DateCreated <= EndDate.AddDays(1));
+
+            // get user
+            UserManager<ApplicationUser> userManager = HttpContext.RequestServices.GetService(typeof(UserManager<ApplicationUser>)) as UserManager<ApplicationUser>;
+            var appUser = await userManager.GetUserAsync(User);
+            if (appUser != null)
+            {
+                // update "last viewed ncr" field, save changes   
+                //ViewData["LastViewed"] = appUser.LastViewedNCRS;// debug, view the last viewed ncr time on the page
+                appUser.LastViewedNCRS = DateTime.Now;
+                await userManager.UpdateAsync(appUser);
+
+            }
+
             return View(nCRContext);
         }
 
