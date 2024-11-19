@@ -2,15 +2,86 @@
 .dashboard{
     display:grid;
     grid-template-columns: repeat(12, 1fr);
-    grid-template-rows: repeat(12, 1fr);
+    grid-template-rows: repeat(6, 0.4fr);
     column-gap: 10px;
     row-gap:10px;
     max-width:100%;
-    min-height:100vh;
+    min-height:10vh;
     border:2px solid #00364e;
     padding: 8px;
     margin: 10px auto;
     box-sizing:border-box;
+}
+
+.dashboard div {
+    background-color: cadetblue;
+    border-radius: 1em;
+    padding: 0.2em;
+    display: flex;
+    flex-direction: column;
+}
+
+
+.dashboard label {
+    font-weight: 600;
+    font-size: 1.3em;
+    display: block;
+    margin-top: 0.4em;
+    margin-left: 0.4em;
+}
+
+.activeNCR > label,
+.numNCR > label {
+    font-size: 1.5em;
+
+    margin: auto;
+    margin-top: 0 !important;
+    margin-bottom: 2em !important;
+}
+
+.dashboard figure:not([class='bySuppliers']) {
+    margin: auto;
+    margin-bottom: 0.2em !important;
+    font-size: 6em;
+}
+
+.dashboard td {
+    border-radius: 1em 0;
+}
+
+.dashboard .canvasjs-chart-toolbar {
+    background-color: white !important;
+}
+.dashboard .canvasjs-chart-container {
+    background-color: white !important;
+    color: white;
+}
+
+.dashboard #ncrBySupplier {
+    background-color: white;
+}
+
+.dashboard canvas {
+    margin-right: 1em;
+    margin-bottom: 1em;
+    border-radius: 1em;
+}
+
+.dashboard table {
+    background-color: white;
+    border-radius: 1em;
+    padding: 1em;
+}
+
+.dashboard #FiveMostRecentNCRs {
+    grid-column: 1/-1;
+    grid-row: auto;
+    padding: 1em;
+    display: block !important;
+}
+.dashboard #FiveMostRecentNCRs > label {
+    margin-top: 0;
+    margin-bottom: 0.6em;
 }
 
 /*.top-dashboard{
@@ -27,51 +98,40 @@
 }*/
 .ncrStatus {
     grid-column: 1/-1;
-    background-color: cadetblue;
-    border-radius: 6px;
     grid-row: 1/2;
     display:flex;
     justify-content:space-evenly;
     align-items:center;
     padding:5px;
+    flex-direction: row !important;
 }
 
 .status{
-    background-color:burlywood;
+    background-color:burlywood !important;
     width:200px;
     height:100px;
-    border-radius:5px;
+    border-radius:5px !important;
 }
 
 .numNCR {
     grid-column: 1/4;
-    background-color: cadetblue;
-    border-radius: 6px;
     grid-row: 2/4;
 }
 
 .activeNCR {
     grid-column: 1/4;
-    background-color: cadetblue;
-    border-radius: 6px;
     grid-row: 4/6;
 }
 .overTime {
     grid-column: 4/8;
-    background-color: cadetblue;
-    border-radius: 6px;
-    grid-row: 2/6;
+    grid-row: 2/4;
 }
 
 .bySuppliers {
     grid-column: 8/-1;
-    background-color: cadetblue;
-    border-radius: 6px;
-    grid-row: 2/6;
+    grid-row: 2/4;
 }
 .partsNCR{
-    grid-column: 1/-1;
-        background-color: cadetblue;
-    border-radius: 6px;
-    grid-row: 6/9;
+    grid-column: 4/-1;
+    grid-row: 4/6;
 }

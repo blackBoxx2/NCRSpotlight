@@ -16,7 +16,14 @@ namespace NCRSPOTLIGHT.Controllers
 		}
         public IActionResult Index()
         {
-            return View();
+            var fiveRecentNCRs = nCRContext.NCRLog
+                .Include(p => p.QualityPortion)
+                .ThenInclude(p => p.Product)
+                .ThenInclude(p => p.Supplier)
+                .Where(p => p.Status == NCRStatus.Active)
+                .OrderByDescending(p => p.DateCreated)
+                .Take(5);
+            return View(fiveRecentNCRs);
         }
 
         public async Task<IActionResult> NCRBySupplier()
