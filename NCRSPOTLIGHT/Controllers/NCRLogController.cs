@@ -23,7 +23,7 @@ using Microsoft.DotNet.Scaffolding.Shared.T4Templating;
 namespace NCRSPOTLIGHT.Controllers
 {
 
-    public class NCRLogController : Controller
+    public class NCRLogController : NotifyingController
     {
 
         private readonly IAddNCRLogAsyncUseCase _addNCRLogAsyncUseCase;
@@ -60,11 +60,12 @@ namespace NCRSPOTLIGHT.Controllers
                                 IGetSupplierByIDAsyncUseCase getSupplierByIDAsyncUseCase,
                                 NCRContext NCRContext
                                 )
+            : base(getNCRLogsAsyncUseCase)
         {
             _addNCRLogAsyncUseCase = addNCRLogAsyncUseCase;
             _delNCRLogAsyncUseCase = deleteNCRLogAsyncUseCase;
-            _getNCRLogByIDAsyncUseCase = getNCRLogByIDAsyncUseCase;
             _getNCRLogsAsyncUseCase = getNCRLogsAsyncUseCase;
+            _getNCRLogByIDAsyncUseCase = getNCRLogByIDAsyncUseCase;
             _updateNCRLogAsyncUseCase = updateNCRLogAsyncUseCase;
             _getQualityPortionsAsyncUseCase = getQualityPortionsAsyncUseCase;
             _addQualityPortionAsyncUseCase = addQualityPortionAsyncUseCase;
@@ -127,6 +128,7 @@ namespace NCRSPOTLIGHT.Controllers
                 await userManager.UpdateAsync(appUser);
             }
 
+            HandleNotifications();
             return View(sorted);
         }
 
@@ -151,7 +153,7 @@ namespace NCRSPOTLIGHT.Controllers
         public async Task<IActionResult> Create()
         {
             ViewData["User"] = HttpContext.User.Identity.Name;
-            ViewData["NCRNumber"] = _getNCRLogsAsyncUseCase.Execute().Result.Last().ID + 1;
+            ViewData["NCRNumber"] = getNCRLogsAsyncUseCase.Execute().Result.Last().ID + 1;
             LoadSelectList(new NCRLog());
         
             var user = HttpContext.User;                      

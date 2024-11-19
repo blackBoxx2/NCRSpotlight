@@ -27,41 +27,73 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="NCRLog" asp-action="Index">NCRLog</a>
-                        </li>
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="NCRLog" asp-action="Index">NCRLog</a>
+                            </li>
+                        }
+                        
                         @{
                             if(User.IsInRole("SuperAdmin"))
                             {
-                                
-                                <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                Admin Panel
-                            </a>
-                            <ul class="dropdown-menu">
-                                <li class="nav-item">
-                                    <a class="nav-link" asp-area="" asp-controller="Supplier" asp-action="Index">Suppliers</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" asp-area="" asp-controller="Product" asp-action="Index">Products</a>
-                                </li>                       
-                        <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="User" asp-action="Index">Users</a>
-                        </li>                        
-                        <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Role" asp-action="Index">Roles</a>
-                        </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" asp-controller="Account" asp-action="Register">Register</a>
-                                </li>                                
-                                <li class="nav-item">
-                                    <a class="nav-link" asp-controller="Report" asp-action="Index">Reports</a>
-                                </li>
-                            </ul>
-                        </li>
+                                    <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Admin Panel
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li class="nav-item">
+                                        <a class="nav-link" asp-area="" asp-controller="Supplier" asp-action="Index">Suppliers</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" asp-area="" asp-controller="Product" asp-action="Index">Products</a>
+                                    </li>                       
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="User" asp-action="Index">Users</a>
+                            </li>                        
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="Role" asp-action="Index">Roles</a>
+                            </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" asp-controller="Account" asp-action="Register">Register</a>
+                                    </li>                                
+                                    <li class="nav-item">
+                                        <a class="nav-link" asp-controller="Report" asp-action="Index">Reports</a>
+                                    </li>
+                                </ul>
+                            </li>
                             }
                         }
                     </ul>
+                    @if (User.IsInRole("Engineer"))
+                    {
+                        if (ViewBag.ShowNotification == true)
+                        {
+                            <a href="#"
+                               onclick="
+                                   if (confirm('@ViewData["NewCount"] new NCRs have been created since the time you viewed the log.\nView them now?')) {
+                                        location.href='@Url.Action("Index", "NCRLog", new {AutoFilterDate=ViewData["NotificationDate"]})';
+
+                                   }
+                               ">
+
+                                <img style="max-width: 2em; cursor: pointer;"
+                                     alt="There are new notifications to view"
+                                     src="~/images/ringing-bell.png"/>
+                            </a>
+                        }
+                        else
+                        {
+                            <a onclick="alert('There are currently no new NCRs to view. You\'re all caught up!')">
+
+                                <img style="max-width: 2em; cursor: pointer;"
+                                     alt="There are no new notifications to view"
+                                     src="~/images/bell.png" />
+                            </a>
+                        }
+                        
+                    }
+                    
                     <partial name="_LoginPartialCustom" />
                 </div>
             </div>

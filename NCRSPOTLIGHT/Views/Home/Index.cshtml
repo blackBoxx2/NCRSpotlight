@@ -4,10 +4,8 @@
 
 <div class="text-center">
     <h1 class="display-4">Welcome</h1> <!-- - @ViewData["LastViewed"]</h1>  debug, view the last viewed ncr time on the page -->
-    <div style="visibility: @(ViewData["ShowNotification"])" onclick="location.href='@Url.Action("Index", "NCRLog", new {AutoFilterDate=ViewData["NotificationDate"]})'" id="divNotifications">
-        <img id="btnNotif" alt="View new NCRs" src="https://static-00.iconduck.com/assets.00/bell-ringing-icon-468x512-drbxxdeb.png" />
-        <label for="btnNotif" >There are @ViewData["NewCount"] new NCRs to view</label>
-    </div>
+    
+    
 
     @if (User.Identity.IsAuthenticated)
     {
@@ -28,7 +26,10 @@
         <h2 class="text-success">Your Role(s): @string.Join(", ", roles)</h2>
     }
 
-  
+    @if (User.IsInRole("Engineer"))
+    {
+        <p>Last viewed the log: @ViewData["LastViewed"]</p>
+    }
 
 
 
