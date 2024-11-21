@@ -1,47 +1,345 @@
-﻿
+﻿@using Plugins.DataStore.SQLite
+@using EntitiesLayer.Models;
+@inject NCRContext ncrContext;
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Reports";
 }
 
 <h1>Reports</h1>
-<div id="chartContainer">
+<div  class="dashboard">
 
+	<div class="ncrStatus panel">
+		<h2>Phase of NCR</h2>
+
+		<div class="wrapper">
+			<div class=" sub-panel">
+				<p>				QA</p>
+				<p>@ncrContext.NCRLog.Where(l => l.Phase == NCRPhase.QA).Count()</p>
+
+			</div>
+			<div class=" sub-panel">
+				<p>				ENG</p>
+				<p>@ncrContext.NCRLog.Where(l => l.Phase == NCRPhase.ENG).Count()</p>
+
+
+			</div>
+			<div class=" sub-panel">
+				<p>
+					PROC
+				</p>
+				<p>@ncrContext.NCRLog.Where(l => l.Phase == NCRPhase.PO).Count()</p>
+
+			</div>
+
+			<div class="numNCR  sub-panel">
+				<p>
+					Number of NCRs
+				</p>
+				<p>
+					@ncrContext.NCRLog.Count()
+				</p>
+
+
+			</div>
+
+			<div class="activeNCR sub-panel">
+				<p>
+					Number of Active NCR
+				</p>
+				<p>
+					@ncrContext.NCRLog.Where(n => n.Status == NCRStatus.Active).Count()
+				</p>
+
+			</div>
+		</div>
+			
+
+		</div>
+
+
+
+		<div class="overTime panel">
+			<canvas id="ncrOverTime"></canvas>
+		</div>
+	<div id="ncrBySupplier" class="bySuppliers panel">
+			<canvas id="ncrChart"></canvas>
+	</div>
+	<div class="partsNCR panel">
+		<canvas id="top4Products">
+		</canvas>
+		</div>
 </div>
 
 
 @section Scripts
-{
-    <script src="https://cdn.canvasjs.com/canvasjs.min.js"></script>
-		<script type="text/javascript">
-
+{	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+	<script type="text/javascript">
 		window.onload = function () {
-			var chart = new CanvasJS.Chart("chartContainer", {
-				theme: "light2",
-				animationEnabled: true,
-				title: {
-					text: "Simple Column Chart in ASP.NET MVC"
-				},
-				subtitles: [
-					{ text: "Try Resizing the Browser" }
-				],
-				data: [
-				{
-					type: "pie", //change type to bar, line, area, pie, etc
-					dataPoints: [
-					{ x: 10, y: 71 },
-					{ x: 20, y: 55 },
-					{ x: 30, y: 50 },
-					{ x: 40, y: 65 },
-					{ x: 50, y: 95 },
-					{ x: 60, y: 68 },
-					{ x: 70, y: 28 },
-					{ x: 80, y: 34 },
-					{ x: 90, y: 14 }
-					]
-				}
-				]
-			});
-			chart.render();
+			fetch('/Report/NCRBySupplier')
+				.then(response => response.json())
+				.then(data => {
+					const labels = data.map(item => item.label); 
+					const values = data.map(item => item.y);
+
+					const backgroundColors = [
+						'rgba(75, 192, 192, 1)',
+						'rgba(153, 102, 255, 1)',
+						'rgba(255, 159, 64, 1)',
+						'rgba(255, 99, 132, 1)',
+						'rgba(54, 162, 235, 1)',
+						'rgba(255, 206, 86, 1)',
+					];
+
+					const borderColors = [
+						'rgba(75, 192, 192, 1)',
+						'rgba(153, 102, 255, 1)',
+						'rgba(255, 159, 64, 1)',
+						'rgba(255, 99, 132, 1)',
+						'rgba(54, 162, 235, 1)',
+						'rgba(255, 206, 86, 1)',
+					];
+
+					const ctx = document.getElementById('ncrChart').getContext('2d');
+					new Chart(ctx, {
+						type: 'bar',
+						data: {
+							labels: labels,
+							datasets: [{
+								label: ' NCR Count',
+								data: values,
+								backgroundColor: backgroundColors,
+								borderColor: borderColors,
+								borderWidth: 1
+							}]
+						},
+						options: {
+							responsive: true,
+							plugins: {
+								legend: {
+									display: false,
+									position: 'top'
+								},
+								title: {
+									display: true,
+									text: 'NCR\'s by Supplier',
+									font: {
+										size: 20,
+										weight: 'bold',
+
+									},
+									padding: {
+										top:40,
+										bottom: 20
+									}
+								},
+
+							},
+							indexAxis: 'y',
+
+							scales: {
+								x: {
+									title: {
+										display: true,
+										text: 'Number of NCR\'s',
+										font:{
+											size: 20,
+											weight:'bold',
+											
+										},
+										padding: {
+											top: 20
+										}
+									},
+									beginAtZero: true
+								},
+								y: {
+									title: {
+										display: true,
+										text: 'Supplier',
+										font: {
+											size: 20,
+											weight: 'bold',
+
+										},
+										padding: {
+											right: 20
+										}
+									}
+								}
+
+							}
+						}
+					});
+				})
+				.catch(error => console.error('Error fetching data:', error));
+
+				//top 4 products
+			fetch('/Report/Top4MostBrokenProducts')
+				.then(response => response.json())
+				.then(data => {
+					const labels = data.map(item => item.label);
+					const values = data.map(item => item.y);
+
+					const backgroundColors = [
+						'rgba(75, 192, 192, 1)', 
+						'rgba(153, 102, 255, 1)', 
+						'rgba(255, 159, 64, 1)',  
+						'rgba(255, 99, 132, 1)',  
+						'rgba(54, 162, 235, 1)',  
+						'rgba(255, 206, 86, 1)',  
+					];
+
+					const borderColors = [
+						'rgba(75, 192, 192, 1)',   
+						'rgba(153, 102, 255, 1)',  
+						'rgba(255, 159, 64, 1)',   
+						'rgba(255, 99, 132, 1)',   
+						'rgba(54, 162, 235, 1)',   
+						'rgba(255, 206, 86, 1)',   
+					];
+
+					const ctx = document.getElementById('top4Products').getContext('2d');
+					new Chart(ctx, {
+						type: 'pie',
+						data: {
+							labels: labels,
+							datasets: [{
+								label: 'NCR Count',
+								data: values,
+								backgroundColor: backgroundColors,
+								borderColor: borderColors,
+								borderWidth: 1
+							}]
+						},
+						options: {
+							responsive: true,
+							plugins: {
+								legend: {
+									display: true,
+									position: 'top',
+									align: 'start',
+									labels:{
+										font: { size: 10 }
+									}
+									
+								},
+								title: {
+									display: true,
+									text: 'Products with the most NCR\'s',
+									font: { size: 20, weight: 'bold' },
+									padding: { top: 40, bottom: 20 }
+								}
+
+							}
+						}
+					});
+				})
+				.catch(error => console.error('Error fetching data for Top4MostBrokenProducts:', error));
+
+
+				//NCR's over time
+
+			fetch('/Report/NumberOfNCROverTime')
+				.then(response => response.json())
+				.then(data => {
+					const labels = data.map(item => item.label);
+					const values = data.map(item => item.y);
+
+					const backgroundColors = [
+						'rgba(75, 192, 192, 1)',
+						'rgba(153, 102, 255, 1)',
+						'rgba(255, 159, 64, 1)',
+						'rgba(255, 99, 132, 1)',
+						'rgba(54, 162, 235, 1)',
+						'rgba(255, 206, 86, 1)',
+					];
+
+					const borderColors = [
+						'rgba(75, 192, 192, 1)',
+						'rgba(153, 102, 255, 1)',
+						'rgba(255, 159, 64, 1)',
+						'rgba(255, 99, 132, 1)',
+						'rgba(54, 162, 235, 1)',
+						'rgba(255, 206, 86, 1)',
+					];
+
+					const ctx = document.getElementById('ncrOverTime').getContext('2d');
+					new Chart(ctx, {
+						type: 'line',
+						data: {
+							labels: labels,
+							datasets: [{
+								label: ' NCR Count',
+								data: values,
+								backgroundColor: backgroundColors,
+								borderColor: borderColors,
+								borderWidth: 1
+							}]
+						},
+						options: {
+							responsive: true,
+							plugins: {
+								legend: {
+									display: false,
+									position: 'top'
+								},
+								title: {
+									display: true,
+									text: 'NCR\'s Per Month',
+									font: {
+										size: 20,
+										weight: 'bold',
+
+									},
+									padding: {
+										top: 40,
+										bottom: 20
+									}
+								},
+
+							},
+
+							scales: {
+								x: {
+									title: {
+										display: true,
+										text: 'Month',
+										font: {
+											size: 20,
+											weight: 'bold',
+
+										},
+										padding: {
+											top: 20
+										}
+									},
+									beginAtZero: true
+								},
+								y: {
+									title: {
+										display: true,
+										text: 'Number of NCR\'s',
+										font: {
+											size: 20,
+											weight: 'bold',
+
+										},
+										padding: {
+											right: 20
+										}
+									}
+								}
+
+							}
+						}
+					});
+				})
+				.catch(error => console.error('Error fetching data:', error));
+
 		};
+
+		//Top 4 Products
+		
 	</script>
+
 }

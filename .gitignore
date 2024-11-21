@@ -7,6 +7,8 @@ NCRSPOTLIGHT/NCRDatabase.db-shm
 NCRSPOTLIGHT/NCRDatabase.db-wal
 NCRSPOTLIGHT/NCRSPOTLIGHTIdentity.db-shm
 NCRSPOTLIGHT/NCRSPOTLIGHTIdentity.db-wal
+NCRSPOTLIGHTIdentity.db
+*.db
 # User-specific files
 *.rsuser
 *.suo
@@ -403,3 +405,6 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+/NCRSPOTLIGHT/NCRDatabase.db
+/NCRSPOTLIGHT/NCRSPOTLIGHTIdentity.db
+/NCRSPOTLIGHT/NCRSPOTLIGHTIdentity.db

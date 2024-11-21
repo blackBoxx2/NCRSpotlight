@@ -27,6 +27,8 @@ namespace EntitiesLayer.Models
         [Display(Name = "Date Created")]
         public DateTime DateCreated { get; set; } = DateTime.Now;
 
+        public NCRPhase Phase { get; set; } = NCRPhase.QA;
+
         [NotMapped]
         [Display(Name = "Date")]
         public string DateSummary

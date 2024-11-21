@@ -24,7 +24,7 @@ namespace Plugins.DataStore.SQLite
         public async Task<IEnumerable<NCRLog>> GetNCRLogAsync()
         {
             var NCRContext = await _context.NCRLog
-                .Include(p => p.QualityPortion)
+                .Include(p => p.QualityPortion).ThenInclude(q => q.Product).ThenInclude(p => p.Supplier)
                 .Include(p => p.EngPortion)
                 .AsNoTracking()
                 .ToListAsync();
@@ -38,6 +38,7 @@ namespace Plugins.DataStore.SQLite
 
             var log = await _context.NCRLog
                 .Include(p => p.QualityPortion).ThenInclude(q => q.Product).ThenInclude(p => p.Supplier)
+                .Include(p => p.QualityPortion).ThenInclude(q => q.qualityPictures).ThenInclude(p => p.FileContent)
                 .Include(p => p.EngPortion)
                 .AsNoTracking()
                 .FirstOrDefaultAsync(m => m.ID == id);
@@ -64,6 +65,7 @@ namespace Plugins.DataStore.SQLite
 
             logToUpdate.QualityPortionID = log.QualityPortionID;
             logToUpdate.Status = log.Status;
+            logToUpdate.Phase = log.Phase;
 
             await _context.SaveChangesAsync();
 

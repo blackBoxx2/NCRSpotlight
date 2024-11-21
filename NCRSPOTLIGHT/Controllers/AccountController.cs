@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
-using EntitiesLayer.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 using System.Runtime.CompilerServices;
@@ -258,30 +257,42 @@ namespace NCRSPOTLIGHT.Controllers
 
                 if (user is null)
                 {
-                    return NotFound();
+                    ModelState.AddModelError("", "Username or Password Incorrect");
+
+                    return View(loginViewModel);
                 }
-                var result = await _signInManager.PasswordSignInAsync(user.UserName, password: "password", isPersistent: false, lockoutOnFailure: false);
+                Microsoft.AspNetCore.Identity.SignInResult result;
+                if (user.Email == "admin@email.com" || user.Email == "superadmin@email.com" || user.Email == "qa@email.com" || user.Email == "engineer@email.com")
+                {
+                result = await _signInManager.PasswordSignInAsync(user.UserName, password: "password", isPersistent: false, lockoutOnFailure: false);
+
+                }
+                else
+                {
+                    result = await _signInManager.PasswordSignInAsync(user.UserName, loginViewModel.Password, isPersistent: false, lockoutOnFailure: false);
+
+                }
                 if (result.Succeeded && returnUrl != null)
                 {
-                    if(user.Email == "admin@email.com" && user.Role != "Admin")
+                    if(user.Email == "admin@email.com" && user.Role != SD.Admin)
                     {
-                        _userManager.AddToRoleAsync(user, "Admin");
+                        _userManager.AddToRoleAsync(user, SD.Admin);
                     }
-                    else if (user.Email == "qa@email.com" && user.Role != "QualityAssurance")
+                    else if (user.Email == "qa@email.com" && user.Role != SD.QualityAssurance)
                     {
-                        _userManager.AddToRoleAsync(user, "QualityAssurance");
+                        _userManager.AddToRoleAsync(user, SD.QualityAssurance);
                     }
-                    else if (user.Email == "engineer@email.com" && user.Role != "Engineer")
+                    else if (user.Email == "engineer@email.com" && user.Role != SD.Engineer)
                     {
-                        _userManager.AddToRoleAsync(user, "Engineer");
+                        _userManager.AddToRoleAsync(user, SD.Engineer);
                     }
-                    else if (user.Email == "superadmin@email.com" && user.Role != "SuperAdmin")
+                    else if (user.Email == "superadmin@email.com" && user.Role != SD.SuperAdmin)
                     {
-                        _userManager.AddToRoleAsync(user, "SuperAdmin");
+                        _userManager.AddToRoleAsync(user, SD.SuperAdmin);
                     }
                     else
                     {
-                        _userManager.AddToRoleAsync(user, "BasicUser");
+                        _userManager.AddToRoleAsync(user, SD.User);
                     }
 
                     return LocalRedirect(returnUrl);
@@ -566,7 +577,7 @@ namespace NCRSPOTLIGHT.Controllers
         public async Task<IActionResult> LogOut()
         {
             await _signInManager.SignOutAsync();
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Login", "Account");
         }
         private void AddErrors(IdentityResult result)
         {
