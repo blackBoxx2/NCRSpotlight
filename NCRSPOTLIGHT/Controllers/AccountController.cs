@@ -241,7 +241,7 @@ namespace NCRSPOTLIGHT.Controllers
             LoginViewModel loginViewModel = new();
             return View(loginViewModel);
         }
-
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
         [AllowAnonymous]
@@ -262,7 +262,7 @@ namespace NCRSPOTLIGHT.Controllers
                     return View(loginViewModel);
                 }
                 Microsoft.AspNetCore.Identity.SignInResult result;
-                if (user.Email == "admin@email.com" || user.Email == "superadmin@email.com" || user.Email == "qa@email.com" || user.Email == "engineer@email.com")
+                if (user.Email == "admin@email.com" || user.Email == "superadmin@email.com" || user.Email == "qa@email.com" || user.Email == "engineer@email.com" || user.Email == "basic@email.com")
                 {
                 result = await _signInManager.PasswordSignInAsync(user.UserName, password: "password", isPersistent: false, lockoutOnFailure: false);
 
