@@ -5,14 +5,23 @@ using Microsoft.AspNetCore.Mvc;
 using NCRSPOTLIGHT.Models;
 using Plugins.DataStore.SQLite;
 using System.Diagnostics;
+using UseCasesLayer.UseCaseInterfaces.NCRLogUseCaseInterfaces;
 
 namespace NCRSPOTLIGHT.Controllers
 {
-    public class HomeController : Controller
+    public class HomeController : NotifyingController
     {
         private readonly ILogger<HomeController> _logger;
         private readonly UserManager<ApplicationUser> _userManager;
-        public HomeController(ILogger<HomeController> logger, UserManager<ApplicationUser> userManager)
+
+
+        public HomeController(
+            ILogger<HomeController> logger, 
+            UserManager<ApplicationUser> userManager,
+            IGetNCRLogsAsyncUseCase getNCRLogsAsyncUseCase
+
+        )
+            : base(getNCRLogsAsyncUseCase)
         {
             _logger = logger;
             this._userManager = userManager;
@@ -29,6 +38,8 @@ namespace NCRSPOTLIGHT.Controllers
             {
                 ViewData["TwoFactorEnabled"] = user.TwoFactorEnabled;
             }
+
+            HandleNotifications();
             return View();
         }
 
